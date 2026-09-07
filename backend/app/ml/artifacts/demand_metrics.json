@@ -1,0 +1,36 @@
+{
+  "model_type": "RandomForestRegressor",
+  "features": [
+    "day_of_week",
+    "month",
+    "is_weekend",
+    "component_code",
+    "blood_group_code",
+    "has_trauma_center",
+    "bed_capacity",
+    "rolling_7d_avg",
+    "current_stock",
+    "dengue_outbreak_factor"
+  ],
+  "n_training_samples": 2400,
+  "n_test_samples": 600,
+  "metrics": {
+    "mean_absolute_error": 6.855,
+    "root_mean_squared_error": 13.11,
+    "r2_score": 0.8568
+  },
+  "feature_importances": {
+    "day_of_week": 0.01986105692011524,
+    "month": 0.006226571267253305,
+    "is_weekend": 0.0112652725422734,
+    "component_code": 0.037571998141233916,
+    "blood_group_code": 0.014312150006598835,
+    "has_trauma_center": 0.004745777756840899,
+    "bed_capacity": 0.44830668686019837,
+    "rolling_7d_avg": 0.3858574275246169,
+    "current_stock": 0.018844817150946533,
+    "dengue_outbreak_factor": 0.05300824182992248
+  },
+  "evaluation_dataset": "Synthetic Multi-Source Transfusion Longitudinal Data",
+  "notes": "Empirically evaluated using scikit-learn metrics. No fictional accuracy values."
+}

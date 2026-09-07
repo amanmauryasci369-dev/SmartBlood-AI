@@ -1,0 +1,51 @@
+id,name,license_number,district,state,latitude,longitude,contact_number,has_trauma_center,bed_capacity,is_active
+1,Hyderabad Government Medical College #1,HOSP-TE-001,Hyderabad,Telangana,17.37482,78.56418,+91 35 26136767,False,250,True
+2,Kolkata Memorial Medical Institute #2,HOSP-WE-002,Kolkata,West Bengal,22.49287,88.43199,+91 57 27617984,True,250,True
+3,Hyderabad District Civil Hospital #3,HOSP-TE-003,Hyderabad,Telangana,17.4047,78.51284,+91 75 26594467,False,1200,True
+4,Hyderabad Super-Specialty Hospital #4,HOSP-TE-004,Hyderabad,Telangana,17.36938,78.454,+91 96 27180501,False,450,True
+5,Bengaluru Memorial Medical Institute #5,HOSP-KA-005,Bengaluru,Karnataka,12.95657,77.648,+91 66 28865264,False,2000,True
+6,Hyderabad Super-Specialty Hospital #6,HOSP-TE-006,Hyderabad,Telangana,17.3794,78.47745,+91 32 29526840,False,250,True
+7,Bengaluru Memorial Medical Institute #7,HOSP-KA-007,Bengaluru,Karnataka,12.97407,77.61587,+91 97 26603987,False,450,True
+8,Mumbai Government Medical College #8,HOSP-MA-008,Mumbai,Maharashtra,19.01958,72.80509,+91 20 27820307,True,1200,True
+9,Mumbai Memorial Medical Institute #9,HOSP-MA-009,Mumbai,Maharashtra,19.11094,72.85914,+91 94 29768194,False,250,True
+10,Noida Government Medical College #10,HOSP-UT-010,Noida,Uttar Pradesh,28.58005,77.34601,+91 70 24421262,True,2000,True
+11,Mumbai Super-Specialty Hospital #11,HOSP-MA-011,Mumbai,Maharashtra,19.1428,72.81712,+91 96 28455457,False,2000,True
+12,Hyderabad Government Medical College #12,HOSP-TE-012,Hyderabad,Telangana,17.45701,78.54933,+91 65 28595883,True,1200,True
+13,Gurugram Memorial Medical Institute #13,HOSP-HA-013,Gurugram,Haryana,28.49848,77.02255,+91 92 26326256,False,2000,True
+14,Chennai District Civil Hospital #14,HOSP-TA-014,Chennai,Tamil Nadu,13.10298,80.23464,+91 41 26279311,False,750,True
+15,Hyderabad Super-Specialty Hospital #15,HOSP-TE-015,Hyderabad,Telangana,17.44788,78.41959,+91 99 25281823,False,450,True
+16,Noida Apex Trauma Hospital #16,HOSP-UT-016,Noida,Uttar Pradesh,28.52188,77.36394,+91 37 27524419,True,1200,True
+17,Delhi Apex Trauma Hospital #17,HOSP-DE-017,Delhi,Delhi,28.67098,77.2515,+91 56 26504944,False,1200,True
+18,Kolkata Memorial Medical Institute #18,HOSP-WE-018,Kolkata,West Bengal,22.57872,88.40144,+91 73 25840642,True,750,True
+19,Kolkata Super-Specialty Hospital #19,HOSP-WE-019,Kolkata,West Bengal,22.5703,88.34612,+91 32 27920752,True,450,True
+20,Delhi Apex Trauma Hospital #20,HOSP-DE-020,Delhi,Delhi,28.67901,77.2237,+91 93 27595464,True,450,True
+21,Chennai Super-Specialty Hospital #21,HOSP-TA-021,Chennai,Tamil Nadu,13.03178,80.23233,+91 52 26831159,False,1200,True
+22,Bengaluru Apex Trauma Hospital #22,HOSP-KA-022,Bengaluru,Karnataka,13.01192,77.64771,+91 71 24162598,False,2000,True
+23,Delhi Apex Trauma Hospital #23,HOSP-DE-023,Delhi,Delhi,28.69389,77.18499,+91 14 26074362,True,450,True
+24,Delhi Apex Trauma Hospital #24,HOSP-DE-024,Delhi,Delhi,28.63331,77.16717,+91 83 25828419,True,1200,True
+25,Bengaluru Apex Trauma Hospital #25,HOSP-KA-025,Bengaluru,Karnataka,13.0143,77.54145,+91 31 26609183,True,250,True
+26,Delhi Super-Specialty Hospital #26,HOSP-DE-026,Delhi,Delhi,28.68252,77.22113,+91 61 29997978,True,450,True
+27,Noida District Civil Hospital #27,HOSP-UT-027,Noida,Uttar Pradesh,28.55024,77.44389,+91 98 29036617,False,250,True
+28,Delhi Government Medical College #28,HOSP-DE-028,Delhi,Delhi,28.58945,77.19754,+91 93 26862454,False,250,True
+29,Kolkata Super-Specialty Hospital #29,HOSP-WE-029,Kolkata,West Bengal,22.62417,88.30079,+91 30 27653130,True,450,True
+30,Bengaluru Super-Specialty Hospital #30,HOSP-KA-030,Bengaluru,Karnataka,12.99015,77.66174,+91 66 28970037,True,750,True
+31,Hyderabad Super-Specialty Hospital #31,HOSP-TE-031,Hyderabad,Telangana,17.44127,78.53962,+91 42 27898257,False,2000,True
+32,Kolkata Super-Specialty Hospital #32,HOSP-WE-032,Kolkata,West Bengal,22.54642,88.36299,+91 38 26976487,False,750,True
+33,Hyderabad Government Medical College #33,HOSP-TE-033,Hyderabad,Telangana,17.34975,78.50208,+91 12 28333783,True,450,True
+34,Noida Memorial Medical Institute #34,HOSP-UT-034,Noida,Uttar Pradesh,28.49412,77.37603,+91 99 27993758,True,1200,True
+35,Chennai Memorial Medical Institute #35,HOSP-TA-035,Chennai,Tamil Nadu,13.12957,80.20559,+91 50 29569700,False,2000,True
+36,Hyderabad Government Medical College #36,HOSP-TE-036,Hyderabad,Telangana,17.38072,78.49165,+91 53 26951200,False,1200,True
+37,Bengaluru District Civil Hospital #37,HOSP-KA-037,Bengaluru,Karnataka,12.94066,77.55149,+91 26 28495152,True,450,True
+38,Mumbai Government Medical College #38,HOSP-MA-038,Mumbai,Maharashtra,19.03062,72.87517,+91 87 26373965,True,250,True
+39,Mumbai Government Medical College #39,HOSP-MA-039,Mumbai,Maharashtra,19.0434,72.85544,+91 27 26301090,False,250,True
+40,Delhi Super-Specialty Hospital #40,HOSP-DE-040,Delhi,Delhi,28.62244,77.24059,+91 24 24102889,False,2000,True
+41,Bengaluru Apex Trauma Hospital #41,HOSP-KA-041,Bengaluru,Karnataka,12.9667,77.58508,+91 43 28007482,False,250,True
+42,Noida Apex Trauma Hospital #42,HOSP-UT-042,Noida,Uttar Pradesh,28.51961,77.32285,+91 30 25251560,True,2000,True
+43,Bengaluru Super-Specialty Hospital #43,HOSP-KA-043,Bengaluru,Karnataka,12.90523,77.55431,+91 88 29000674,True,2000,True
+44,Mumbai District Civil Hospital #44,HOSP-MA-044,Mumbai,Maharashtra,19.12011,72.85856,+91 86 27597285,True,750,True
+45,Delhi Memorial Medical Institute #45,HOSP-DE-045,Delhi,Delhi,28.63144,77.24741,+91 91 25770207,True,750,True
+46,Noida Apex Trauma Hospital #46,HOSP-UT-046,Noida,Uttar Pradesh,28.48063,77.33881,+91 63 27779098,False,2000,True
+47,Chennai Super-Specialty Hospital #47,HOSP-TA-047,Chennai,Tamil Nadu,13.0493,80.22774,+91 20 29766202,True,450,True
+48,Bengaluru Memorial Medical Institute #48,HOSP-KA-048,Bengaluru,Karnataka,13.01765,77.61461,+91 65 24962813,True,2000,True
+49,Mumbai Apex Trauma Hospital #49,HOSP-MA-049,Mumbai,Maharashtra,19.09962,72.94305,+91 18 25391861,True,750,True
+50,Bengaluru Super-Specialty Hospital #50,HOSP-KA-050,Bengaluru,Karnataka,12.96186,77.58959,+91 45 28198264,False,2000,True

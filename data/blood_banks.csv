@@ -1,0 +1,51 @@
+id,name,license_number,district,state,latitude,longitude,contact_number,storage_capacity,cold_chain_verified,is_active
+1,Noida City Transfusion Blood Center #1,BB-UT-2026-001,Noida,Uttar Pradesh,28.4595,77.355,+91 28 21719583,500,True,True
+2,Delhi National Rotary Blood Center #2,BB-DE-2026-002,Delhi,Delhi,28.53867,77.16398,+91 88 20445199,800,True,True
+3,Kolkata Red Cross Regional Blood Center #3,BB-WE-2026-003,Kolkata,West Bengal,22.52787,88.37818,+91 31 27090293,1200,True,True
+4,Mumbai Red Cross Regional Blood Center #4,BB-MA-2026-004,Mumbai,Maharashtra,19.14915,72.85156,+91 59 21622631,1200,True,True
+5,Bengaluru National Rotary Blood Center #5,BB-KA-2026-005,Bengaluru,Karnataka,13.02074,77.63136,+91 26 26350753,500,True,True
+6,Hyderabad Red Cross Regional Blood Center #6,BB-TE-2026-006,Hyderabad,Telangana,17.39738,78.51943,+91 95 23823498,1200,True,True
+7,Mumbai Civil Hospital Blood Center #7,BB-MA-2026-007,Mumbai,Maharashtra,19.13464,72.85852,+91 92 26120868,800,True,True
+8,Mumbai Red Cross Regional Blood Center #8,BB-MA-2026-008,Mumbai,Maharashtra,19.10323,72.90999,+91 88 22871230,800,True,True
+9,Kolkata National Rotary Blood Center #9,BB-WE-2026-009,Kolkata,West Bengal,22.53579,88.43196,+91 39 25440561,500,True,True
+10,Delhi Red Cross Regional Blood Center #10,BB-DE-2026-010,Delhi,Delhi,28.66271,77.19319,+91 38 29515702,1200,True,True
+11,Chennai Civil Hospital Blood Center #11,BB-TA-2026-011,Chennai,Tamil Nadu,13.066,80.33703,+91 29 24443951,800,True,True
+12,Bengaluru National Rotary Blood Center #12,BB-KA-2026-012,Bengaluru,Karnataka,13.01112,77.58315,+91 62 26073292,800,True,True
+13,Gurugram Red Cross Regional Blood Center #13,BB-HA-2026-013,Gurugram,Haryana,28.46102,76.96115,+91 25 22564251,800,True,True
+14,Kolkata National Rotary Blood Center #14,BB-WE-2026-014,Kolkata,West Bengal,22.58803,88.34546,+91 70 28877065,1200,True,True
+15,Delhi National Rotary Blood Center #15,BB-DE-2026-015,Delhi,Delhi,28.64275,77.14733,+91 45 25707197,500,True,True
+16,Gurugram Apex Charitable Blood Center #16,BB-HA-2026-016,Gurugram,Haryana,28.4521,77.09921,+91 75 22997281,500,True,True
+17,Bengaluru City Transfusion Blood Center #17,BB-KA-2026-017,Bengaluru,Karnataka,13.02627,77.59583,+91 30 26273233,800,True,True
+18,Delhi Red Cross Regional Blood Center #18,BB-DE-2026-018,Delhi,Delhi,28.62973,77.20718,+91 57 25159230,800,False,True
+19,Noida Red Cross Regional Blood Center #19,BB-UT-2026-019,Noida,Uttar Pradesh,28.4692,77.38876,+91 79 22109911,800,True,True
+20,Gurugram Civil Hospital Blood Center #20,BB-HA-2026-020,Gurugram,Haryana,28.42191,77.08619,+91 38 29047886,800,True,True
+21,Kolkata Civil Hospital Blood Center #21,BB-WE-2026-021,Kolkata,West Bengal,22.65182,88.38788,+91 77 27574680,500,True,True
+22,Noida City Transfusion Blood Center #22,BB-UT-2026-022,Noida,Uttar Pradesh,28.50959,77.40513,+91 86 23694634,500,False,True
+23,Delhi Apex Charitable Blood Center #23,BB-DE-2026-023,Delhi,Delhi,28.57053,77.27387,+91 20 28626108,800,True,True
+24,Chennai National Rotary Blood Center #24,BB-TA-2026-024,Chennai,Tamil Nadu,13.03698,80.21187,+91 84 27930103,800,True,True
+25,Kolkata Civil Hospital Blood Center #25,BB-WE-2026-025,Kolkata,West Bengal,22.52307,88.29941,+91 56 27106470,2000,True,True
+26,Delhi Red Cross Regional Blood Center #26,BB-DE-2026-026,Delhi,Delhi,28.64164,77.28647,+91 18 26754864,1200,True,True
+27,Noida Civil Hospital Blood Center #27,BB-UT-2026-027,Noida,Uttar Pradesh,28.49529,77.34143,+91 28 27077999,800,True,True
+28,Mumbai National Rotary Blood Center #28,BB-MA-2026-028,Mumbai,Maharashtra,19.13592,72.80976,+91 23 20848731,500,True,True
+29,Mumbai City Transfusion Blood Center #29,BB-MA-2026-029,Mumbai,Maharashtra,19.02261,72.8754,+91 62 20983738,800,True,True
+30,Kolkata Civil Hospital Blood Center #30,BB-WE-2026-030,Kolkata,West Bengal,22.53503,88.40935,+91 47 27096887,2000,True,True
+31,Bengaluru National Rotary Blood Center #31,BB-KA-2026-031,Bengaluru,Karnataka,12.92643,77.52396,+91 18 25261415,500,False,True
+32,Chennai City Transfusion Blood Center #32,BB-TA-2026-032,Chennai,Tamil Nadu,13.08316,80.32714,+91 18 28519948,500,True,True
+33,Noida City Transfusion Blood Center #33,BB-UT-2026-033,Noida,Uttar Pradesh,28.55071,77.41903,+91 62 22011363,800,True,True
+34,Delhi National Rotary Blood Center #34,BB-DE-2026-034,Delhi,Delhi,28.633,77.19608,+91 83 28770838,1200,True,True
+35,Mumbai Apex Charitable Blood Center #35,BB-MA-2026-035,Mumbai,Maharashtra,19.10316,72.84797,+91 61 22195773,1200,True,True
+36,Noida National Rotary Blood Center #36,BB-UT-2026-036,Noida,Uttar Pradesh,28.45699,77.41039,+91 23 21229110,800,True,True
+37,Gurugram City Transfusion Blood Center #37,BB-HA-2026-037,Gurugram,Haryana,28.52882,77.08754,+91 58 24781295,800,True,True
+38,Bengaluru National Rotary Blood Center #38,BB-KA-2026-038,Bengaluru,Karnataka,12.98947,77.67256,+91 12 29304682,1200,True,True
+39,Noida Red Cross Regional Blood Center #39,BB-UT-2026-039,Noida,Uttar Pradesh,28.60573,77.33249,+91 24 29281552,800,True,True
+40,Mumbai Apex Charitable Blood Center #40,BB-MA-2026-040,Mumbai,Maharashtra,19.11082,72.83028,+91 75 28196204,1200,True,True
+41,Delhi Apex Charitable Blood Center #41,BB-DE-2026-041,Delhi,Delhi,28.54867,77.19677,+91 16 20059486,1200,True,True
+42,Bengaluru Civil Hospital Blood Center #42,BB-KA-2026-042,Bengaluru,Karnataka,12.91745,77.58529,+91 82 20162230,500,False,True
+43,Gurugram National Rotary Blood Center #43,BB-HA-2026-043,Gurugram,Haryana,28.46679,77.08014,+91 81 22484601,2000,True,True
+44,Bengaluru Red Cross Regional Blood Center #44,BB-KA-2026-044,Bengaluru,Karnataka,12.94994,77.66389,+91 56 23524499,800,True,True
+45,Hyderabad Civil Hospital Blood Center #45,BB-TE-2026-045,Hyderabad,Telangana,17.42982,78.54816,+91 90 22592974,800,True,True
+46,Gurugram Apex Charitable Blood Center #46,BB-HA-2026-046,Gurugram,Haryana,28.52053,76.95057,+91 63 24163555,1200,True,True
+47,Noida Civil Hospital Blood Center #47,BB-UT-2026-047,Noida,Uttar Pradesh,28.51671,77.3172,+91 39 23348276,2000,True,True
+48,Mumbai Civil Hospital Blood Center #48,BB-MA-2026-048,Mumbai,Maharashtra,19.03167,72.90331,+91 53 24674183,500,True,True
+49,Bengaluru National Rotary Blood Center #49,BB-KA-2026-049,Bengaluru,Karnataka,12.94778,77.5961,+91 53 20463060,500,True,True
+50,Bengaluru Apex Charitable Blood Center #50,BB-KA-2026-050,Bengaluru,Karnataka,12.92017,77.66861,+91 15 21818692,2000,True,True

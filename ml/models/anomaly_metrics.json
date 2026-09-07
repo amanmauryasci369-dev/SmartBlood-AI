@@ -1,0 +1,12 @@
+{
+  "model_name": "Transfusion Consumption & Inventory Drop Anomaly Detector",
+  "model_type": "IsolationForest",
+  "contamination_rate": 0.03,
+  "n_samples_analyzed": 20000,
+  "detected_historical_anomalies": 600,
+  "features": [
+    "units_consumed",
+    "seasonal_dengue_index"
+  ],
+  "use_case": "Detect unseasonal surges, sudden mass casualty spikes, and abnormal inventory drop rates"
+}

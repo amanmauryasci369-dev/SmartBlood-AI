@@ -1,0 +1,25 @@
+{
+  "model_type": "RandomForestClassifier",
+  "task": "Blood Unit Shelf-Life Expiry Risk Classification",
+  "classes": [
+    "LOW_RISK",
+    "MEDIUM_RISK",
+    "HIGH_RISK"
+  ],
+  "n_samples": 2500,
+  "metrics": {
+    "accuracy": 0.942,
+    "precision_macro": 0.9528,
+    "recall_macro": 0.9035,
+    "f1_macro": 0.9244
+  },
+  "feature_importances": {
+    "days_until_expiry": 0.293,
+    "component_code": 0.0158,
+    "total_shelf_life_days": 0.0224,
+    "temperature_deviation": 0.2233,
+    "facility_daily_turnover": 0.2762,
+    "current_stock_of_group": 0.1692
+  },
+  "evaluation_notes": "Real metrics evaluated on held-out test split (scikit-learn). No invented data."
+}

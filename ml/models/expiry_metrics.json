@@ -1,0 +1,30 @@
+{
+  "model_name": "FEFO Expiry Spoilage Risk Classifier",
+  "model_type": "RandomForestClassifier",
+  "classes": [
+    "LOW_RISK",
+    "MEDIUM_RISK",
+    "HIGH_RISK"
+  ],
+  "n_samples": 10000,
+  "evaluation_metrics": {
+    "accuracy": 1.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0
+  },
+  "features": [
+    "days_remaining",
+    "total_shelf_days",
+    "comp_code",
+    "units_available",
+    "temperature_celsius"
+  ],
+  "feature_importances": {
+    "days_remaining": 0.6505,
+    "total_shelf_days": 0.1188,
+    "comp_code": 0.0868,
+    "units_available": 0.0012,
+    "temperature_celsius": 0.1427
+  }
+}
