@@ -11,6 +11,7 @@ import {
 } from './types';
 import { ApiService } from './services/api';
 import { Navbar, NavTab } from './components/Navbar';
+import { DemoModeBanner } from './components/common/DemoModeBanner';
 import { HomePage } from './components/home/HomePage';
 import { BloodSearchSection } from './components/home/BloodSearchSection';
 import { BloodCenterDirectoryPage } from './components/directory/BloodCenterDirectoryPage';
@@ -181,6 +182,9 @@ export const App: React.FC = () => {
         onOpenMetrics={() => setIsMetricsModalOpen(true)}
         backendHealthy={backendHealthy}
       />
+
+      {/* Demo Mode & Authoritative Sources Provenance Disclosure */}
+      <DemoModeBanner />
 
       {/* 2. Main Content Body */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">

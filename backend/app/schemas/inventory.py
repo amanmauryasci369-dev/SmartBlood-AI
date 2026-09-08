@@ -15,6 +15,14 @@ class InventoryItemBase(BaseModel):
     temperature_celsius: float = 4.0
     is_quarantined: bool = False
     source_tag: str = "DIRECT_BANK_LOG"
+    inventory_status: Optional[str] = "DEMO_SIMULATED"
+    demo_notice: Optional[str] = "Simulated data for demonstration only"
+    critical_threshold: Optional[int] = 5
+    days_to_expiry: Optional[int] = None
+    expiry_risk: Optional[str] = "LOW"
+    stock_source: Optional[str] = "Simulated Demonstration Stock"
+    stock_source_url: Optional[str] = "https://eraktkosh.mohfw.gov.in/"
+    stock_last_updated: Optional[str] = None
 
 
 class InventoryItemCreate(InventoryItemBase):

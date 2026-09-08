@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.core.config import UserRole
 from app.core.database import get_db
-from app.core.deps import get_current_user, require_roles
+from app.core.deps import get_current_user, get_current_user_optional, require_roles
 from app.models.facility import BloodBank, Hospital
 from app.models.user import User
 from app.schemas.facility import (
@@ -20,7 +20,7 @@ router = APIRouter()
 def list_blood_banks(
     district: str = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     """List blood banks, optionally filtered by district."""
     query = db.query(BloodBank).filter(BloodBank.is_active == True)
@@ -53,7 +53,7 @@ def create_blood_bank(
 def list_hospitals(
     district: str = None,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     """List hospitals, optionally filtered by district."""
     query = db.query(Hospital).filter(Hospital.is_active == True)

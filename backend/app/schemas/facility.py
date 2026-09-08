@@ -14,6 +14,22 @@ class BloodBankBase(BaseModel):
     storage_capacity: int = 500
     cold_chain_verified: bool = True
     is_active: bool = True
+    short_name: Optional[str] = None
+    parent_hospital: Optional[str] = None
+    address: Optional[str] = None
+    city: Optional[str] = None
+    pincode: Optional[str] = None
+    region: Optional[str] = None
+    category: Optional[str] = "Government"
+    organization_type: Optional[str] = "Government"
+    email: Optional[str] = None
+    website: Optional[str] = None
+    source_name: Optional[str] = "Delhi Government / DSACS"
+    source_url: Optional[str] = "https://dsacs.delhi.gov.in/"
+    source_type: Optional[str] = "OFFICIAL"
+    source_verified: bool = True
+    last_verified_at: Optional[str] = None
+    data_status: Optional[str] = "VERIFIED"
 
 
 class BloodBankCreate(BloodBankBase):

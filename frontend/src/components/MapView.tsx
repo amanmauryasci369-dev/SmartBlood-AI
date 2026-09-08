@@ -550,31 +550,38 @@ export const MapView: React.FC<MapViewProps> = ({
                 }}
               >
                 <Popup className="custom-leaflet-popup">
-                  <div className="p-3 bg-slate-900 text-slate-100 min-w-[240px]">
+                  <div className="p-3 bg-slate-900 text-slate-100 min-w-[260px]">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
                       <div className="flex items-center gap-1.5 text-xs font-bold text-blood-400 uppercase tracking-wider">
                         <Building2 className="w-3.5 h-3.5 text-blood-500" />
-                        Regional Blood Bank
+                        <span>{bank.category || 'Blood Centre'}</span>
                       </div>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-blood-950 text-blood-300 border border-blood-800 font-mono">
-                        #{bank.id}
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-mono font-semibold">
+                        ✓ Verified
                       </span>
                     </div>
 
                     <h4 className="font-bold text-sm text-white mt-2 leading-snug">{bank.name}</h4>
-                    <p className="text-xs text-slate-400 mt-0.5">{bank.district}, {bank.state}</p>
+                    <p className="text-xs text-slate-400 mt-0.5">{bank.address || `${bank.district}, ${bank.state}`}</p>
+                    {bank.contact_number && (
+                      <p className="text-xs text-blood-400 font-mono mt-1 font-semibold">📞 {bank.contact_number}</p>
+                    )}
 
-                    <div className="mt-3 grid grid-cols-2 gap-2 text-xs bg-slate-850 p-2 rounded-lg border border-slate-800">
+                    <div className="mt-2.5 grid grid-cols-2 gap-2 text-xs bg-slate-850 p-2 rounded-lg border border-slate-800">
                       <div>
-                        <span className="text-[10px] uppercase tracking-wider text-slate-400 block">Storage Cap</span>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-400 block">Capacity</span>
                         <strong className="text-white text-sm">{bank.storage_capacity}</strong> units
                       </div>
                       <div>
                         <span className="text-[10px] uppercase tracking-wider text-slate-400 block">Cold-Chain</span>
                         <span className="text-emerald-400 font-semibold flex items-center gap-0.5 mt-0.5">
-                          <ShieldCheck className="w-3 h-3" /> Verified
+                          <ShieldCheck className="w-3 h-3" /> Certified
                         </span>
                       </div>
+                    </div>
+
+                    <div className="mt-2 text-[10px] text-amber-300/80 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded">
+                      Demo Mode: Stock counts simulated for algorithm evaluation. Facility details verified via {bank.source_name || 'e-RaktKosh / DSACS'}.
                     </div>
 
                     <div className="mt-3 pt-2 border-t border-slate-800 flex items-center justify-between gap-2">

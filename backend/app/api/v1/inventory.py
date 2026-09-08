@@ -6,7 +6,7 @@ from sqlalchemy import func
 
 from app.core.config import AvailabilityStatus, BloodGroup, ComponentType, UserRole
 from app.core.database import get_db
-from app.core.deps import get_current_user, require_roles
+from app.core.deps import get_current_user, get_current_user_optional, require_roles
 from app.models.user import User
 from app.models.facility import BloodBank
 from app.models.inventory import BloodInventory
@@ -31,7 +31,7 @@ def get_inventory(
     component: Optional[ComponentType] = None,
     status_filter: Optional[AvailabilityStatus] = Query(None, alias="status"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: Optional[User] = Depends(get_current_user_optional)
 ):
     """Retrieve blood inventory with strict status distinction filters."""
     query = db.query(BloodInventory)

@@ -30,14 +30,30 @@ export interface User {
 export interface BloodBank {
   id: number;
   name: string;
+  short_name?: string;
+  parent_hospital?: string;
   license_number: string;
   district: string;
   state: string;
+  address?: string;
+  city?: string;
+  pincode?: string;
+  region?: string;
+  category?: string;
+  organization_type?: string;
   latitude: number;
   longitude: number;
   contact_number: string;
+  email?: string;
+  website?: string;
   storage_capacity: number;
   cold_chain_verified: boolean;
+  source_name?: string;
+  source_url?: string;
+  source_type?: string;
+  source_verified?: boolean;
+  last_verified_at?: string;
+  data_status?: string;
   is_active: boolean;
 }
 
@@ -70,6 +86,14 @@ export interface InventoryItem {
   last_verified_by_user_id?: number;
   verified_at?: string;
   created_at: string;
+  inventory_status?: 'DEMO_SIMULATED' | 'OFFICIAL_LIVE' | 'REPORTED' | string;
+  demo_notice?: string;
+  critical_threshold?: number;
+  days_to_expiry?: number;
+  expiry_risk?: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  stock_source?: string;
+  stock_source_url?: string;
+  stock_last_updated?: string;
 }
 
 export interface FacilityRecommendation {

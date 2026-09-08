@@ -44,8 +44,16 @@ class BloodInventory(Base):
     last_verified_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     verified_at = Column(DateTime, nullable=True)
     
-    # Ingestion provenance
+    # Ingestion provenance & Demo Separation
     source_tag = Column(String, default="DIRECT_BANK_LOG", nullable=False)
+    inventory_status = Column(String, default="DEMO_SIMULATED", nullable=False, index=True)
+    demo_notice = Column(String, default="Simulated data for demonstration only", nullable=True)
+    critical_threshold = Column(Integer, default=5, nullable=False)
+    days_to_expiry = Column(Integer, nullable=True)
+    expiry_risk = Column(String, default="LOW", nullable=True, index=True)
+    stock_source = Column(String, default="Simulated Demonstration Stock", nullable=True)
+    stock_source_url = Column(String, default="https://eraktkosh.mohfw.gov.in/", nullable=True)
+    stock_last_updated = Column(String, nullable=True)
     
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     updated_at = Column(
