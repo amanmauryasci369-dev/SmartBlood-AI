@@ -313,29 +313,25 @@ export const App: React.FC = () => {
 
       </main>
 
-      {/* 4. Official Government of India e-RaktKosh Portal Footer */}
-      <footer className="bg-slate-900 text-slate-300 mt-16 text-xs border-t-4 border-[#800020]">
+      {/* 4. Professional Healthcare Footer (Reference Section 24) */}
+      <footer className="bg-slate-900 text-white mt-14 border-t border-slate-800 text-xs">
         
-        {/* Top Government Portals Affiliation Strip */}
-        <div className="bg-slate-950 border-b border-slate-800 py-3 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400">
-            <span className="font-bold text-slate-300 uppercase tracking-wider">National Healthcare Portals:</span>
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-              <a href="https://mohfw.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                Ministry of Health & Family Welfare (MoHFW)
-              </a>
-              <a href="https://nhm.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                National Health Mission (NHM)
-              </a>
+        {/* National Portal Top Bar */}
+        <div className="bg-slate-950/80 border-b border-slate-800/80 py-3 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Official National Health Mission Integrated Platform</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-4 text-slate-400">
               <a href="https://india.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
-                National Portal of India (india.gov.in)
+                National Portal of India
               </a>
               <a href="https://digitalindia.gov.in" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">
                 Digital India
               </a>
-              <a href="https://eraktkosh.mohfw.gov.in" target="_blank" rel="noreferrer" className="text-red-400 font-bold hover:underline">
-                Official e-RaktKosh Portal
-              </a>
+              <span className="text-slate-500">&bull;</span>
+              <span className="text-slate-400 font-medium">Ministry of Health &amp; Family Welfare</span>
             </div>
           </div>
         </div>
@@ -345,146 +341,154 @@ export const App: React.FC = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
-            {/* Column 1: Government & Portal Identity */}
-            <div className="space-y-3.5">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-[#800020] flex items-center justify-center text-white font-black text-xs">
-                  eR
+            {/* Column 1: LifeLink Primary Platform Identity */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-[#9B001B] flex items-center justify-center text-white shadow-xs">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                    <path d="M12 2.5C12 2.5 6 9.5 6 14C6 17.3137 8.68629 20 12 20C15.3137 20 18 17.3137 18 14C18 9.5 12 2.5 12 2.5Z" fill="#ffffff" />
+                    <path d="M8.5 14H10.5L11.5 11.5L12.5 16.5L13.5 14H15.5" stroke="#9B001B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
                 <div>
-                  <div className="text-[10px] uppercase font-bold tracking-wider text-slate-400">National Health Mission</div>
-                  <div className="text-base font-black text-white">
-                    <span>e-Rakt</span>
-                    <span className="text-red-500">Kosh</span>
-                    <span className="text-xs font-normal text-slate-400 ml-1.5">| LifeLink</span>
+                  <div className="text-lg font-black text-white tracking-tight leading-none">LifeLink</div>
+                  <div className="text-[10px] font-semibold text-rose-300 tracking-wide mt-0.5">
+                    Connect &bull; Donate &bull; Save
                   </div>
                 </div>
               </div>
 
               <p className="text-xs text-slate-400 leading-relaxed">
-                LifeLink is an intelligent hospital and blood resource network integrated with official e-RaktKosh standards, promoting voluntary blood donation and zero wastage through deterministic FEFO allocation.
+                Autonomous AI blood resource intelligence, FEFO shelf-life prioritization, and emergency inter-hospital allocation system.
               </p>
 
               {/* 24x7 Helplines Badge */}
-              <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 space-y-1">
-                <div className="text-[10px] uppercase font-bold text-red-400 tracking-wider flex items-center gap-1">
-                  <PhoneCall className="w-3 h-3 text-red-400" />
-                  <span>24x7 Emergency Helplines (India)</span>
+              <div className="p-3.5 rounded-xl bg-slate-800/90 border border-slate-700/80 space-y-1">
+                <div className="text-[10px] uppercase font-extrabold text-rose-400 tracking-wider flex items-center gap-1.5">
+                  <PhoneCall className="w-3.5 h-3.5 text-red-500 animate-pulse" />
+                  <span>24x7 Emergency Helplines</span>
                 </div>
-                <div className="text-sm font-black text-white font-mono flex items-center gap-3">
-                  <span>104 (Health)</span>
-                  <span>•</span>
-                  <span>108 / 112 (Ambulance)</span>
+                <div className="text-base font-black text-white font-mono flex items-center gap-2.5 pt-0.5">
+                  <span className="text-rose-400">104</span>
+                  <span className="text-slate-600">/</span>
+                  <span className="text-rose-400">108</span>
+                  <span className="text-[10px] font-normal text-slate-400 font-sans ml-1">(Toll-Free National)</span>
                 </div>
               </div>
             </div>
 
-            {/* Column 2: Looking for Blood */}
+            {/* Column 2: Quick Links */}
             <div>
-              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                <span>Looking for Blood</span>
+              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs border-b border-slate-800 pb-2">
+                Quick Links
               </h4>
-              <ul className="space-y-2 text-slate-400">
+              <ul className="space-y-2.5 text-slate-400">
                 <li>
-                  <button onClick={() => setActiveTab('find-blood')} className="hover:text-red-400 cursor-pointer flex items-center gap-1.5">
-                    <span>Blood Availability</span>
+                  <button onClick={() => setActiveTab('find-blood')} className="hover:text-white cursor-pointer transition-colors flex items-center gap-1.5">
+                    <span>Looking for Blood</span>
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('patient-request')} className="text-red-400 font-bold hover:text-red-300 cursor-pointer flex items-center gap-1">
-                    <span>Smart Blood Allocation (FEFO)</span>
+                  <button onClick={() => setActiveTab('donation-camps')} className="hover:text-white cursor-pointer transition-colors">
+                    Donate Blood
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('blood-centers')} className="hover:text-red-400 cursor-pointer">
-                    Blood Center Directory
+                  <button onClick={() => setActiveTab('blood-centers')} className="hover:text-white cursor-pointer transition-colors">
+                    Blood Centres
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('nearby')} className="hover:text-red-400 cursor-pointer">
-                    Nearby Centers (GIS Map)
+                  <button onClick={() => {
+                    setRole('HOSPITAL');
+                    setActiveTab('hospital-exchange');
+                  }} className="hover:text-white cursor-pointer transition-colors">
+                    Hospital Desk (H2H Exchange)
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('emergency-request')} className="text-red-400 font-bold hover:underline cursor-pointer">
-                    Emergency Blood Requisition (SOS)
+                  <button onClick={() => setActiveTab('ai-insights')} className="hover:text-white cursor-pointer transition-colors">
+                    AI Insights
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => setIsSOSModalOpen(true)} className="text-red-400 font-extrabold hover:text-red-300 cursor-pointer transition-colors">
+                    Emergency SOS &rarr;
                   </button>
                 </li>
               </ul>
             </div>
 
-            {/* Column 3: Want to Donate */}
+            {/* Column 3: Portals & Roles */}
             <div>
-              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                <span>Want to Donate</span>
+              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs border-b border-slate-800 pb-2">
+                Clinical &amp; Citizen Portals
               </h4>
-              <ul className="space-y-2 text-slate-400">
+              <ul className="space-y-2.5 text-slate-400">
                 <li>
-                  <button onClick={() => setActiveTab('donation-camps')} className="hover:text-red-400 cursor-pointer">
-                    Blood Donation Camps
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => setActiveTab('donors')} className="hover:text-red-400 cursor-pointer">
-                    Donor Directory & Matching
+                  <button onClick={() => {
+                    setRole('DONOR');
+                    setActiveTab('donors');
+                  }} className="hover:text-white cursor-pointer transition-colors">
+                    Donor Profile Portal
                   </button>
                 </li>
                 <li>
                   <button onClick={() => {
-                    authenticateRole('DONOR');
-                    setActiveTab('admin-dashboard');
-                  }} className="hover:text-red-400 cursor-pointer">
-                    Donor Login / Profile
-                  </button>
-                </li>
-                <li>
-                  <span className="text-slate-500">Voluntary Blood Donation Guidelines</span>
-                </li>
-                <li>
-                  <span className="text-slate-500">Universal Donor (O-Negative) Protocols</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Column 4: Clinical & Institutional Login */}
-            <div>
-              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs flex items-center gap-1.5 border-b border-slate-800 pb-2">
-                <span>Clinical & Portals</span>
-              </h4>
-              <ul className="space-y-2 text-slate-400">
-                <li>
-                  <button onClick={() => {
-                    authenticateRole('HOSPITAL');
-                    setActiveTab('hospital-network');
-                  }} className="hover:text-red-400 cursor-pointer">
-                    Hospital Transfusion Desk (H2H)
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => {
-                    authenticateRole('BLOOD_BANK');
+                    setRole('BLOOD_BANK');
                     setActiveTab('inventory');
-                  }} className="hover:text-red-400 cursor-pointer">
-                    Blood Bank Officer Portal
+                  }} className="hover:text-white cursor-pointer transition-colors">
+                    Blood Bank Officer Desk
                   </button>
                 </li>
                 <li>
                   <button onClick={() => {
-                    authenticateRole('ADMIN');
+                    setRole('HOSPITAL');
+                    setActiveTab('hospital-network');
+                  }} className="hover:text-white cursor-pointer transition-colors">
+                    Hospital Network Registry
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => {
+                    setRole('ADMIN');
                     setActiveTab('admin-dashboard');
-                  }} className="hover:text-red-400 cursor-pointer">
-                    State Command Administrator
+                  }} className="hover:text-white cursor-pointer transition-colors">
+                    Admin Command Center
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setActiveTab('wastage-analytics')} className="hover:text-red-400 cursor-pointer">
-                    Wastage Reports & Audit
+                  <button onClick={() => setActiveTab('wastage-analytics')} className="hover:text-white cursor-pointer transition-colors">
+                    Wastage Reports &amp; Audit
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 4: Resources & Governance */}
+            <div>
+              <h4 className="font-bold text-white uppercase tracking-wider mb-3.5 text-xs border-b border-slate-800 pb-2">
+                Resources &amp; System
+              </h4>
+              <ul className="space-y-2.5 text-slate-400">
+                <li>
+                  <button onClick={() => setActiveTab('about')} className="hover:text-white cursor-pointer transition-colors">
+                    About LifeLink
                   </button>
                 </li>
                 <li>
-                  <button onClick={() => setIsMetricsModalOpen(true)} className="hover:text-purple-400 cursor-pointer text-purple-300">
-                    AI Scikit-Learn Model Metrics
+                  <button onClick={() => setIsMetricsModalOpen(true)} className="hover:text-rose-400 cursor-pointer text-rose-300 transition-colors">
+                    AI Scikit-Learn Validation
                   </button>
+                </li>
+                <li>
+                  <span className="text-slate-500">Help &amp; Documentation</span>
+                </li>
+                <li>
+                  <span className="text-slate-500">Privacy &amp; Data Security</span>
+                </li>
+                <li>
+                  <span className="text-slate-500">Terms of Clinical Decision Support</span>
                 </li>
               </ul>
             </div>
@@ -494,10 +498,10 @@ export const App: React.FC = () => {
           {/* Compliance & Copyright Disclaimers */}
           <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-[11px] text-slate-500">
             <p>
-              Website content managed and hosted by National Health Mission & Ministry of Health and Family Welfare (MoHFW), Government of India.
+              Website content managed and hosted by National Health Mission &amp; Ministry of Health and Family Welfare (MoHFW), Government of India.
             </p>
             <p className="text-slate-400 font-medium">
-              LifeLink — Smart Hospital & Blood Network &bull; Prototype 2026.
+              LifeLink &bull; Connect &bull; Donate &bull; Save &bull; Production Release 2026.
             </p>
           </div>
 

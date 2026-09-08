@@ -28,7 +28,8 @@ import {
   ShieldCheck,
   CheckCircle2,
   Activity,
-  FileText
+  FileText,
+  Settings
 } from 'lucide-react';
 
 export type NavTab = 
@@ -113,26 +114,27 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           
           {/* Left: Government of India & LifeLink Platform Identity */}
-          <div className="flex items-center gap-4 sm:gap-6 shrink-0">
+          <div className="flex items-center gap-4 sm:gap-5 shrink-0">
             
             {/* Government of India Emblem & MoHFW Text */}
             <div 
               onClick={() => onTabChange('home')}
               className="flex items-center gap-2.5 cursor-pointer select-none"
             >
-              {/* Ashoka Stambh SVG Graphic */}
-              <div className="w-9 h-9 shrink-0 flex items-center justify-center rounded-lg bg-slate-50 border border-slate-200">
-                <Building2 className="w-5 h-5 text-slate-800" />
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center p-0.5">
+                <img 
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/55/Emblem_of_India.svg" 
+                  alt="Emblem of India" 
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                />
               </div>
 
               <div className="text-left">
-                <div className="text-[11px] font-bold text-slate-900 leading-tight">
-                  स्वास्थ्य एवं परिवार कल्याण मंत्रालय
-                </div>
-                <div className="text-[10px] font-bold text-slate-700 uppercase tracking-tight">
+                <div className="text-[11px] font-bold text-slate-800 leading-tight">
                   Ministry of Health and Family Welfare
                 </div>
-                <div className="text-[9px] text-slate-500 font-medium">
+                <div className="text-[9.5px] text-slate-500 font-medium">
                   Government of India
                 </div>
               </div>
@@ -145,26 +147,26 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => onTabChange('home')}
               className="flex items-center gap-2.5 cursor-pointer select-none group"
             >
-              <img 
-                src="/favicon.svg" 
-                alt="LifeLink Logo" 
-                className="w-8 h-8 rounded-lg shadow-xs group-hover:scale-105 transition-transform" 
-              />
+              <div className="w-8 h-8 rounded-lg bg-[#9B001B] flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                  <path d="M12 2.5C12 2.5 6 9.5 6 14C6 17.3137 8.68629 20 12 20C15.3137 20 18 17.3137 18 14C18 9.5 12 2.5 12 2.5Z" fill="#ffffff" />
+                  <path d="M8.5 14H10.5L11.5 11.5L12.5 16.5L13.5 14H15.5" stroke="#9B001B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
               <div className="text-left">
-                <div className="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 leading-tight">
-                  National Health Mission
+                <div className="text-lg font-black text-slate-900 tracking-tight leading-none flex items-center">
+                  <span>LifeLink</span>
                 </div>
-                <div className="text-lg font-black tracking-tight leading-none flex items-center">
-                  <span className="text-[#800020]">Life</span><span className="text-red-600">Link</span>
-                  <span className="ml-1.5 px-1.5 py-0.5 rounded bg-red-50 text-red-700 text-[9px] font-black uppercase border border-red-200">AI</span>
+                <div className="text-[9.5px] font-semibold text-slate-500 tracking-wide mt-0.5">
+                  Connect &bull; Donate &bull; Save
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* Right: National Helplines, Language Toggle, and Status Indicators */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0 text-xs">
+          {/* Right: National Helplines, Language Toggle, Status, and Login */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0 text-xs">
             
             {/* 24x7 Official Blood & Health Helplines */}
             <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-xs text-[#800020]">
@@ -174,20 +176,20 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* System Status Pill */}
-            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-[11px]">
-              <span className={`w-2 h-2 rounded-full ${backendHealthy ? 'bg-emerald-500' : 'bg-amber-400'} inline-block`}></span>
-              <span className="text-slate-600 font-mono font-semibold">
-                {backendHealthy ? 'MoHFW Network Live' : 'Reconnecting...'}
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[11px]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+              <span className="text-emerald-800 font-semibold">
+                MoHFW Network Live
               </span>
             </div>
 
             {/* Language Switcher [ EN | HI ] */}
-            <div className="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs font-bold">
+            <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs font-bold">
               <button 
                 type="button"
                 onClick={() => setLang('EN')}
-                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                  lang === 'EN' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
+                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                  lang === 'EN' ? 'bg-white text-slate-900 shadow-2xs font-extrabold' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 EN
@@ -195,8 +197,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button 
                 type="button"
                 onClick={() => setLang('HI')}
-                className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
-                  lang === 'HI' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-800'
+                className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                  lang === 'HI' ? 'bg-white text-slate-900 shadow-2xs font-extrabold' : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 HI
@@ -235,6 +237,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               )}
             </div>
+
+            {/* Login / Register Pill Button */}
+            <button
+              type="button"
+              onClick={() => {
+                onRoleChange('ADMIN');
+                handleNavClick('admin-dashboard');
+              }}
+              className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#800020] hover:bg-[#660018] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            >
+              <UserIcon className="w-3.5 h-3.5" />
+              <span>Login / Register</span>
+            </button>
 
             {/* Mobile Hamburger Button */}
             <button
@@ -531,21 +546,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* HOSPITAL BLOOD EXCHANGE (FEFO Peer Network) */}
-            {/* // TODO: Re-enable hospital authentication and role-based access before production. */}
             <button
               type="button"
-              onClick={() => {
-                handleNavClick('hospital-exchange');
-              }}
-              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer border ${
+              onClick={() => handleNavClick('hospital-exchange')}
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'hospital-exchange'
-                  ? 'bg-white text-[#800020] font-black border-white shadow-sm'
-                  : 'bg-black/20 hover:bg-black/30 text-white font-bold border-white/20'
+                  ? 'bg-black/30 text-white font-bold border-b-2 border-white'
+                  : 'text-white/90 hover:bg-black/10 hover:text-white'
               }`}
             >
-              <Hospital className="w-3.5 h-3.5 text-blue-200" />
-              <span>HOSPITAL BLOOD EXCHANGE</span>
-              <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400 text-slate-900 font-extrabold">
+              <span>Hospital Blood Exchange</span>
+              <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-yellow-400 text-slate-900 font-extrabold uppercase shadow-2xs">
                 FEFO
               </span>
             </button>
@@ -556,45 +567,58 @@ export const Navbar: React.FC<NavbarProps> = ({
               onClick={() => handleNavClick('ai-insights')}
               className={`px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
                 activeTab === 'ai-insights'
-                  ? 'bg-black/20 text-white font-bold border-b-2 border-white'
+                  ? 'bg-black/30 text-white font-bold border-b-2 border-white'
                   : 'text-white/90 hover:bg-black/10 hover:text-white'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
               <span>AI Insights</span>
+            </button>
+
+            {/* Find Blood */}
+            <button
+              type="button"
+              onClick={() => handleNavClick('find-blood')}
+              className={`px-3 py-2 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+                activeTab === 'find-blood'
+                  ? 'bg-black/30 text-white font-bold border-b-2 border-white'
+                  : 'text-white/90 hover:bg-black/10 hover:text-white'
+              }`}
+            >
+              <span>Find Blood</span>
             </button>
 
           </nav>
 
           {/* Right Action Buttons on Maroon Bar */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             
-            {/* Quick Find Blood Shortcut */}
-            <button
-              type="button"
-              onClick={() => handleNavClick('find-blood')}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer border border-white/20"
-            >
-              <Search className="w-3.5 h-3.5" />
-              <span>Find Blood</span>
-            </button>
-
             {/* Emergency SOS Button */}
             <button
               type="button"
               onClick={onOpenSOSModal}
               id="emergency-sos-btn"
-              className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 uppercase tracking-wider cursor-pointer border border-red-400"
+              className="px-3.5 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 uppercase tracking-wider cursor-pointer border border-red-400/80"
             >
               <AlertTriangle className="w-3.5 h-3.5 text-white animate-bounce" />
               <span>Emergency SOS</span>
             </button>
 
-            {/* Active User / Role Badge */}
-            <div className="hidden md:flex items-center gap-1 px-2.5 py-1 rounded-md bg-black/20 text-white text-[11px] font-medium border border-white/10">
-              {roleConfig[currentRole].icon}
-              <span>{roleConfig[currentRole].label}</span>
-            </div>
+            {/* Admin Command */}
+            <button
+              type="button"
+              onClick={() => {
+                onRoleChange('ADMIN');
+                handleNavClick('admin-dashboard');
+              }}
+              className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                activeTab === 'admin-dashboard'
+                  ? 'bg-white text-[#800020] font-bold shadow-xs'
+                  : 'bg-black/20 hover:bg-black/30 text-white border border-white/10'
+              }`}
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Admin Command</span>
+            </button>
 
           </div>
 

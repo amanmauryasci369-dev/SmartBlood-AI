@@ -20,6 +20,7 @@ import {
   Layers,
   ArrowRight
 } from 'lucide-react';
+import { LiveNetworkStatusCard } from './LiveNetworkStatusCard';
 
 interface BloodSearchSectionProps {
   onOpenSOSModal: () => void;
@@ -333,93 +334,32 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
   return (
     <div id="blood-search-section" className="w-full space-y-6">
       
-      {/* e-RaktKosh Blood Availability Portal Container */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Search Blood Availability & Live Network Status Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
         
-        {/* Portal Subheader Breadcrumbs & Citizen Verification Notice */}
-        <div className="px-6 sm:px-8 py-3.5 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-1.5 text-slate-500 font-medium">
-            <span className="hover:text-[#800020] cursor-pointer" onClick={() => onNavigateToTab?.('home')}>Home</span>
-            <span>/</span>
-            <span className="text-slate-600">Looking for Blood</span>
-            <span>/</span>
-            <span className="text-[#800020] font-bold">Blood Availability</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-              <CheckCircle2 className="w-3 h-3" />
-              <span>MoHFW & NBTC Certified Feeds</span>
-            </span>
-
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedState('Delhi');
-                setSelectedDistrict('Central Delhi');
-                setSelectedGroup('All');
-                setSelectedComponent('Packed Red Blood Cells');
-                setHasSearched(true);
-                setCurrentPage(1);
-              }}
-              className="px-2.5 py-1 rounded-md bg-red-50 hover:bg-red-100 text-[#800020] text-[11px] font-bold transition-all cursor-pointer border border-red-200"
-            >
-              Demo Search (Delhi)
-            </button>
-          </div>
-        </div>
-
-        {/* 2. Main Search Body */}
-        <div className="p-6 sm:p-8 space-y-6">
+        {/* Left: Search Blood Availability Card (Reference Section 6) */}
+        <div className="lg:col-span-7 bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs space-y-4 flex flex-col justify-between">
           
-          {/* Main Title: Blood Availability */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+            <div className="w-10 h-10 rounded-full bg-[#9B001B] text-white flex items-center justify-center shadow-xs shrink-0">
+              <Search className="w-5 h-5" />
+            </div>
             <div>
-              <h2 className="text-2xl sm:text-3xl font-black text-[#800020] tracking-tight">
-                Blood Availability
+              <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                Search Blood Availability
               </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Real-time stock query across authorized regional blood banks and transfusion centers.
+              <p className="text-xs text-slate-500 font-medium">
+                Get real-time information from verified blood centres
               </p>
             </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">Citizen Public Portal</span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                <CheckCircle2 className="w-3 h-3" />
-                <span>Verified Stock Feeds</span>
-              </span>
-            </div>
           </div>
 
-          {/* 3. Search Form Controls Grid (Faithfully replicating the screenshot) */}
-          <form onSubmit={handleSearch} className="space-y-4">
-            
-            {/* Top Row: 5 Form Controls */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
+          <form onSubmit={handleSearch} className="space-y-4 pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
               
-              {/* Select Services */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Services
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedService}
-                    onChange={(e) => setSelectedService(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020] cursor-pointer pr-8"
-                  >
-                    <option value="Blood Availability">Blood Availability</option>
-                    <option value="Blood Center Directory">Blood Center Directory</option>
-                    <option value="Blood Donation Camps">Blood Donation Camps</option>
-                  </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-3 pointer-events-none" />
-                </div>
-              </div>
-
               {/* Select State */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
                   Select State
                 </label>
                 <div className="relative">
@@ -429,9 +369,9 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
                       setSelectedState(e.target.value);
                       setSelectedDistrict('Select');
                     }}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020] cursor-pointer pr-8"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#9B001B] focus:border-[#9B001B] cursor-pointer pr-8"
                   >
-                    <option value="Select">Select</option>
+                    <option value="Select">-- State --</option>
                     {Object.keys(stateDistrictsMap).map((st) => (
                       <option key={st} value={st}>{st}</option>
                     ))}
@@ -442,7 +382,7 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
 
               {/* Select District */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
                   Select District
                 </label>
                 <div className="relative">
@@ -450,9 +390,9 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
                     value={selectedDistrict}
                     onChange={(e) => setSelectedDistrict(e.target.value)}
                     disabled={selectedState === 'Select'}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020] cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 pr-8"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#9B001B] focus:border-[#9B001B] cursor-pointer disabled:bg-slate-100 disabled:text-slate-400 pr-8"
                   >
-                    <option value="Select">Select</option>
+                    <option value="Select">-- District --</option>
                     {availableDistricts.map((dist) => (
                       <option key={dist} value={dist}>{dist}</option>
                     ))}
@@ -461,32 +401,18 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
                 </div>
               </div>
 
-              {/* Select Blood Center */}
+              {/* Blood Group */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Blood Center
-                </label>
-                <input
-                  type="text"
-                  value={centerSearchInput}
-                  onChange={(e) => setCenterSearchInput(e.target.value)}
-                  placeholder="Type hospital name"
-                  className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020]"
-                />
-              </div>
-
-              {/* Select Blood Group */}
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Blood Group
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  Blood Group
                 </label>
                 <div className="relative">
                   <select
                     value={selectedGroup}
                     onChange={(e) => setSelectedGroup(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020] cursor-pointer pr-8"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#9B001B] focus:border-[#9B001B] cursor-pointer pr-8"
                   >
-                    <option value="All">All</option>
+                    <option value="All">-- Select --</option>
                     <option value="A+">A+</option>
                     <option value="A-">A-</option>
                     <option value="B+">B+</option>
@@ -500,22 +426,18 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
                 </div>
               </div>
 
-            </div>
-
-            {/* Second Row: Component & Search Button */}
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-              
-              {/* Select Blood Component */}
-              <div className="md:col-span-10">
-                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Select Blood Component
+              {/* Component */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">
+                  Component
                 </label>
                 <div className="relative">
                   <select
                     value={selectedComponent}
                     onChange={(e) => setSelectedComponent(e.target.value)}
-                    className="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#800020] focus:border-[#800020] cursor-pointer pr-8"
+                    className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-800 font-medium appearance-none focus:outline-none focus:ring-1 focus:ring-[#9B001B] focus:border-[#9B001B] cursor-pointer pr-8"
                   >
+                    <option value="Packed Red Blood Cells">-- Select --</option>
                     <option value="Packed Red Blood Cells">Packed Red Blood Cells</option>
                     <option value="Whole Blood">Whole Blood</option>
                     <option value="Platelet Concentrate">Platelet Concentrate</option>
@@ -526,20 +448,45 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
                 </div>
               </div>
 
-              {/* Search Button */}
-              <div className="md:col-span-2">
-                <button
-                  type="submit"
-                  className="w-full bg-[#800020] hover:bg-[#68001a] active:bg-[#520014] text-white font-bold text-xs py-2 px-6 rounded-lg transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2 tracking-wide uppercase"
-                >
-                  <Search className="w-3.5 h-3.5" />
-                  <span>Search</span>
-                </button>
-              </div>
-
             </div>
 
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedState('Delhi');
+                  setSelectedDistrict('Central Delhi');
+                  setSelectedGroup('All');
+                  setSelectedComponent('Packed Red Blood Cells');
+                  setHasSearched(true);
+                  setCurrentPage(1);
+                }}
+                className="text-[11px] font-semibold text-[#9B001B] hover:underline cursor-pointer"
+              >
+                Quick Fill Demo (Delhi NCR)
+              </button>
+
+              <button
+                type="submit"
+                className="px-6 py-2.5 rounded-xl bg-[#9B001B] hover:bg-[#800016] text-white font-extrabold text-xs transition-all cursor-pointer shadow-xs flex items-center gap-2 uppercase tracking-wider"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span>Search</span>
+              </button>
+            </div>
           </form>
+
+        </div>
+
+        {/* Right: Live Network Status Card (Reference Section 7) */}
+        <div className="lg:col-span-5">
+          <LiveNetworkStatusCard bloodBanks={bloodBanks} inventory={inventory} />
+        </div>
+
+      </div>
+
+      {/* Results Container (Shows automatically or when searched) */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden p-6 sm:p-8 space-y-6">
 
           {/* 4. Selected Fields Pills & Quick Search Box */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
@@ -893,8 +840,6 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
           </div>
 
         </div>
-
-      </div>
 
       {/* Details Modal */}
       {selectedModalRow && (
