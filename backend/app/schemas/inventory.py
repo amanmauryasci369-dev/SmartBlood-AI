@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Union
 from pydantic import BaseModel, Field, ConfigDict
 from app.core.config import AvailabilityStatus, BloodGroup, ComponentType
 
@@ -23,7 +23,7 @@ class InventoryItemCreate(InventoryItemBase):
 
 class InventoryItemResponse(InventoryItemBase):
     id: int
-    status: AvailabilityStatus
+    status: Union[AvailabilityStatus, str]
     last_verified_by_user_id: Optional[int] = None
     verified_at: Optional[datetime] = None
     created_at: datetime

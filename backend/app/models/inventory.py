@@ -27,7 +27,10 @@ class BloodInventory(Base):
         index=True
     )
     screening_status = Column(String, default="cleared", nullable=False, index=True)
+    storage_status = Column(String, default="proper", nullable=False, index=True)
     blood_bank_name = Column(String, nullable=True)
+    hospital_id = Column(Integer, ForeignKey("hospitals.id"), nullable=True, index=True)
+    hospital_name = Column(String, nullable=True)
     city = Column(String, nullable=True)
     
     collected_date = Column(Date, nullable=False)

@@ -23,6 +23,7 @@ import { MapView } from './components/MapView';
 import { BRAND } from './constants/branding';
 import { LifeLinkLogo } from './components/common/LifeLinkLogo';
 import { SmartBloodAllocationPage } from './components/patient/SmartBloodAllocationPage';
+import { HospitalBloodExchangePage } from './components/hospital/HospitalBloodExchangePage';
 
 import { AdminDashboard } from './components/dashboards/AdminDashboard';
 import { BloodBankDashboard } from './components/dashboards/BloodBankDashboard';
@@ -53,7 +54,9 @@ import {
   Users,
   ShieldCheck,
   AlertTriangle,
-  Info
+  Info,
+  Droplets,
+  Building2
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -144,10 +147,19 @@ export const App: React.FC = () => {
     setRole(newRole);
     if (newRole === 'ADMIN') setActiveTab('admin-dashboard');
     else if (newRole === 'BLOOD_BANK') setActiveTab('inventory');
-    else if (newRole === 'HOSPITAL') setActiveTab('hospital-network');
+    else if (newRole === 'HOSPITAL') setActiveTab('hospital-exchange');
     else if (newRole === 'DONOR') setActiveTab('donors');
     else if (newRole === 'PATIENT') setActiveTab('patient-request');
   };
+
+  // Role-Based Route Protection (Rule 1)
+  // If non-hospital user attempts to access hospital-exchange, redirect to appropriate tab
+  useEffect(() => {
+    if (activeTab === 'hospital-exchange' && role !== 'HOSPITAL') {
+      console.warn(`RBAC Enforcement: Role '${role}' is not authorized for Hospital Blood Exchange. Redirecting...`);
+      setActiveTab('home');
+    }
+  }, [activeTab, role]);
 
   const handleDispatchConfirmed = (dispatch: any) => {
     setActiveDispatch(dispatch);
@@ -181,6 +193,16 @@ export const App: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
+            <button
+              onClick={() => {
+                setActiveTab('hospital-exchange');
+                setRole('HOSPITAL');
+              }}
+              className="px-2.5 py-1 rounded-lg bg-[#800020] hover:bg-[#600018] text-white border border-[#800020] text-[11px] font-black transition-all cursor-pointer flex items-center gap-1 shadow-xs"
+            >
+              <Droplets className="w-3 h-3 text-amber-300" />
+              <span>Hospital Blood Exchange (FEFO)</span>
+            </button>
             <button
               onClick={() => {
                 setActiveTab('emergency-request');
@@ -319,6 +341,13 @@ export const App: React.FC = () => {
 
         {activeTab === 'wastage-analytics' && (
           <WastageAnalyticsPage />
+        )}
+
+        {activeTab === 'hospital-exchange' && (
+          <HospitalBloodExchangePage
+            currentRole={role}
+            onRoleSwitch={handleRoleChange}
+          />
         )}
 
         {activeTab === 'hospital-network' && (

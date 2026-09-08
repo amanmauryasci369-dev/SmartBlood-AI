@@ -8,6 +8,7 @@ from app.models.shelf_life import ComponentShelfLifeRule
 from app.models.wastage import WastageRecord
 from app.models.hospital_network import HospitalBloodRequest, HospitalRequestMessage
 from app.models.system_config import SystemConfiguration
+from app.models.exchange import BloodRequest, BloodRequestItem
 
 __all__ = [
     "User",
@@ -22,6 +23,8 @@ __all__ = [
     "WastageRecord",
     "HospitalBloodRequest",
     "HospitalRequestMessage",
-    "SystemConfiguration"
+    "SystemConfiguration",
+    "BloodRequest",
+    "BloodRequestItem"
 ]
 

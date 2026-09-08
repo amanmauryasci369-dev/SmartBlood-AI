@@ -48,7 +48,8 @@ export type NavTab =
   | 'admin-dashboard'
   | 'admin-configuration'
   | 'about'
-  | 'patient-request';
+  | 'patient-request'
+  | 'hospital-exchange';
 
 interface NavbarProps {
   currentRole: UserRole;
@@ -509,9 +510,46 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <UserIcon className="w-4 h-4 text-cyan-700" />
                     <span>Citizen / Patient Portal</span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onRoleChange('HOSPITAL');
+                      handleNavClick('hospital-exchange');
+                    }}
+                    className="w-full text-left px-4 py-2 hover:bg-red-50 hover:text-[#800020] flex items-center gap-2 cursor-pointer font-bold text-blue-800 bg-blue-50/50"
+                  >
+                    <Hospital className="w-4 h-4 text-blue-700" />
+                    <div>
+                      <div className="font-black text-blue-950">Hospital Blood Exchange</div>
+                      <div className="text-[10px] text-slate-500 font-normal">FEFO Peer Wastage-Reduction Network</div>
+                    </div>
+                  </button>
                 </div>
               )}
             </div>
+
+            {/* HOSPITAL BLOOD EXCHANGE (FEFO Peer Network) */}
+            <button
+              type="button"
+              onClick={() => {
+                if (currentRole !== 'HOSPITAL') {
+                  onRoleChange('HOSPITAL');
+                }
+                handleNavClick('hospital-exchange');
+              }}
+              className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer border ${
+                activeTab === 'hospital-exchange'
+                  ? 'bg-white text-[#800020] font-black border-white shadow-sm'
+                  : 'bg-black/20 hover:bg-black/30 text-white font-bold border-white/20'
+              }`}
+            >
+              <Hospital className="w-3.5 h-3.5 text-blue-200" />
+              <span>HOSPITAL BLOOD EXCHANGE</span>
+              <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-400 text-slate-900 font-extrabold">
+                FEFO
+              </span>
+            </button>
 
             {/* AI Insights Direct Link */}
             <button
@@ -625,6 +663,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="pt-2 border-t border-slate-200 space-y-1">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider px-2">Clinical & Hospital Portals</div>
             
+            <button
+              type="button"
+              onClick={() => {
+                onRoleChange('HOSPITAL');
+                handleNavClick('hospital-exchange');
+              }}
+              className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-blue-900 bg-blue-50 border border-blue-200 flex items-center justify-between cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <Hospital className="w-3.5 h-3.5 text-blue-700" />
+                <span>Hospital Blood Exchange (H2H)</span>
+              </div>
+              <span className="text-[9px] px-1.5 py-0.2 bg-blue-600 text-white rounded font-mono font-bold">FEFO</span>
+            </button>
+
             <button
               type="button"
               onClick={() => handleNavClick('hospital-network')}

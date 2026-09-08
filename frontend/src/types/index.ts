@@ -403,3 +403,70 @@ export interface SystemConfigItem {
   description: string;
   updated_at?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Hospital Blood Exchange (H2H FEFO Module)
+// ---------------------------------------------------------------------------
+
+export interface ExchangeUnitCard {
+  id: number;
+  unit_code: string;
+  blood_group: string;
+  component: string;
+  quantity_ml: number;
+  providing_hospital_id?: number;
+  providing_hospital_name: string;
+  city: string;
+  collection_date: string;
+  expiration_date: string;
+  days_until_expiry: number;
+  urgency_label: string; // "Critical Expiry", "Expiring Soon", "Use Soon", "Normal"
+  urgency_color: string;
+  status: string;
+  is_recommended_allocation: boolean;
+}
+
+export interface ExchangeSearchResult {
+  requested_blood_group: string;
+  requested_component: string;
+  requested_quantity: number;
+  available_units_count: number;
+  shortage_units_count: number;
+  is_fully_fulfillable: boolean;
+  wastage_prevention_message: string;
+  recommended_units: ExchangeUnitCard[];
+  all_eligible_units: ExchangeUnitCard[];
+}
+
+export interface RequestItemDetail {
+  id: number;
+  blood_inventory_id: number;
+  unit_code: string;
+  expiration_date: string;
+  days_until_expiry: number;
+}
+
+export interface ExchangeRequestCard {
+  id: number;
+  requesting_hospital_id: number;
+  requesting_hospital_name: string;
+  providing_hospital_id?: number;
+  providing_hospital_name?: string;
+  blood_group: string;
+  component: string;
+  quantity_requested: number;
+  required_by?: string;
+  status: 'pending' | 'accepted' | 'rejected' | 'cancelled' | 'fulfilled';
+  created_at: string;
+  allocated_units: RequestItemDetail[];
+}
+
+export interface WastagePreventionDashboard {
+  total_available_units: number;
+  expiring_within_3_days: number;
+  expiring_within_7_days: number;
+  expiring_within_30_days: number;
+  prioritized_early_utilization_units: number;
+  headline: string;
+}
+

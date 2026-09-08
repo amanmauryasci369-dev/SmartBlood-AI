@@ -17,7 +17,10 @@ import {
   HospitalRequestMessage,
   HospitalNetworkOverview,
   ComponentShelfLifeRule,
-  SystemConfigItem
+  SystemConfigItem,
+  ExchangeSearchResult,
+  ExchangeRequestCard,
+  WastagePreventionDashboard
 } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api/v1';
@@ -365,5 +368,69 @@ export class ApiService {
       method: 'PUT',
       body: JSON.stringify({ configs }),
     });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Hospital Blood Exchange Methods (H2H FEFO Module)
+  // ---------------------------------------------------------------------------
+
+  static async verifyHospitalAccess(): Promise<any> {
+    return this.request<any>('/hospital-exchange/verify-access');
+  }
+
+  static async searchHospitalExchange(params: {
+    blood_group: string;
+    component: string;
+    required_quantity: number;
+    search_location?: string;
+  }): Promise<ExchangeSearchResult> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('blood_group', params.blood_group);
+    searchParams.append('component', params.component);
+    searchParams.append('required_quantity', String(params.required_quantity));
+    if (params.search_location && params.search_location.trim()) {
+      searchParams.append('search_location', params.search_location.trim());
+    }
+    return this.request<ExchangeSearchResult>(`/hospital-exchange/search?${searchParams.toString()}`);
+  }
+
+  static async createHospitalExchangeRequest(payload: {
+    providing_hospital_id: number;
+    providing_hospital_name: string;
+    blood_group: string;
+    component: string;
+    quantity_requested: number;
+    required_by?: string;
+    search_location?: string;
+    selected_unit_ids: number[];
+  }): Promise<any> {
+    return this.request<any>('/hospital-exchange/request', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  static async getIncomingExchangeRequests(): Promise<ExchangeRequestCard[]> {
+    return this.request<ExchangeRequestCard[]>('/hospital-exchange/incoming-requests');
+  }
+
+  static async getMyExchangeRequests(): Promise<ExchangeRequestCard[]> {
+    return this.request<ExchangeRequestCard[]>('/hospital-exchange/my-requests');
+  }
+
+  static async acceptExchangeRequest(requestId: number): Promise<any> {
+    return this.request<any>(`/hospital-exchange/requests/${requestId}/accept`, {
+      method: 'POST',
+    });
+  }
+
+  static async rejectExchangeRequest(requestId: number): Promise<any> {
+    return this.request<any>(`/hospital-exchange/requests/${requestId}/reject`, {
+      method: 'POST',
+    });
+  }
+
+  static async getExchangeWastageOverview(): Promise<WastagePreventionDashboard> {
+    return this.request<WastagePreventionDashboard>('/hospital-exchange/inventory-overview');
   }
 }
