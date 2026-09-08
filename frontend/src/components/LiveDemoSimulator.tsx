@@ -131,10 +131,10 @@ export const LiveDemoSimulator: React.FC<LiveDemoSimulatorProps> = ({ onComplete
           ) : isCompleted ? (
             <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" />
-              <span>Full 19-step SIH scenario completed! Route rendered on GIS map.</span>
+              <span>Full 19-step live scenario completed! Route rendered on GIS map.</span>
             </span>
           ) : (
-            <span className="text-slate-400">Click below to trigger the autonomous 19-step end-to-end SIH demonstration.</span>
+            <span className="text-slate-400">Click below to trigger the autonomous 19-step end-to-end demonstration.</span>
           )}
         </div>
 
