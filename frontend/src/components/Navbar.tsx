@@ -108,11 +108,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header ref={navRef} className="sticky top-0 z-40 w-full bg-white shadow-md">
       
-      {/* 1. Official National Government Header Strip (e-RaktKosh & MoHFW) */}
+      {/* 1. Official National Government Header Strip (MoHFW & LifeLink) */}
       <div className="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-8 py-2">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           
-          {/* Left: Emblem of India & National Health Mission e-RaktKosh Logo */}
+          {/* Left: Government of India & LifeLink Platform Identity */}
           <div className="flex items-center gap-4 sm:gap-6 shrink-0">
             
             {/* Government of India Emblem & MoHFW Text */}
@@ -140,22 +140,23 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <div className="hidden sm:block h-8 w-px bg-slate-200" />
 
-            {/* National Health Mission + e-RaktKosh Co-branding */}
+            {/* LifeLink Primary Branding */}
             <div 
               onClick={() => onTabChange('home')}
-              className="flex items-center gap-2.5 cursor-pointer select-none"
+              className="flex items-center gap-2.5 cursor-pointer select-none group"
             >
-              <div className="w-8 h-8 rounded-full bg-[#800020] flex items-center justify-center text-white font-black text-xs shadow-xs">
-                eR
-              </div>
+              <img 
+                src="/favicon.svg" 
+                alt="LifeLink Logo" 
+                className="w-8 h-8 rounded-lg shadow-xs group-hover:scale-105 transition-transform" 
+              />
               <div className="text-left">
                 <div className="text-[9px] font-extrabold uppercase tracking-wider text-slate-500 leading-tight">
                   National Health Mission
                 </div>
-                <div className="text-base font-black text-[#800020] tracking-tight flex items-center gap-1">
-                  <span>e-Rakt</span>
-                  <span className="text-red-600">Kosh</span>
-                  <span className="text-[10px] font-semibold text-slate-400 ml-1">| LifeLink</span>
+                <div className="text-lg font-black tracking-tight leading-none flex items-center">
+                  <span className="text-[#800020]">Life</span><span className="text-red-600">Link</span>
+                  <span className="ml-1.5 px-1.5 py-0.5 rounded bg-red-50 text-red-700 text-[9px] font-black uppercase border border-red-200">AI</span>
                 </div>
               </div>
             </div>
@@ -218,7 +219,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {notificationsOpen && (
                 <div className="absolute right-0 mt-2 w-72 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 text-xs">
                   <div className="px-3 py-1 font-bold text-slate-700 border-b border-slate-100 flex items-center justify-between">
-                    <span>e-RaktKosh Bulletins</span>
+                    <span>LifeLink Bulletins</span>
                     <span className="text-[10px] font-mono text-red-600 font-bold">2 Live Updates</span>
                   </div>
                   <div className="divide-y divide-slate-100">
@@ -250,7 +251,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       </div>
 
-      {/* 2. Authentic e-RaktKosh Primary Maroon Navigation Bar */}
+      {/* 2. Authentic Primary Maroon Navigation Bar */}
       <div className="bg-[#800020] text-white shadow-inner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-12">
           
@@ -270,7 +271,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               Home
             </button>
 
-            {/* About e-Raktkosh Dropdown */}
+            {/* About Dropdown */}
             <div className="relative">
               <button
                 type="button"
@@ -281,7 +282,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     : 'text-white/90 hover:bg-black/10 hover:text-white'
                 }`}
               >
-                <span>About e-Raktkosh</span>
+                <span>About</span>
                 <ChevronDown className="w-3.5 h-3.5 opacity-80" />
               </button>
 
@@ -293,7 +294,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className="w-full text-left px-4 py-2 hover:bg-red-50 hover:text-[#800020] flex items-center gap-2 cursor-pointer font-medium"
                   >
                     <FileText className="w-4 h-4 text-[#800020]" />
-                    <span>About LifeLink & e-RaktKosh</span>
+                    <span>About LifeLink</span>
                   </button>
                   <button
                     type="button"
