@@ -22,6 +22,7 @@ import { AboutPage } from './components/about/AboutPage';
 import { MapView } from './components/MapView';
 import { BRAND } from './constants/branding';
 import { LifeLinkLogo } from './components/common/LifeLinkLogo';
+import { SmartBloodAllocationPage } from './components/patient/SmartBloodAllocationPage';
 
 import { AdminDashboard } from './components/dashboards/AdminDashboard';
 import { BloodBankDashboard } from './components/dashboards/BloodBankDashboard';
@@ -144,7 +145,7 @@ export const App: React.FC = () => {
     else if (newRole === 'BLOOD_BANK') setActiveTab('inventory');
     else if (newRole === 'HOSPITAL') setActiveTab('hospital-network');
     else if (newRole === 'DONOR') setActiveTab('donors');
-    else if (newRole === 'PATIENT') setActiveTab('find-blood');
+    else if (newRole === 'PATIENT') setActiveTab('patient-request');
   };
 
   const handleDispatchConfirmed = (dispatch: any) => {
@@ -242,6 +243,10 @@ export const App: React.FC = () => {
             selectedFacility={selectedFacility}
             onSelectFacility={(fac) => setSelectedFacility(fac)}
           />
+        )}
+
+        {activeTab === 'patient-request' && (
+          <SmartBloodAllocationPage />
         )}
 
         {activeTab === 'find-blood' && (

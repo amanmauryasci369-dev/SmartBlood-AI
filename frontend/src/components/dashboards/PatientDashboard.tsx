@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { BloodGroup, ComponentType, InventoryItem, BloodBank } from '../../types';
 import { StatusBadge } from '../StatusBadge';
+import { SmartBloodAllocationPage } from '../patient/SmartBloodAllocationPage';
 import { 
   Search, 
   PhoneCall, 
   Building2, 
   ShieldCheck, 
   AlertCircle, 
-  HeartHandshake
+  HeartHandshake,
+  Droplets
 } from 'lucide-react';
 
 interface PatientDashboardProps {
@@ -19,6 +21,7 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
   inventory,
   bloodBanks,
 }) => {
+  const [activeSubTab, setActiveSubTab] = useState<'FEFO_ALLOCATION' | 'DIRECTORY'>('FEFO_ALLOCATION');
   const [selectedGroup, setSelectedGroup] = useState<BloodGroup>('O+');
   const [selectedComponent, setSelectedComponent] = useState<ComponentType>('PACKED_RED_BLOOD_CELLS');
 
@@ -28,6 +31,40 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
 
   return (
     <div className="space-y-6">
+      
+      {/* Patient View Tab Switcher */}
+      <div className="flex border-b border-slate-200 gap-4 text-xs font-bold">
+        <button
+          type="button"
+          onClick={() => setActiveSubTab('FEFO_ALLOCATION')}
+          className={`pb-3 flex items-center gap-1.5 border-b-2 transition-all cursor-pointer ${
+            activeSubTab === 'FEFO_ALLOCATION'
+              ? 'border-red-600 text-red-600'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Droplets className="w-4 h-4" />
+          <span>Smart Blood Allocation (FEFO Priority)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveSubTab('DIRECTORY')}
+          className={`pb-3 flex items-center gap-1.5 border-b-2 transition-all cursor-pointer ${
+            activeSubTab === 'DIRECTORY'
+              ? 'border-red-600 text-red-600'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <Search className="w-4 h-4" />
+          <span>General Center Directory</span>
+        </button>
+      </div>
+
+      {activeSubTab === 'FEFO_ALLOCATION' ? (
+        <SmartBloodAllocationPage />
+      ) : (
+        <div className="space-y-6">
       
       {/* Ethical Transparency Banner */}
       <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-1.5">
@@ -170,7 +207,8 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
           </div>
         </div>
       </div>
-
     </div>
-  );
+  )}
+</div>
+);
 };

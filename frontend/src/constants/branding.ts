@@ -54,5 +54,6 @@ export const BRAND = {
     'admin-dashboard': 'LifeLink | Dashboard',
     'admin-configuration': 'LifeLink | System Configuration',
     'about': 'LifeLink | About',
+    'patient-request': 'LifeLink | Smart Blood Allocation',
   } as Record<string, string>,
 };

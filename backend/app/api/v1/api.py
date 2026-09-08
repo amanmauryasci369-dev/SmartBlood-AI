@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from app.api.v1 import (
     auth, facilities, inventory, emergency, predictions, transfers, intelligence,
-    fefo_expiry, wastage, hospital_requests, admin_config
+    fefo_expiry, wastage, hospital_requests, admin_config, allocation
 )
 
 api_router = APIRouter()
@@ -12,6 +12,7 @@ api_router.include_router(emergency.router, prefix="/emergency", tags=["Emergenc
 api_router.include_router(predictions.router, prefix="/predictions", tags=["Predictive Analytics & ML"])
 api_router.include_router(transfers.router, prefix="/transfers", tags=["Inter-Facility Rebalancing"])
 api_router.include_router(intelligence.router, prefix="/intel", tags=["Smart Automation & AI Insights"])
+api_router.include_router(allocation.router, prefix="/allocation", tags=["Smart Blood Allocation (FEFO)"])
 
 # New Extension Routers
 api_router.include_router(fefo_expiry.router, tags=["Shelf-Life & FEFO Prioritization"])

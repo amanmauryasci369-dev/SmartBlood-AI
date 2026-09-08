@@ -46,7 +46,8 @@ export type NavTab =
   | 'wastage-analytics'
   | 'admin-dashboard'
   | 'admin-configuration'
-  | 'about';
+  | 'about'
+  | 'patient-request';
 
 interface NavbarProps {
   currentRole: UserRole;
@@ -74,15 +75,16 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const roleConfig: Record<UserRole, { label: string; icon: React.ReactNode; badge: string }> = {
-    ADMIN: { label: 'Regional Admin', icon: <Shield className="w-3.5 h-3.5" />, badge: 'bg-amber-100 text-amber-800' },
-    BLOOD_BANK: { label: 'Blood Center Officer', icon: <Building2 className="w-3.5 h-3.5" />, badge: 'bg-blue-100 text-blue-800' },
-    HOSPITAL: { label: 'Trauma & Hospital Desk', icon: <Hospital className="w-3.5 h-3.5" />, badge: 'bg-rose-100 text-rose-800' },
+    ADMIN: { label: 'Admin Command', icon: <Shield className="w-3.5 h-3.5" />, badge: 'bg-slate-900 text-white' },
+    BLOOD_BANK: { label: 'Blood Bank Officer', icon: <Building2 className="w-3.5 h-3.5" />, badge: 'bg-red-100 text-red-800' },
+    HOSPITAL: { label: 'Hospital Desk', icon: <Hospital className="w-3.5 h-3.5" />, badge: 'bg-blue-100 text-blue-800' },
     DONOR: { label: 'Registered Donor', icon: <Heart className="w-3.5 h-3.5" />, badge: 'bg-emerald-100 text-emerald-800' },
     PATIENT: { label: 'Citizen / Seeker', icon: <UserIcon className="w-3.5 h-3.5" />, badge: 'bg-cyan-100 text-cyan-800' },
   };
 
   const navItems: Array<{ id: NavTab; label: string }> = [
     { id: 'admin-dashboard', label: 'Dashboard' },
+    { id: 'patient-request', label: 'Patient Request' },
     { id: 'find-blood', label: 'Find Blood' },
     { id: 'blood-centers', label: 'Blood Centers' },
     { id: 'hospital-network', label: 'Hospitals' },

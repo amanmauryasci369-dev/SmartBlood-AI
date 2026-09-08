@@ -9,25 +9,31 @@ class BloodInventory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     facility_id = Column(Integer, ForeignKey("blood_banks.id"), nullable=False, index=True)
+    unit_code = Column(String, unique=True, index=True, nullable=True)
     blood_group = Column(SQLEnum(BloodGroup), nullable=False, index=True)
     component = Column(SQLEnum(ComponentType), nullable=False, index=True)
-    units_available = Column(Integer, nullable=False, default=0)
+    quantity_ml = Column(Integer, nullable=False, default=450)
+    units_available = Column(Integer, nullable=False, default=1)
     reserved_units = Column(Integer, nullable=False, default=0)
     issued_units = Column(Integer, nullable=False, default=0)
     expired_units = Column(Integer, nullable=False, default=0)
     batch_number = Column(String, unique=True, index=True, nullable=False)
     
-    # Clearly distinguished availability state (Rule 10)
+    # Clearly distinguished availability state ('available', 'reserved', 'used', 'expired')
     status = Column(
-        SQLEnum(AvailabilityStatus),
-        default=AvailabilityStatus.REPORTED,
+        String,
+        default="available",
         nullable=False,
         index=True
     )
+    screening_status = Column(String, default="cleared", nullable=False, index=True)
+    blood_bank_name = Column(String, nullable=True)
+    city = Column(String, nullable=True)
     
     collected_date = Column(Date, nullable=False)
     processing_date = Column(Date, nullable=True)
     expiry_date = Column(Date, nullable=False, index=True)
+    expiration_date = Column(Date, nullable=True, index=True)
     temperature_celsius = Column(Float, default=4.0, nullable=False)
     is_quarantined = Column(Boolean, default=False, nullable=False)
     
