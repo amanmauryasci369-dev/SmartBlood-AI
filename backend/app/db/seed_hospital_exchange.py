@@ -99,11 +99,9 @@ def seed_hospital_exchange():
             # Mandatory Demo Units:
             (1001, 'BL-1001', 'O+', 'Packed Red Blood Cells', 450, -40, 2,  'available', 'cleared', 'proper', 2, 'Delhi'),
             (1002, 'BL-1002', 'O+', 'Packed Red Blood Cells', 450, -37, 5,  'available', 'cleared', 'proper', 2, 'Delhi'),
-            (1003, 'BL-1003', 'O+', 'Packed Red Blood Cells', 450, -34, 8,  'available', 'cleared', 'proper', 3, 'Noida'),
-            (1004, 'BL-1004', 'O+', 'Packed Red Blood Cells', 450, -24, 18, 'available', 'cleared', 'proper', 5, 'Faridabad'),
-
-            # Critical Expiry (0-2d)
-            (1005, 'BL-1005', 'A+',  'Packed Red Blood Cells', 450, -40, 2, 'available', 'cleared', 'proper', 4, 'Ghaziabad'),
+            (1003, 'BL-1003', 'O+', 'Packed Red Blood Cells', 450, -33, 9,  'available', 'cleared', 'proper', 6, 'Delhi'),
+            (1004, 'BL-1004', 'O+', 'Packed Red Blood Cells', 450, -24, 18, 'available', 'cleared', 'proper', 7, 'Delhi'),
+            (1005, 'BL-1005', 'O+', 'Packed Red Blood Cells', 450, -45, -2, 'expired',   'cleared', 'proper', 2, 'Delhi'),
             (1006, 'BL-1006', 'B+',  'Platelets',              250, -4,  1, 'available', 'cleared', 'proper', 6, 'Delhi'),
             (1007, 'BL-1007', 'O-',  'Packed Red Blood Cells', 450, -41, 1, 'available', 'cleared', 'proper', 3, 'Noida'),
             (1008, 'BL-1008', 'AB+', 'Whole Blood',            450, -33, 2, 'available', 'cleared', 'proper', 7, 'Delhi'),
@@ -146,10 +144,10 @@ def seed_hospital_exchange():
             (1039, 'BL-1039', 'B-',  'Fresh Frozen Plasma',    300, -90, 275, 'available', 'cleared', 'proper', 5, 'Faridabad'),
             (1040, 'BL-1040', 'O+',  'Fresh Frozen Plasma',    300, -45, 320, 'available', 'cleared', 'proper', 11, 'Delhi'),
             (1041, 'BL-1041', 'A+',  'Whole Blood',            450, -10, 25, 'available', 'cleared', 'proper', 12, 'Noida'),
-            (1042, 'BL-1042', 'O+',  'Packed Red Blood Cells', 450, -12, 30, 'available', 'cleared', 'proper', 7, 'Delhi'),
+            (1042, 'BL-1042', 'O+',  'Packed Red Blood Cells', 450, -12, 30, 'available', 'cleared', 'proper', 7, 'Ghaziabad'),
 
             # Expired Units
-            (1043, 'BL-1043', 'O+',  'Packed Red Blood Cells', 450, -45, -3, 'expired',   'cleared', 'proper', 2, 'Delhi'),
+            (1043, 'BL-1043', 'O+',  'Packed Red Blood Cells', 450, -45, -3, 'expired',   'cleared', 'proper', 2, 'Noida'),
             (1044, 'BL-1044', 'A+',  'Whole Blood',            450, -40, -5, 'expired',   'cleared', 'proper', 3, 'Noida'),
             (1045, 'BL-1045', 'B+',  'Platelets',              250, -7,  -2, 'expired',   'cleared', 'proper', 4, 'Ghaziabad'),
             (1046, 'BL-1046', 'O-',  'Packed Red Blood Cells', 450, -44, -2, 'expired',   'cleared', 'proper', 6, 'Delhi'),
@@ -177,9 +175,9 @@ def seed_hospital_exchange():
             (1060, 'BL-1060', 'AB-', 'Whole Blood',            450, -12, 23, 'available', 'cleared', 'quarantine', 8, 'Gurugram'),
 
             # Additional Units (Normal shelf life > 20 days so demo units 1-4 take priority)
-            (1061, 'BL-1061', 'O+',  'Packed Red Blood Cells', 450, -20, 21, 'available', 'cleared', 'proper', 6, 'Delhi'),
+            (1061, 'BL-1061', 'O+',  'Packed Red Blood Cells', 450, -20, 21, 'available', 'cleared', 'proper', 6, 'Noida'),
             (1062, 'BL-1062', 'O+',  'Packed Red Blood Cells', 450, -18, 25, 'available', 'cleared', 'proper', 9, 'Noida'),
-            (1063, 'BL-1063', 'O+',  'Packed Red Blood Cells', 450, -15, 28, 'available', 'cleared', 'proper', 11, 'Delhi'),
+            (1063, 'BL-1063', 'O+',  'Packed Red Blood Cells', 450, -15, 28, 'available', 'cleared', 'proper', 11, 'Faridabad'),
             (1064, 'BL-1064', 'O+',  'Packed Red Blood Cells', 450, -12, 32, 'available', 'cleared', 'proper', 12, 'Noida'),
             (1065, 'BL-1065', 'O+',  'Platelets',              250, -2,  3,  'available', 'cleared', 'proper', 3, 'Noida'),
             (1066, 'BL-1066', 'O+',  'Fresh Frozen Plasma',    300, -120, 245, 'available', 'cleared', 'proper', 4, 'Ghaziabad'),

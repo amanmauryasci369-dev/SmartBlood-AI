@@ -163,24 +163,48 @@ def normalize_component(comp: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Protected Endpoints (Hospital-Only RBAC)
+# Endpoints (Hospital Blood Exchange - Prototype Demo Mode)
 # ---------------------------------------------------------------------------
 
-@router.get("/verify-access", summary="Verify Hospital Role Access")
+# TODO: Re-enable hospital authentication and role-based access before production.
+# For prototype/demo, allow any user (including ADMIN, demo accounts, or unauthenticated visitors)
+# to access Hospital Blood Exchange without RBAC restrictions.
+def get_prototype_user(db: Session = Depends(get_db)) -> User:
+    """
+    // TODO: Re-enable hospital authentication and role-based access before production.
+    Bypasses hospital role requirement for prototype demo.
+    Returns a demo hospital/admin user from the database or a default AIIMS demo account.
+    """
+    user = db.query(User).filter(User.role == UserRole.HOSPITAL).first()
+    if not user:
+        user = db.query(User).first()
+    if not user:
+        user = User(
+            id=1,
+            email="trauma@aiims.edu",
+            role=UserRole.HOSPITAL,
+            facility_id=1,
+            full_name="AIIMS Apex Trauma Center Desk",
+            is_active=True
+        )
+    return user
+
+
+@router.get("/verify-access", summary="Verify Hospital Role Access (Prototype Demo Mode)")
 def verify_hospital_access(
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """
-    Returns 200 OK if authenticated user is a verified HOSPITAL staff member.
-    Returns 403 Forbidden for patients, donors, blood banks, or unauthenticated users.
+    // TODO: Re-enable hospital authentication and role-based access before production.
+    Prototype/demo mode: always returns 200 OK allowing any role to preview the exchange.
     """
     return {
         "access_granted": True,
         "user_id": current_user.id,
         "email": current_user.email,
-        "role": current_user.role.value,
+        "role": current_user.role.value if hasattr(current_user, 'role') else "HOSPITAL",
         "hospital_id": current_user.facility_id or 1,
-        "hospital_name": "AIIMS Apex Trauma Center" if current_user.facility_id == 1 or not current_user.facility_id else "Participating Hospital Desk"
+        "hospital_name": "AIIMS Apex Trauma Center" if (current_user.facility_id == 1 or not current_user.facility_id) else "Participating Hospital Desk"
     }
 
 
@@ -191,7 +215,7 @@ def search_available_exchange_blood(
     required_quantity: int = Query(1, ge=1, description="Quantity of units"),
     search_location: Optional[str] = Query(None, description="Filter by city"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """
     Deterministic FEFO search logic (Rule 4, 5, 16):
@@ -262,7 +286,9 @@ def search_available_exchange_blood(
 
     # City filter if specified
     if search_location and search_location.strip():
-        query = query.filter(func.lower(BloodInventory.city) == search_location.strip().lower())
+        loc = search_location.strip().lower()
+        if loc not in ("all", "all locations"):
+            query = query.filter(func.lower(BloodInventory.city).like(f"%{loc}%"))
 
     # Deterministic FEFO Ordering: Earliest expiring first!
     query = query.order_by(
@@ -330,7 +356,7 @@ def search_available_exchange_blood(
 def create_exchange_request(
     payload: CreateExchangeRequestPayload,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """
     Atomic reservation preventing double booking (Rule 8 & 9):
@@ -426,7 +452,7 @@ def create_exchange_request(
 @router.get("/incoming-requests", response_model=List[ExchangeRequestCard], summary="Incoming Blood Requests for Providing Hospital")
 def get_incoming_requests(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """Fetch blood requests targeting the authenticated hospital's inventory (Rule 10)."""
     hosp_id = current_user.facility_id or 2  # Default to CityCare (2) or active hospital
@@ -481,7 +507,7 @@ def get_incoming_requests(
 @router.get("/my-requests", response_model=List[ExchangeRequestCard], summary="Outgoing Blood Requests from this Hospital")
 def get_my_requests(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """Fetch blood requests initiated by the authenticated hospital (Rule 11)."""
     hosp_id = current_user.facility_id or 1
@@ -537,7 +563,7 @@ def get_my_requests(
 def accept_blood_request(
     request_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """Accept incoming blood request (Rule 10)."""
     req = db.query(BloodRequest).filter(BloodRequest.id == request_id).first()
@@ -553,7 +579,7 @@ def accept_blood_request(
 def reject_blood_request(
     request_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """Reject blood request and restore reserved inventory units to 'available' (Rule 10)."""
     req = db.query(BloodRequest).filter(BloodRequest.id == request_id).first()
@@ -577,7 +603,7 @@ def reject_blood_request(
 @router.get("/inventory-overview", response_model=WastagePreventionDashboard, summary="Hospital Inventory & Wastage Insight")
 def get_inventory_wastage_overview(
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRole.HOSPITAL]))
+    current_user: User = Depends(get_prototype_user)
 ):
     """
     Inventory shelf-life buckets and wastage reduction insights (Rule 12 & 13):

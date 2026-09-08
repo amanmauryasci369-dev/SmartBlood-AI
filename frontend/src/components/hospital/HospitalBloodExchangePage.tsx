@@ -48,7 +48,7 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
   const [component, setComponent] = useState<string>('Packed Red Blood Cells');
   const [quantity, setQuantity] = useState<number>(3);
   const [requiredBy, setRequiredBy] = useState<string>('');
-  const [searchLocation, setSearchLocation] = useState<string>('');
+  const [searchLocation, setSearchLocation] = useState<string>('Delhi');
   const [searchRadius, setSearchRadius] = useState<string>('25 km');
   
   // Search Results & Loading
@@ -76,17 +76,16 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
   const [submittingRequest, setSubmittingRequest] = useState<boolean>(false);
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  // Check RBAC
-  const isAuthorized = currentRole === 'HOSPITAL';
+  // TODO: Re-enable hospital authentication and role-based access before production.
+  // Bypassed for prototype/demo so any user (including ADMIN or demo visitors) can access Hospital Blood Exchange:
+  const isAuthorized = true;
 
   // Load Initial Overview and Lists
   useEffect(() => {
-    if (isAuthorized) {
-      loadOverviewAndRequests();
-      // Auto-trigger search for the demo scenario
-      handleSearch();
-    }
-  }, [isAuthorized]);
+    loadOverviewAndRequests();
+    // Auto-trigger search for the demo scenario
+    handleSearch();
+  }, []);
 
   const loadOverviewAndRequests = async () => {
     setLoadingRequests(true);
@@ -119,7 +118,9 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
       });
       setSearchResults(result);
     } catch (err: any) {
-      setSearchError(err.message || 'Failed to query exchange inventory.');
+      console.error('Exchange search error:', err);
+      // User-friendly error message without raw database errors
+      setSearchError('Unable to fetch blood inventory. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -201,50 +202,8 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
   // ---------------------------------------------------------------------------
   // RBAC ACCESS GUARD (Rule 1)
   // ---------------------------------------------------------------------------
-  if (!isAuthorized) {
-    return (
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <div className="bg-white rounded-3xl border border-red-200 p-8 text-center shadow-lg space-y-6">
-          <div className="w-16 h-16 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600">
-            <Lock className="w-8 h-8" />
-          </div>
-          <div className="space-y-2">
-            <span className="px-3 py-1 rounded-full bg-red-100 text-red-800 text-xs font-bold uppercase tracking-wider">
-              Restricted Area • Hospital Staff Only
-            </span>
-            <h1 className="text-2xl font-black text-slate-900 mt-2">
-              HOSPITAL BLOOD EXCHANGE ACCESS RESTRICTED
-            </h1>
-            <p className="text-sm text-slate-600 max-w-xl mx-auto">
-              This module is strictly designated for authenticated hospital transfusion desks to coordinate peer blood exchange and eliminate inventory wastage.
-            </p>
-          </div>
-
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 max-w-md mx-auto text-left space-y-1">
-            <p className="font-bold flex items-center gap-1.5">
-              <ShieldAlert className="w-4 h-4 text-amber-700" />
-              Role-Based Access Control (RBAC) Enforced:
-            </p>
-            <p>Current Active Role: <span className="font-mono font-bold uppercase">{currentRole}</span></p>
-            <p>Required Access Role: <span className="font-mono font-bold text-red-700">HOSPITAL</span></p>
-          </div>
-
-          <div className="pt-2 flex flex-wrap justify-center gap-3">
-            {onRoleSwitch && (
-              <button
-                type="button"
-                onClick={() => onRoleSwitch('HOSPITAL')}
-                className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm shadow-md transition-all cursor-pointer flex items-center gap-2"
-              >
-                <Building2 className="w-4 h-4" />
-                <span>Switch to Hospital Role (AIIMS Desk)</span>
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // TODO: Re-enable hospital authentication and role-based access before production.
+  // Bypassed for prototype demo: Accessible to any user/role without restriction.
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
@@ -470,10 +429,10 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2.5 rounded-xl bg-[#800020] hover:bg-[#600018] text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2"
+                  className="px-6 py-2.5 rounded-xl bg-[#800020] hover:bg-[#600018] text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <Search className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-                  <span>{loading ? 'Searching Inventory...' : 'Search Available Blood'}</span>
+                  <span>{loading ? 'Searching available blood...' : 'Search Available Blood'}</span>
                 </button>
               </div>
             </form>
@@ -556,8 +515,41 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
             </div>
           )}
 
+          {/* Empty State when no units are available */}
+          {searchResults && searchResults.all_eligible_units.length === 0 && (
+            <div className="bg-white rounded-3xl border border-dashed border-slate-300 p-8 text-center space-y-4 shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto text-red-600">
+                <Droplets className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-base font-black text-slate-900">
+                  No eligible blood currently available.
+                </h3>
+                <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+                  No cleared, non-expired inventory units matched {searchResults.requested_blood_group} ({searchResults.requested_component}).
+                </p>
+              </div>
+              <div className="flex items-center justify-center gap-6 text-xs bg-slate-50 py-2.5 px-6 rounded-2xl max-w-sm mx-auto border border-slate-200">
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Requested</span>
+                  <span className="text-sm font-black text-slate-900">{searchResults.requested_quantity} units</span>
+                </div>
+                <div className="h-6 w-px bg-slate-300" />
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Available</span>
+                  <span className="text-sm font-black text-red-600">{searchResults.available_units_count} units</span>
+                </div>
+                <div className="h-6 w-px bg-slate-300" />
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-slate-400 block">Shortage</span>
+                  <span className="text-sm font-black text-red-600">{searchResults.shortage_units_count} units</span>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* 3. Results Grid of Cards (Rule 6) */}
-          {searchResults && (
+          {searchResults && searchResults.all_eligible_units.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs text-slate-500 font-bold px-1">
                 <span>Eligible Units Ranked by Expiry (First Expired, First Out)</span>
@@ -603,7 +595,7 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                         <span className="font-semibold text-slate-800 truncate max-w-[160px]">{unit.providing_hospital_name}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-slate-400">City / Hub:</span>
+                        <span className="text-slate-400">Location:</span>
                         <span className="font-semibold text-slate-800">{unit.city}</span>
                       </div>
                       <div className="flex items-center justify-between">
@@ -613,6 +605,13 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                       <div className="flex items-center justify-between">
                         <span className="text-slate-400">Expiration Date:</span>
                         <span className="font-mono font-bold text-slate-900">{unit.expiration_date}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400">Availability Status:</span>
+                        <span className="inline-flex items-center gap-1 font-bold text-emerald-700 capitalize">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                          {unit.status}
+                        </span>
                       </div>
                     </div>
 

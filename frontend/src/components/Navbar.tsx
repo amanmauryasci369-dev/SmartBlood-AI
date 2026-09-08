@@ -530,12 +530,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             {/* HOSPITAL BLOOD EXCHANGE (FEFO Peer Network) */}
+            {/* // TODO: Re-enable hospital authentication and role-based access before production. */}
             <button
               type="button"
               onClick={() => {
-                if (currentRole !== 'HOSPITAL') {
-                  onRoleChange('HOSPITAL');
-                }
                 handleNavClick('hospital-exchange');
               }}
               className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 cursor-pointer border ${
