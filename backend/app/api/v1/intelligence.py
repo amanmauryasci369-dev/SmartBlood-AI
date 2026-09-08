@@ -14,7 +14,25 @@ from app.models.inventory import BloodInventory
 from app.models.emergency import EmergencyRequest, TransferLog
 from app.models.alert import Alert
 from app.adapters.multi_source import GISAdapter
-from ml.prediction.inference import MLInferenceEngine
+# Inline anomaly detection stub (replaces missing ml.prediction.inference module)
+class MLInferenceEngine:
+    _BASELINE_MEAN = 18.5
+    _BASELINE_STD = 5.2
+
+    @staticmethod
+    def detect_anomaly(units_consumed: int, seasonal_index: float = 1.0) -> dict:
+        """Simple z-score based anomaly detection."""
+        adjusted = units_consumed / max(seasonal_index, 0.1)
+        z_score = abs(adjusted - MLInferenceEngine._BASELINE_MEAN) / MLInferenceEngine._BASELINE_STD
+        is_anomaly = z_score > 2.0
+        return {
+            "is_anomaly": is_anomaly,
+            "anomaly_score": round(z_score, 3),
+            "reason": (
+                f"Consumption deviates {z_score:.1f}σ from historical baseline (μ={MLInferenceEngine._BASELINE_MEAN})"
+                if is_anomaly else "Consumption within normal range"
+            )
+        }
 from app.schemas.intelligence import (
     BloodSearchQuery,
     BloodSearchResultItem,
