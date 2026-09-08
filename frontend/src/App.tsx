@@ -253,6 +253,8 @@ export const App: React.FC = () => {
           <BloodSearchSection
             onOpenSOSModal={() => setIsSOSModalOpen(true)}
             onNavigateToTab={setActiveTab}
+            bloodBanks={bloodBanks}
+            inventory={inventory}
           />
         )}
 
