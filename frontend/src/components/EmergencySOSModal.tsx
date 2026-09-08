@@ -105,28 +105,28 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
-      <div className="relative w-full max-w-3xl rounded-2xl bg-slate-900 border border-blood-600/40 shadow-2xl shadow-blood-950/50 overflow-hidden my-8">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
+      <div className="relative w-full max-w-3xl rounded-2xl bg-white border border-slate-200 shadow-2xl overflow-hidden my-8 text-slate-900">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-gradient-to-r from-blood-950/80 via-slate-900 to-slate-900">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-red-600 text-white">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-blood-600/30 border border-blood-500 flex items-center justify-center text-blood-400">
-              <AlertTriangle className="w-5 h-5 text-blood-400 animate-bounce" />
+            <div className="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center text-white shrink-0">
+              <AlertTriangle className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <h3 className="text-base font-black flex items-center gap-2">
                 Emergency Blood SOS Coordination
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-blood-500/20 text-blood-300 border border-blood-500/30">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wider">
                   Critical Priority
                 </span>
               </h3>
-              <p className="text-xs text-slate-400">Multi-criteria spatial matching & cold-chain verification engine</p>
+              <p className="text-xs text-white/80">Multi-criteria spatial matching & cold-chain verification engine</p>
             </div>
           </div>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -135,22 +135,22 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
         {/* Content Body */}
         <div className="p-6">
           {error && (
-            <div className="mb-4 p-3 rounded-lg bg-red-950/60 border border-red-800 text-red-300 text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-center gap-2 font-medium">
+              <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
               <span>{error}</span>
             </div>
           )}
 
           {!sosResult ? (
             /* SOS Request Formulation Form */
-            <form onSubmit={handleSubmitSOS} className="space-y-4">
+            <form onSubmit={handleSubmitSOS} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Requesting Hospital Facility</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Requesting Hospital</label>
                   <select
                     value={selectedHospitalId}
                     onChange={(e) => setSelectedHospitalId(Number(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blood-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium cursor-pointer"
                   >
                     {hospitals.map((h) => (
                       <option key={h.id} value={h.id}>
@@ -161,30 +161,30 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Urgency Triage Level</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Urgency Triage Level</label>
                   <select
                     value={urgency}
                     onChange={(e) => setUrgency(e.target.value)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blood-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium cursor-pointer"
                   >
-                    <option value="CRITICAL_IMMEDIATE">Critical Immediate (Massive Hemorrhage / Active Trauma)</option>
+                    <option value="CRITICAL_IMMEDIATE">Critical Immediate (Massive Hemorrhage / Trauma)</option>
                     <option value="URGENT_UNDER_4H">Urgent (Under 4 Hours - ICU / Severe Anemia)</option>
                     <option value="ELECTIVE_PLANNED">Elective Planned (Scheduled Surgery Reserve)</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Blood Group Required</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Blood Group Required</label>
                   <div className="grid grid-cols-4 gap-2">
                     {(['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'] as BloodGroup[]).map((bg) => (
                       <button
                         type="button"
                         key={bg}
                         onClick={() => setBloodGroup(bg)}
-                        className={`py-1.5 px-2 rounded-lg text-xs font-bold transition-all ${
+                        className={`py-1.5 px-2 rounded-lg text-xs font-black transition-all cursor-pointer ${
                           bloodGroup === bg 
-                            ? 'bg-blood-600 text-white shadow-md shadow-blood-900/50 border border-blood-400' 
-                            : 'bg-slate-800 text-slate-300 border border-slate-700 hover:border-slate-600'
+                            ? 'bg-red-600 text-white shadow-xs' 
+                            : 'bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100'
                         }`}
                       >
                         {bg}
@@ -194,14 +194,14 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Component Type</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Component Type</label>
                   <select
                     value={component}
                     onChange={(e) => setComponent(e.target.value as ComponentType)}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blood-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium cursor-pointer"
                   >
                     <option value="PACKED_RED_BLOOD_CELLS">Packed Red Blood Cells (PRBC)</option>
-                    <option value="PLATELET_CONCENTRATE">Platelet Concentrate (RDP / SDP)</option>
+                    <option value="PLATELET_CONCENTRATE">Platelet Concentrate</option>
                     <option value="FRESH_FROZEN_PLASMA">Fresh Frozen Plasma (FFP)</option>
                     <option value="WHOLE_BLOOD">Whole Blood</option>
                     <option value="CRYOPRECIPITATE">Cryoprecipitate</option>
@@ -211,48 +211,48 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Units Required (1 - 20)</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Units Required</label>
                   <input
                     type="number"
                     min={1}
                     max={20}
                     value={units}
                     onChange={(e) => setUnits(Number(e.target.value))}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blood-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-bold"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1">Clinical Context (Anonymized)</label>
+                  <label className="block font-bold text-slate-700 mb-1 uppercase">Clinical Context (Anonymized)</label>
                   <input
                     type="text"
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="e.g. Polytrauma resuscitation"
-                    className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blood-500"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900 font-medium"
                   />
                 </div>
               </div>
 
-              <div className="p-3 rounded-lg bg-slate-850 border border-slate-800 text-slate-400 text-xs flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
+              <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
                 <span>
                   <strong>Clinical Safety Notice:</strong> AI allocation engine scores distance, shelf-life, and physical confirmation. Final cross-match and patient verification remains with the treating clinician.
                 </span>
               </div>
 
-              <div className="pt-2 flex justify-end gap-3">
+              <div className="pt-2 flex justify-end gap-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                  className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-blood-600 to-blood-700 hover:from-blood-500 hover:to-blood-600 text-white font-semibold text-xs shadow-lg shadow-blood-900/40 transition-all disabled:opacity-50"
+                  className="flex items-center gap-2 px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer disabled:opacity-50"
                 >
                   {loading ? (
                     <span>Evaluating Network Routing...</span>
@@ -267,147 +267,95 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
             </form>
           ) : (
             /* Recommendations & AI Explainability View */
-            <div className="space-y-5">
-              
+            <div className="space-y-4 text-xs">
               {dispatchSuccess ? (
-                <div className="p-6 text-center rounded-xl bg-emerald-950/50 border border-emerald-500/50 space-y-3">
-                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6" />
+                <div className="p-6 text-center rounded-2xl bg-emerald-50 border border-emerald-200 space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 mx-auto flex items-center justify-center">
+                    <CheckCircle className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <h4 className="text-lg font-bold text-white">Emergency Blood Dispatch Authorized</h4>
-                  <p className="text-xs text-slate-300 max-w-md mx-auto">
-                    {units} units of {bloodGroup} {component} dispatched from <strong>{selectedRec?.blood_bank_name}</strong>. Transit corridor established with estimated arrival in {selectedRec?.estimated_transit_mins} mins.
+                  <h4 className="text-base font-black text-slate-900">Emergency Blood Dispatch Authorized</h4>
+                  <p className="text-xs text-slate-600 max-w-md mx-auto">
+                    {units} units of {bloodGroup} {component.replace(/_/g, ' ')} dispatched from <strong>{selectedRec?.blood_bank_name}</strong>. Transit corridor established with estimated arrival in {selectedRec?.estimated_transit_mins} mins.
                   </p>
                   <button
-                    onClick={() => {
-                      setSosResult(null);
-                      onClose();
-                    }}
-                    className="px-5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md"
+                    onClick={onClose}
+                    className="mt-2 px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold cursor-pointer"
                   >
-                    Return to Live Command Center
+                    Return to Transfusion Portal
                   </button>
                 </div>
               ) : (
-                <>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-purple-400" />
-                        AI Multi-Criteria Ranked Blood Centers ({sosResult.recommendations.length} Candidates)
-                      </h4>
-                      <p className="text-xs text-slate-400">
-                        Ranked by confirmed stock sufficiency, Haversine proximity, cold chain, and therapeutic shelf life.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setSosResult(null)}
-                      className="text-xs text-slate-400 hover:text-slate-200 underline"
-                    >
-                      Modify Parameters
-                    </button>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <span className="font-bold text-slate-700">Ranked Facility Matches ({sosResult.recommendations.length})</span>
+                    <span className="text-[11px] text-slate-500 font-mono">Request #{sosResult.emergency_request_id}</span>
                   </div>
 
-                  {/* Recommendations List */}
-                  <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
-                    {sosResult.recommendations.map((rec) => {
-                      const isSelected = selectedRec?.blood_bank_id === rec.blood_bank_id;
-                      return (
-                        <div
-                          key={rec.blood_bank_id}
-                          onClick={() => setSelectedRec(rec)}
-                          className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
-                            isSelected 
-                              ? 'bg-slate-800/90 border-blood-500 shadow-md shadow-blood-950/40' 
-                              : 'bg-slate-850/60 border-slate-800 hover:border-slate-700'
-                          }`}
-                        >
-                          <div className="flex items-start justify-between">
+                  <div className="space-y-3 max-h-80 overflow-y-auto">
+                    {sosResult.recommendations.map((rec) => (
+                      <div
+                        key={rec.rank}
+                        onClick={() => setSelectedRec(rec)}
+                        className={`p-4 rounded-xl border transition-all cursor-pointer ${
+                          selectedRec?.blood_bank_id === rec.blood_bank_id
+                            ? 'border-red-500 bg-red-50/50 ring-2 ring-red-500'
+                            : 'border-slate-200 bg-white hover:bg-slate-50'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
                             <div className="flex items-center gap-2">
-                              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black ${
-                                rec.rank === 1 ? 'bg-amber-500 text-black' : 'bg-slate-700 text-white'
-                              }`}>
+                              <span className="w-5 h-5 rounded-full bg-red-600 text-white font-bold text-[11px] flex items-center justify-center">
                                 #{rec.rank}
                               </span>
-                              <div>
-                                <h5 className="font-bold text-sm text-white">{rec.blood_bank_name}</h5>
-                                <p className="text-xs text-slate-400">{rec.district}</p>
-                              </div>
+                              <h5 className="font-bold text-slate-900">{rec.blood_bank_name}</h5>
                             </div>
-                            <div className="text-right">
-                              <span className="text-xs font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
-                                Match: {rec.overall_match_score}%
-                              </span>
-                            </div>
+                            <p className="text-slate-500 text-[11px] mt-0.5">{rec.district}</p>
                           </div>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                            Score: {rec.overall_match_score}%
+                          </span>
+                        </div>
 
-                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-2 border-t border-slate-750 text-xs">
-                            <div className="flex items-center gap-1.5 text-slate-300">
-                              <Navigation className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                              <span>{rec.distance_km} km away</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-slate-300">
-                              <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                              <span>~{rec.estimated_transit_mins} mins transit</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-emerald-300 font-medium">
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                              <span>{rec.confirmed_units} Confirmed Units</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 text-cyan-300">
-                              <ThermometerSnowflake className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                              <span>{rec.shelf_life_status}</span>
-                            </div>
+                        <div className="grid grid-cols-3 gap-2 py-2 px-3 bg-slate-50 rounded-lg border border-slate-100 mt-2 text-[11px]">
+                          <div>
+                            <span className="text-slate-400 block">Distance</span>
+                            <strong className="text-slate-800">{rec.distance_km} km</strong>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">ETA</span>
+                            <strong className="text-emerald-700 font-bold">~{rec.estimated_transit_mins} mins</strong>
+                          </div>
+                          <div>
+                            <span className="text-slate-400 block">Confirmed Units</span>
+                            <strong className="text-slate-800">{rec.confirmed_units} Units</strong>
                           </div>
                         </div>
-                      );
-                    })}
+
+                        <p className="text-[11px] text-slate-600 mt-2">{rec.explanation}</p>
+                      </div>
+                    ))}
                   </div>
 
-                  {/* Detailed AI Explainability Box for Selected Recommendation (Rule 14) */}
-                  {selectedRec && (
-                    <div className="p-4 rounded-xl bg-purple-950/30 border border-purple-800/40 text-xs space-y-2">
-                      <div className="flex items-center gap-2 font-bold text-purple-300">
-                        <Sparkles className="w-4 h-4 text-purple-400" />
-                        <span>AI Decision-Support Rationale for #{selectedRec.rank} Choice</span>
-                      </div>
-                      <p className="text-slate-300 leading-relaxed">
-                        {selectedRec.explanation}
-                      </p>
-                      <div className="text-[11px] text-purple-400 font-mono">
-                        {selectedRec.recommended_action}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Clinical Disclaimer (Rule 9) */}
-                  <div className="p-2.5 rounded-lg bg-slate-800/80 border border-slate-700 text-slate-400 text-[11px]">
-                    <strong>Clinical Decision Support Advisory:</strong> {sosResult.clinical_decision_support_disclaimer}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="pt-2 flex justify-end gap-3">
+                  <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
                     <button
-                      onClick={onClose}
-                      className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium"
+                      onClick={() => setSosResult(null)}
+                      className="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-semibold cursor-pointer"
                     >
-                      Dismiss
+                      Back
                     </button>
                     <button
                       onClick={handleConfirmDispatch}
                       disabled={loading || !selectedRec}
-                      className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-bold text-xs shadow-lg shadow-emerald-950/50 transition-all disabled:opacity-50"
+                      className="px-5 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer disabled:opacity-50"
                     >
-                      <CheckCircle className="w-4 h-4" />
-                      <span>Authorize & Dispatch {units} Units Now</span>
+                      {loading ? 'Confirming Dispatch...' : `Authorize Dispatch (${selectedRec?.blood_bank_name})`}
                     </button>
                   </div>
-                </>
+                </div>
               )}
-
             </div>
           )}
-
         </div>
 
       </div>

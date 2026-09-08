@@ -73,21 +73,21 @@ export const WastageAnalyticsPage: React.FC = () => {
 
   if (loading && !data) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-4">
-        <RefreshCw className="w-10 h-10 text-cyan-400 animate-spin" />
-        <p className="text-slate-400 font-medium">Synthesizing hemovigilance wastage metrics and proactive reduction models...</p>
+      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-3 bg-white p-8 rounded-2xl border border-slate-200">
+        <RefreshCw className="w-8 h-8 text-red-600 animate-spin" />
+        <p className="text-slate-600 font-medium text-xs">Synthesizing hemovigilance wastage metrics and proactive reduction models...</p>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="p-6 bg-red-950/30 border border-red-800/40 rounded-xl text-center">
-        <AlertCircle className="w-10 h-10 text-red-400 mx-auto mb-2" />
-        <p className="text-red-300 font-medium">{error || 'Data could not be retrieved'}</p>
+      <div className="p-8 bg-red-50 border border-red-200 rounded-2xl text-center space-y-3">
+        <AlertCircle className="w-10 h-10 text-red-600 mx-auto" />
+        <p className="text-red-800 font-semibold text-xs">{error || 'Data could not be retrieved'}</p>
         <button
           onClick={fetchData}
-          className="mt-4 px-4 py-2 bg-red-800/40 hover:bg-red-700/50 text-white rounded-lg text-sm transition"
+          className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
         >
           Retry
         </button>
@@ -115,132 +115,130 @@ export const WastageAnalyticsPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-2xl border border-slate-800 backdrop-blur-md">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-1 bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-full text-xs font-semibold tracking-wide uppercase">
+            <span className="px-2.5 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 rounded-full text-xs font-bold uppercase tracking-wider">
               Hemovigilance & Wastage Audit
             </span>
-            <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-semibold tracking-wide">
+            <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold">
               Utilization Rate: {data.kpis.utilization_rate_pct}%
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mt-2">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2 tracking-tight">
             Blood Wastage Analytics & Spoilage Reduction
-          </h1>
-          <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+          </h2>
+          <p className="text-slate-500 text-xs mt-0.5 max-w-2xl">
             Quantitative tracking of collection velocity, transfusion issuance, and discard etiology with proactive rebalance advisories.
           </p>
         </div>
 
         <button
           onClick={fetchData}
-          className="flex items-center space-x-2 px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-sm font-medium transition shadow-lg shadow-cyan-900/30 self-start sm:self-center"
+          className="flex items-center space-x-1.5 px-3.5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-center"
         >
-          <RefreshCw className="w-4 h-4" />
+          <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh Analytics</span>
         </button>
       </div>
 
-      {/* 8 Metric KPI Cards Grid (Step 7) */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
-        <div className="bg-slate-900/70 border border-slate-800 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Collected</span>
-          <div className="text-xl font-bold text-white mt-1">{data.kpis.total_collected}</div>
-          <span className="text-[10px] text-slate-500">units</span>
+      {/* 8 Metric KPI Cards Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 text-xs">
+        <div className="health-card p-3.5 text-center">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Collected</span>
+          <div className="text-lg font-black text-slate-900 font-mono mt-1">{data.kpis.total_collected}</div>
+          <span className="text-[10px] text-slate-400">units</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-slate-800 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-blue-400 uppercase tracking-wider">Issued</span>
-          <div className="text-xl font-bold text-blue-400 mt-1">{data.kpis.total_issued}</div>
-          <span className="text-[10px] text-slate-500">transfused</span>
+        <div className="health-card p-3.5 text-center">
+          <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider block">Issued</span>
+          <div className="text-lg font-black text-blue-700 font-mono mt-1">{data.kpis.total_issued}</div>
+          <span className="text-[10px] text-slate-400">transfused</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-slate-800 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Discarded</span>
-          <div className="text-xl font-bold text-rose-400 mt-1">{data.kpis.total_discarded}</div>
-          <span className="text-[10px] text-slate-500">all causes</span>
+        <div className="health-card p-3.5 text-center bg-rose-50/50 border-rose-200">
+          <span className="text-[10px] font-bold text-rose-700 uppercase tracking-wider block">Discarded</span>
+          <div className="text-lg font-black text-rose-700 font-mono mt-1">{data.kpis.total_discarded}</div>
+          <span className="text-[10px] text-slate-400">all causes</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-slate-800 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">Expiry Loss</span>
-          <div className="text-xl font-bold text-amber-400 mt-1">{data.kpis.expiry_related_wastage}</div>
-          <span className="text-[10px] text-slate-500">outdated</span>
+        <div className="health-card p-3.5 text-center bg-amber-50/50 border-amber-200">
+          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">Expiry Loss</span>
+          <div className="text-lg font-black text-amber-700 font-mono mt-1">{data.kpis.expiry_related_wastage}</div>
+          <span className="text-[10px] text-slate-400">outdated</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-slate-800 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Other Discard</span>
-          <div className="text-xl font-bold text-slate-300 mt-1">{data.kpis.other_wastage}</div>
-          <span className="text-[10px] text-slate-500">TTI/QC/Bags</span>
+        <div className="health-card p-3.5 text-center">
+          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Other Discard</span>
+          <div className="text-lg font-black text-slate-700 font-mono mt-1">{data.kpis.other_wastage}</div>
+          <span className="text-[10px] text-slate-400">TTI/QC/Bags</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-emerald-900/40 p-4 rounded-xl bg-gradient-to-br from-slate-900/70 to-emerald-950/20">
-          <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Utilization</span>
-          <div className="text-xl font-bold text-emerald-400 mt-1">{data.kpis.utilization_rate_pct}%</div>
+        <div className="health-card p-3.5 text-center bg-emerald-50/50 border-emerald-200">
+          <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">Utilization</span>
+          <div className="text-lg font-black text-emerald-700 font-mono mt-1">{data.kpis.utilization_rate_pct}%</div>
           <span className="text-[10px] text-slate-400">Issued/Coll</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-rose-900/40 p-4 rounded-xl bg-gradient-to-br from-slate-900/70 to-rose-950/20">
-          <span className="text-[11px] font-semibold text-rose-400 uppercase tracking-wider">Wastage Rate</span>
-          <div className="text-xl font-bold text-rose-400 mt-1">{data.kpis.wastage_rate_pct}%</div>
+        <div className="health-card p-3.5 text-center bg-rose-50/50 border-rose-200">
+          <span className="text-[10px] font-bold text-rose-700 uppercase tracking-wider block">Wastage Rate</span>
+          <div className="text-lg font-black text-rose-700 font-mono mt-1">{data.kpis.wastage_rate_pct}%</div>
           <span className="text-[10px] text-slate-400">Discard/Coll</span>
         </div>
 
-        <div className="bg-slate-900/70 border border-amber-900/40 p-4 rounded-xl">
-          <span className="text-[11px] font-semibold text-amber-400 uppercase tracking-wider">At-Risk Stock</span>
-          <div className="text-xl font-bold text-amber-400 mt-1">{data.kpis.units_at_expiry_risk}</div>
-          <span className="text-[10px] text-slate-500">≤ 7d remaining</span>
+        <div className="health-card p-3.5 text-center bg-amber-50/50 border-amber-200">
+          <span className="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">At-Risk Stock</span>
+          <div className="text-lg font-black text-amber-700 font-mono mt-1">{data.kpis.units_at_expiry_risk}</div>
+          <span className="text-[10px] text-slate-400">≤ 7d remaining</span>
         </div>
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-wrap items-center gap-3 bg-slate-900/60 p-4 rounded-xl border border-slate-800 text-xs">
-        <div className="flex items-center space-x-1.5 text-slate-400">
-          <Filter className="w-4 h-4 text-cyan-400" />
-          <span className="font-semibold text-slate-300">Filters:</span>
+      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+        <div className="flex items-center space-x-2 text-slate-600 sm:col-span-1">
+          <Filter className="w-4 h-4 text-red-600" />
+          <span className="font-bold text-slate-900">Filter Analytics:</span>
         </div>
 
-        <div className="flex items-center space-x-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
-          <span className="text-slate-400">State:</span>
+        <div>
           <select
             value={selectedState}
             onChange={e => setSelectedState(e.target.value)}
-            className="bg-transparent text-white focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-medium cursor-pointer"
           >
-            <option value="ALL" className="bg-slate-900">All Regions</option>
-            <option value="Delhi" className="bg-slate-900">Delhi-NCR</option>
-            <option value="Uttar Pradesh" className="bg-slate-900">Uttar Pradesh</option>
-            <option value="Haryana" className="bg-slate-900">Haryana</option>
+            <option value="ALL">All Regions</option>
+            <option value="Delhi">Delhi-NCR</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Haryana">Haryana</option>
           </select>
         </div>
 
-        <div className="flex items-center space-x-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
-          <span className="text-slate-400">Group:</span>
+        <div>
           <select
             value={selectedGroup}
             onChange={e => setSelectedGroup(e.target.value)}
-            className="bg-transparent text-white focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-medium cursor-pointer"
           >
-            <option value="ALL" className="bg-slate-900">All Groups</option>
+            <option value="ALL">All Blood Groups</option>
             {['O+', 'O-', 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-'].map(g => (
-              <option key={g} value={g} className="bg-slate-900">{g}</option>
+              <option key={g} value={g}>{g}</option>
             ))}
           </select>
         </div>
 
-        <div className="flex items-center space-x-1.5 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
-          <span className="text-slate-400">Component:</span>
+        <div>
           <select
             value={selectedComp}
             onChange={e => setSelectedComp(e.target.value)}
-            className="bg-transparent text-white focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-medium cursor-pointer"
           >
-            <option value="ALL" className="bg-slate-900">All Components</option>
-            <option value="PRBC" className="bg-slate-900">Packed Red Blood Cells (PRBC)</option>
-            <option value="PLATELETS" className="bg-slate-900">Platelet Concentrates</option>
-            <option value="FFP" className="bg-slate-900">Fresh Frozen Plasma (FFP)</option>
-            <option value="CRYOPRECIPITATE" className="bg-slate-900">Cryoprecipitate</option>
+            <option value="ALL">All Components</option>
+            <option value="PRBC">Packed Red Blood Cells (PRBC)</option>
+            <option value="PLATELETS">Platelet Concentrates</option>
+            <option value="FFP">Fresh Frozen Plasma (FFP)</option>
+            <option value="CRYOPRECIPITATE">Cryoprecipitate</option>
           </select>
         </div>
       </div>
@@ -248,53 +246,48 @@ export const WastageAnalyticsPage: React.FC = () => {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Monthly Collection vs Issue vs Wastage */}
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-semibold text-white">Monthly Collection, Issue & Wastage</h3>
-              <p className="text-xs text-slate-400">Longitudinal flow of units across facilities</p>
-            </div>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="mb-4">
+            <h3 className="text-sm font-black text-slate-900">Monthly Collection, Issue & Wastage</h3>
+            <p className="text-xs text-slate-500">Longitudinal flow of units across facilities</p>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data.monthly_trend}>
                 <defs>
                   <linearGradient id="colGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#06b6d4" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#2563eb" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#2563eb" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="issGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4}/>
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="wasGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#dc2626" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#dc2626" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="month" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="month" stroke="#64748b" tick={{ fontSize: 11 }} />
+                <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }} 
-                  itemStyle={{ color: '#e2e8f0' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '0.75rem', fontSize: '12px' }} 
                 />
-                <Legend />
-                <Area type="monotone" dataKey="collected" name="Collected" stroke="#06b6d4" fill="url(#colGrad)" strokeWidth={2} />
+                <Legend wrapperStyle={{ fontSize: '11px' }} />
+                <Area type="monotone" dataKey="collected" name="Collected" stroke="#2563eb" fill="url(#colGrad)" strokeWidth={2} />
                 <Area type="monotone" dataKey="issued" name="Issued" stroke="#10b981" fill="url(#issGrad)" strokeWidth={2} />
-                <Area type="monotone" dataKey="discarded" name="Discarded" stroke="#ef4444" fill="url(#wasGrad)" strokeWidth={2} />
+                <Area type="monotone" dataKey="discarded" name="Discarded" stroke="#dc2626" fill="url(#wasGrad)" strokeWidth={2} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Discard Reasons Breakdown */}
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-semibold text-white">Discard Etiology Breakdown</h3>
-              <p className="text-xs text-slate-400">Categorized by Expiry, TTI Reactive, Bag Damage, QC</p>
-            </div>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="mb-4">
+            <h3 className="text-sm font-black text-slate-900">Discard Etiology Breakdown</h3>
+            <p className="text-xs text-slate-500">Categorized by Expiry, TTI Reactive, Bag Damage, QC</p>
           </div>
           <div className="h-64 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
@@ -303,9 +296,9 @@ export const WastageAnalyticsPage: React.FC = () => {
                   data={reasonData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={60}
-                  outerRadius={85}
-                  paddingAngle={5}
+                  innerRadius={55}
+                  outerRadius={80}
+                  paddingAngle={4}
                   dataKey="value"
                   label={({ name, percent }: any) => `${name} (${((percent || 0) * 100).toFixed(0)}%)`}
                 >
@@ -314,8 +307,7 @@ export const WastageAnalyticsPage: React.FC = () => {
                   ))}
                 </Pie>
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }} 
-                  itemStyle={{ color: '#e2e8f0' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '0.75rem', fontSize: '12px' }} 
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -323,66 +315,60 @@ export const WastageAnalyticsPage: React.FC = () => {
         </div>
 
         {/* Wastage by Component */}
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-semibold text-white">Wastage by Blood Component</h3>
-              <p className="text-xs text-slate-400">Platelets vs PRBC vs FFP outdating volume</p>
-            </div>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="mb-4">
+            <h3 className="text-sm font-black text-slate-900">Wastage by Blood Component</h3>
+            <p className="text-xs text-slate-500">Platelets vs PRBC vs FFP outdating volume</p>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={componentData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="name" stroke="#94a3b8" tick={{ fontSize: 11 }} />
-                <YAxis stroke="#94a3b8" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" tick={{ fontSize: 11 }} />
+                <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }} 
-                  itemStyle={{ color: '#e2e8f0' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '0.75rem', fontSize: '12px' }} 
                 />
-                <Bar dataKey="count" name="Discarded Units" fill="#f43f5e" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="count" name="Discarded Units" fill="#dc2626" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Blood Bank Comparison */}
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-semibold text-white">Facility Spoilage Comparison</h3>
-              <p className="text-xs text-slate-400">Total discard volume per licensed blood centre</p>
-            </div>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+          <div className="mb-4">
+            <h3 className="text-sm font-black text-slate-900">Facility Spoilage Comparison</h3>
+            <p className="text-xs text-slate-500">Total discard volume per licensed blood centre</p>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={bankData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="name" stroke="#94a3b8" tick={{ fontSize: 11 }} />
-                <YAxis stroke="#94a3b8" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+                <XAxis dataKey="name" stroke="#64748b" tick={{ fontSize: 11 }} />
+                <YAxis stroke="#64748b" tick={{ fontSize: 11 }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }} 
-                  itemStyle={{ color: '#e2e8f0' }}
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: '#e2e8f0', borderRadius: '0.75rem', fontSize: '12px' }} 
                 />
-                <Bar dataKey="count" name="Discarded Units" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="count" name="Discarded Units" fill="#7c3aed" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Proactive Wastage Reduction Recommendations Engine (Step 8 & 9) */}
-      <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4 mb-4">
+      {/* Proactive Wastage Reduction Recommendations Engine */}
+      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
           <div>
             <div className="flex items-center space-x-2">
-              <Sparkles className="w-5 h-5 text-amber-400" />
-              <h3 className="text-lg font-bold text-white">Proactive Wastage Reduction Engine</h3>
-              <span className="px-2.5 py-0.5 bg-slate-800 text-cyan-400 border border-cyan-500/30 rounded-full text-xs font-mono">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+              <h3 className="text-base font-black text-slate-900">Proactive Wastage Reduction Engine</h3>
+              <span className="px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full text-xs font-mono font-bold">
                 Baseline Risk Model v1.0
               </span>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 mt-0.5">
               Deterministic mathematical evaluation of stock pressure, days to expiry, and trauma center absorption.
             </p>
           </div>
@@ -401,48 +387,48 @@ export const WastageAnalyticsPage: React.FC = () => {
                 key={rec.id}
                 className={`p-5 rounded-xl border transition-all ${
                   isUrgent 
-                    ? 'bg-red-950/20 border-red-800/40 hover:border-red-700/60' 
+                    ? 'bg-red-50/60 border-red-200' 
                     : isHigh 
-                    ? 'bg-amber-950/20 border-amber-800/40 hover:border-amber-700/60' 
-                    : 'bg-slate-800/40 border-slate-700/50'
+                    ? 'bg-amber-50/60 border-amber-200' 
+                    : 'bg-slate-50 border-slate-200'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <span className="px-2.5 py-1 bg-slate-800 text-cyan-400 text-xs font-bold rounded-md">
+                    <span className="px-2 py-0.5 bg-white text-slate-900 border border-slate-200 text-xs font-black rounded-md">
                       {rec.blood_group} {rec.component.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-xs text-slate-400 font-medium">({rec.available_units} units)</span>
+                    <span className="text-xs text-slate-500 font-medium">({rec.available_units} units)</span>
                   </div>
-                  <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                    isUrgent ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
-                    isHigh ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                    'bg-slate-800 text-slate-300'
+                  <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                    isUrgent ? 'bg-red-100 text-red-800 border border-red-200' :
+                    isHigh ? 'bg-amber-100 text-amber-800 border border-amber-200' :
+                    'bg-slate-200 text-slate-700'
                   }`}>
                     {rec.urgency.replace(/_/g, ' ')}
                   </span>
                 </div>
 
-                <p className="text-xs font-semibold text-white mt-3 leading-relaxed">
+                <p className="text-xs font-semibold text-slate-900 mt-3 leading-relaxed">
                   {rec.recommendation}
                 </p>
 
-                <div className="mt-3 p-3 bg-slate-900/70 rounded-lg border border-slate-800 text-[11px] text-slate-400 space-y-1">
+                <div className="mt-3 p-3 bg-white rounded-lg border border-slate-200 text-[11px] text-slate-600 space-y-1">
                   <div className="flex justify-between">
                     <span>Days to Expiry:</span>
-                    <span className="font-bold text-slate-200">{rec.days_to_expiry} days</span>
+                    <span className="font-bold text-slate-800">{rec.days_to_expiry} days</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Model Risk Score:</span>
-                    <span className="font-mono text-cyan-400">{rec.risk_prediction.risk_score}</span>
+                    <span className="font-mono text-red-600 font-bold">{rec.risk_prediction.risk_score}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Recommended Action:</span>
-                    <span className="font-bold text-amber-400">{rec.action_type.replace(/_/g, ' ')}</span>
+                    <span className="font-bold text-amber-700">{rec.action_type.replace(/_/g, ' ')}</span>
                   </div>
                 </div>
 
-                <p className="text-[10px] text-slate-500 mt-2.5 italic">
+                <p className="text-[10px] text-slate-500 mt-2 italic">
                   * {rec.safety_disclaimer}
                 </p>
               </div>
@@ -451,34 +437,35 @@ export const WastageAnalyticsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Research & Reference Literature Section (Step 21) */}
+      {/* Research & Reference Literature Section */}
       {data.research_reference_data && (
-        <div className="bg-slate-900/60 p-6 rounded-2xl border border-slate-800/80">
-          <div className="flex items-center space-x-2 mb-3">
-            <FileText className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-base font-bold text-white">REFERENCE DATA (Published Literature Benchmarks)</h3>
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+          <div className="flex items-center space-x-2">
+            <FileText className="w-5 h-5 text-red-600" />
+            <h3 className="text-sm font-black text-slate-900">REFERENCE DATA (Published Literature Benchmarks)</h3>
           </div>
-          <div className="p-3.5 bg-amber-950/20 border border-amber-800/30 rounded-xl mb-4 text-xs text-amber-300/90 leading-relaxed">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
             <span className="font-bold uppercase tracking-wider">Compliance Demarcation:</span> {data.research_reference_data.disclaimer}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {data.research_reference_data.citations.map((c, i) => (
-              <div key={i} className="p-4 bg-slate-800/50 border border-slate-700/60 rounded-xl">
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Metric</span>
-                <p className="text-sm font-bold text-white mt-0.5">{c.metric}</p>
-                <div className="mt-2.5 flex items-baseline justify-between">
-                  <span className="text-lg font-bold text-cyan-400">{c.value}</span>
-                  <span className="text-xs text-slate-400 font-mono">Year {c.year}</span>
+              <div key={i} className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-xs">
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">Metric</span>
+                <p className="font-bold text-slate-900 mt-0.5">{c.metric}</p>
+                <div className="mt-2 flex items-baseline justify-between">
+                  <span className="text-base font-black text-red-600 font-mono">{c.value}</span>
+                  <span className="text-[11px] text-slate-500 font-mono">Year {c.year}</span>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2 border-t border-slate-700/50 pt-1.5">
-                  <span className="font-semibold text-slate-300">Source:</span> {c.source}
+                <p className="text-[10px] text-slate-500 mt-2 border-t border-slate-200 pt-1.5">
+                  <span className="font-semibold text-slate-700">Source:</span> {c.source}
                 </p>
               </div>
             ))}
           </div>
         </div>
       )}
+
     </div>
   );
 };

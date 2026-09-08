@@ -57,135 +57,123 @@ export const HospitalDashboard: React.FC<HospitalDashboardProps> = ({
     <div className="space-y-6">
       
       {/* Hospital SOS Action Banner */}
-      <div className="glass-panel-glow p-6 rounded-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border border-blood-600/40">
+      <div className="health-card-critical p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-5 border border-red-200">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blood-500 animate-ping"></span>
-            <span className="text-xs font-bold uppercase tracking-wider text-blood-400">Emergency Transfusion Protocol</span>
+            <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse"></span>
+            <span className="text-xs font-bold uppercase tracking-wider text-red-700">Emergency Transfusion Protocol</span>
           </div>
-          <h2 className="text-xl font-bold text-white mt-1">Acute Blood Shortage & Trauma Response</h2>
-          <p className="text-xs text-slate-300 max-w-xl mt-1">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-1">Acute Blood Shortage & Trauma Response</h2>
+          <p className="text-xs text-slate-600 max-w-xl mt-1">
             Initiate automated multi-criteria routing across regional blood banks. AI matches confirmed units, estimates transit time in traffic, and maintains cold-chain integrity.
           </p>
         </div>
 
         <button
           onClick={onOpenSOSModal}
-          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blood-600 via-blood-500 to-blood-600 hover:from-blood-500 hover:to-blood-500 text-white font-bold text-sm shadow-xl shadow-blood-900/50 hover:shadow-blood-700/60 transition-all transform hover:-translate-y-0.5"
+          className="flex items-center gap-2 px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-red-900/20 transition-all cursor-pointer uppercase tracking-wide"
         >
-          <AlertTriangle className="w-5 h-5 text-white animate-bounce" />
+          <AlertTriangle className="w-4 h-4 text-white" />
           <span>Trigger Emergency Blood SOS</span>
         </button>
       </div>
 
       {/* AI Demand Forecasting Simulator */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
+      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-xs space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-400" />
+            <h3 className="text-base font-black text-slate-900 flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-purple-600" />
               <span>Predictive Blood Demand Forecasting (Scikit-Learn ML)</span>
             </h3>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500 mt-0.5">
               Forward-looking 7-day hospital requirement estimation based on trauma status, surgical capacity, and seasonal outbreak factors.
             </p>
           </div>
           <StatusBadge status="PREDICTED_AVAILABILITY" size="sm" />
         </div>
 
-        <form onSubmit={handleRunForecast} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <form onSubmit={handleRunForecast} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Blood Group</label>
+            <label className="block font-bold text-slate-700 mb-1 uppercase">Blood Group</label>
             <select
               value={forecastGroup}
               onChange={(e) => setForecastGroup(e.target.value as BloodGroup)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-bold text-red-600 cursor-pointer"
             >
-              {(['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'] as BloodGroup[]).map(g => (
+              {['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'].map((g) => (
                 <option key={g} value={g}>{g}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">Component</label>
+            <label className="block font-bold text-slate-700 mb-1 uppercase">Blood Component</label>
             <select
               value={forecastComponent}
               onChange={(e) => setForecastComponent(e.target.value as ComponentType)}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-medium cursor-pointer"
             >
               <option value="PACKED_RED_BLOOD_CELLS">Packed Red Blood Cells (PRBC)</option>
               <option value="PLATELET_CONCENTRATE">Platelet Concentrate</option>
               <option value="FRESH_FROZEN_PLASMA">Fresh Frozen Plasma</option>
-              <option value="WHOLE_BLOOD">Whole Blood</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1">
-              Seasonal Dengue Outbreak Index
-            </label>
-            <select
-              value={dengueFactor}
-              onChange={(e) => setDengueFactor(Number(e.target.value))}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white"
-            >
-              <option value={1.0}>1.0x (Baseline / Non-Epidemic)</option>
-              <option value={1.8}>1.8x (Moderate Monsoon Spike)</option>
-              <option value={3.0}>3.0x (Acute Dengue Platelet Crisis)</option>
-            </select>
+            <label className="block font-bold text-slate-700 mb-1 uppercase">Current Stock On Hand</label>
+            <input
+              type="number"
+              value={currentStock}
+              onChange={(e) => setCurrentStock(Number(e.target.value))}
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 font-bold font-mono text-slate-900"
+            />
           </div>
 
           <div className="flex items-end">
             <button
               type="submit"
               disabled={loadingForecast}
-              className="w-full py-2 px-4 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-semibold text-xs transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
-              <TrendingUp className="w-4 h-4" />
-              <span>{loadingForecast ? 'Evaluating Model...' : 'Calculate 7-Day Forecast'}</span>
+              {loadingForecast ? 'Generating ML Forecast...' : 'Run Demand Projection'}
             </button>
           </div>
         </form>
 
         {/* Prediction Results Display */}
         {prediction && (
-          <div className="p-4 rounded-xl bg-slate-900 border border-purple-800/40 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-3 rounded-lg bg-slate-850 border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400">Projected 7-Day Demand</span>
-                <div className="text-2xl font-black text-purple-300 font-mono mt-1">
-                  {prediction.predicted_7d_demand_units} <span className="text-xs font-normal text-slate-400">units</span>
-                </div>
+          <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-4 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div>
+                <span className="text-slate-500 font-bold block">7-Day Projected Demand</span>
+                <strong className="text-2xl font-black text-slate-900 font-mono">
+                  {prediction.predicted_7d_demand_units} Units
+                </strong>
               </div>
-              <div className="p-3 rounded-lg bg-slate-850 border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400">Recommended Safety Reserve</span>
-                <div className="text-2xl font-black text-emerald-400 font-mono mt-1">
-                  {prediction.recommended_safety_stock_units} <span className="text-xs font-normal text-slate-400">units</span>
-                </div>
+              <div>
+                <span className="text-slate-500 font-bold block">Recommended Safety Buffer</span>
+                <strong className="text-2xl font-black text-red-600 font-mono">
+                  {prediction.recommended_safety_stock_units} Units
+                </strong>
               </div>
-              <div className="p-3 rounded-lg bg-slate-850 border border-slate-800 text-center">
-                <span className="text-[11px] text-slate-400">Projected Shortfall Deficit</span>
-                <div className="text-2xl font-black text-rose-400 font-mono mt-1">
-                  {prediction.projected_deficit} <span className="text-xs font-normal text-slate-400">units</span>
-                </div>
+              <div>
+                <span className="text-slate-500 font-bold block">Projected Deficit</span>
+                <strong className="text-2xl font-black text-amber-600 font-mono">
+                  {prediction.projected_deficit} Units
+                </strong>
+              </div>
+              <div>
+                <span className="text-slate-500 font-bold block">Status Tier</span>
+                <span className="inline-block mt-1 px-2.5 py-1 rounded-full text-xs font-bold uppercase bg-red-100 text-red-800 border border-red-200">
+                  {prediction.availability_classification}
+                </span>
               </div>
             </div>
 
-            {/* Explainability Breakdown (Rule 14) */}
-            <div className="p-3 rounded-lg bg-purple-950/30 border border-purple-900/40 text-xs space-y-1.5">
-              <div className="font-bold text-purple-300 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>AI Forecasting Rationale:</span>
-              </div>
-              <ul className="list-disc list-inside text-slate-300 space-y-1">
-                {prediction.explainability.top_drivers.map((driver, idx) => (
-                  <li key={idx}>{driver}</li>
-                ))}
-              </ul>
-              <div className="text-[11px] text-slate-400 pt-1 border-t border-purple-900/30">
-                {prediction.explainability.clinical_advisory}
-              </div>
+            <div className="pt-3 border-t border-slate-200 space-y-1 text-slate-600">
+              <p className="font-bold text-slate-900">Clinical Decision Support Advisory:</p>
+              <p>{prediction.explainability?.clinical_advisory}</p>
             </div>
           </div>
         )}

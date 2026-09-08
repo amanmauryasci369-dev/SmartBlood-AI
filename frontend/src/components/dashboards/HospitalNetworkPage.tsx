@@ -15,7 +15,8 @@ import {
   AlertTriangle,
   ArrowUpRight,
   Sparkles,
-  Search
+  Search,
+  Network
 } from 'lucide-react';
 import { ApiService } from '../../services/api';
 import { HospitalNetworkOverview, HospitalBloodRequest } from '../../types';
@@ -61,78 +62,69 @@ export const HospitalNetworkPage: React.FC = () => {
     setSubmitting(true);
     try {
       await ApiService.createHospitalRequest({
-        requesting_hospital_id: Number(newRequest.requesting_hospital_id),
-        target_hospital_id: newRequest.target_hospital_id > 0 ? Number(newRequest.target_hospital_id) : undefined,
+        requesting_hospital_id: newRequest.requesting_hospital_id,
+        target_hospital_id: newRequest.target_hospital_id > 0 ? newRequest.target_hospital_id : undefined,
         blood_group: newRequest.blood_group,
         component: newRequest.component,
-        quantity: Number(newRequest.quantity),
+        quantity: newRequest.quantity,
         emergency_level: newRequest.emergency_level,
         notes: newRequest.notes
       });
       setShowCreateModal(false);
-      await fetchOverview();
+      fetchOverview();
     } catch (err: any) {
-      alert(err.message || 'Error creating request');
+      alert(`Requisition creation failed: ${err.message}`);
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleAccept = async (id: number, hospId: number) => {
+  const handleAccept = async (id: number) => {
     try {
-      await ApiService.acceptHospitalRequest(id, hospId, 'Accepting requisition; holding units in lab incubator');
-      await fetchOverview();
+      await ApiService.acceptHospitalRequest(id, 2, 'Accepted via SmartBlood H2H peer allocation network.');
+      fetchOverview();
     } catch (err: any) {
-      alert(err.message);
+      alert(`Accept failed: ${err.message}`);
     }
   };
 
-  const handleReject = async (id: number, hospId: number) => {
-    const reason = prompt('Please state the clinical reason for rejecting this requisition:');
+  const handleReject = async (id: number) => {
+    const reason = prompt('Specify rejection reason:', 'Insufficient safety buffer for intensive care unit');
     if (!reason) return;
     try {
-      await ApiService.rejectHospitalRequest(id, hospId, reason);
-      await fetchOverview();
+      await ApiService.rejectHospitalRequest(id, 2, reason);
+      fetchOverview();
     } catch (err: any) {
-      alert(err.message);
-    }
-  };
-
-  const handleConfirmVerification = async (id: number) => {
-    try {
-      await ApiService.confirmHospitalRequest(id, 'Lab cross-match certification verified by clinical officer');
-      await fetchOverview();
-    } catch (err: any) {
-      alert(err.message);
+      alert(`Reject failed: ${err.message}`);
     }
   };
 
   const handleFulfill = async (id: number) => {
     try {
-      await ApiService.fulfillHospitalRequest(id, 'Received and custody signed by emergency triage department');
-      await fetchOverview();
+      await ApiService.fulfillHospitalRequest(id, 'Blood units delivered and cross-matched successfully.');
+      fetchOverview();
     } catch (err: any) {
-      alert(err.message);
+      alert(`Fulfill failed: ${err.message}`);
     }
   };
 
   if (loading && !overview) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-4">
-        <RefreshCw className="w-10 h-10 text-cyan-400 animate-spin" />
-        <p className="text-slate-400 font-medium">Scanning Hospital-to-Hospital Peer Sharing Network...</p>
+      <div className="flex flex-col items-center justify-center min-h-[450px] space-y-3 bg-white p-8 rounded-2xl border border-slate-200">
+        <RefreshCw className="w-8 h-8 text-red-600 animate-spin" />
+        <p className="text-slate-600 font-medium text-xs">Scanning Hospital-to-Hospital Peer Sharing Network...</p>
       </div>
     );
   }
 
   if (error || !overview) {
     return (
-      <div className="p-6 bg-red-950/30 border border-red-800/40 rounded-xl text-center">
-        <AlertTriangle className="w-10 h-10 text-red-400 mx-auto mb-2" />
-        <p className="text-red-300 font-medium">{error || 'Unable to access network'}</p>
+      <div className="p-8 bg-red-50 border border-red-200 rounded-2xl text-center space-y-3">
+        <AlertTriangle className="w-10 h-10 text-red-600 mx-auto" />
+        <p className="text-red-800 font-semibold text-xs">{error || 'Unable to access network'}</p>
         <button
           onClick={fetchOverview}
-          className="mt-4 px-4 py-2 bg-red-800/40 hover:bg-red-700/50 text-white rounded-lg text-sm transition"
+          className="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-bold transition cursor-pointer"
         >
           Retry Connection
         </button>
@@ -142,36 +134,37 @@ export const HospitalNetworkPage: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-6 rounded-2xl border border-slate-800 backdrop-blur-md">
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-semibold tracking-wide uppercase">
+            <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wider">
               Hospital-to-Hospital Network
             </span>
-            <span className="px-2.5 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full text-xs font-semibold tracking-wide">
-              {overview.hospitals.length} Hospitals • {overview.blood_banks.length} Blood Banks
+            <span className="px-2.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-xs font-bold">
+              {overview.hospitals.length} Hospitals &bull; {overview.blood_banks.length} Blood Banks
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mt-2">
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2 tracking-tight">
             Inter-Hospital Resource-Sharing Network
-          </h1>
-          <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+          </h2>
+          <p className="text-slate-500 text-xs mt-0.5 max-w-2xl">
             Direct peer-to-peer blood requisitioning and cross-match coordination between healthcare facilities and apex trauma centers.
           </p>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center space-x-2 px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-sm font-semibold transition shadow-lg shadow-rose-900/30"
+            className="flex items-center space-x-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>Create Peer Request</span>
           </button>
           <button
             onClick={fetchOverview}
-            className="p-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl border border-slate-700 transition"
+            className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -179,13 +172,13 @@ export const HospitalNetworkPage: React.FC = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800 space-x-6 text-sm font-semibold">
+      <div className="flex border-b border-slate-200 space-x-6 text-xs font-bold">
         <button
           onClick={() => setActiveTab('REQUESTS')}
-          className={`pb-3 flex items-center space-x-2 border-b-2 transition ${
+          className={`pb-3 flex items-center space-x-2 border-b-2 transition cursor-pointer ${
             activeTab === 'REQUESTS'
-              ? 'border-cyan-400 text-cyan-400'
-              : 'border-transparent text-slate-400 hover:text-slate-300'
+              ? 'border-red-600 text-red-600'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           <Inbox className="w-4 h-4" />
@@ -193,10 +186,10 @@ export const HospitalNetworkPage: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('DISCOVERED')}
-          className={`pb-3 flex items-center space-x-2 border-b-2 transition ${
+          className={`pb-3 flex items-center space-x-2 border-b-2 transition cursor-pointer ${
             activeTab === 'DISCOVERED'
-              ? 'border-cyan-400 text-cyan-400'
-              : 'border-transparent text-slate-400 hover:text-slate-300'
+              ? 'border-red-600 text-red-600'
+              : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
           <Building2 className="w-4 h-4" />
@@ -208,9 +201,9 @@ export const HospitalNetworkPage: React.FC = () => {
       {activeTab === 'REQUESTS' && (
         <div className="space-y-4">
           {overview.requests.length === 0 ? (
-            <div className="p-12 text-center bg-slate-900/40 rounded-2xl border border-slate-800">
-              <Inbox className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-              <h3 className="text-base font-semibold text-slate-300">No Active Peer Requisitions</h3>
+            <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+              <Inbox className="w-10 h-10 text-slate-400 mx-auto mb-2" />
+              <h3 className="text-sm font-bold text-slate-800">No Active Peer Requisitions</h3>
               <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
                 No hospital requisitions are currently in progress. Use "Create Peer Request" to dispatch an emergency requisition.
               </p>
@@ -219,113 +212,93 @@ export const HospitalNetworkPage: React.FC = () => {
             <div className="grid grid-cols-1 gap-4">
               {overview.requests.map(req => {
                 const isCritical = req.emergency_level === 'CRITICAL';
-                const isPending = req.status === 'PENDING';
-                const isVerification = req.status === 'VERIFICATION_REQUIRED';
-                const isConfirmed = req.status === 'CONFIRMED';
+                const isPending = req.status === 'PENDING' || req.status === 'SEARCHING';
+                const isAccepted = req.status === 'ACCEPTED' || req.status === 'MATCH_FOUND';
                 const isFulfilled = req.status === 'FULFILLED';
-                const isRejected = req.status === 'REJECTED';
 
                 return (
-                  <div 
+                  <div
                     key={req.id}
-                    className="p-5 bg-slate-900/70 border border-slate-800 rounded-2xl flex flex-col lg:flex-row lg:items-center justify-between gap-4"
+                    className="health-card p-5 space-y-3.5 border border-slate-200 hover:border-slate-300 transition-all"
                   >
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-3">
-                        <span className="font-mono text-xs font-bold text-cyan-400 bg-cyan-950/40 px-2.5 py-1 rounded border border-cyan-800/40">
-                          {req.request_id}
-                        </span>
-                        <span className={`px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider ${
-                          isCritical ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-amber-500/20 text-amber-400'
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                      <div className="flex items-center space-x-2.5">
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-wider uppercase ${
+                          isCritical ? 'bg-red-100 text-red-800 border border-red-200' : 'bg-amber-100 text-amber-800'
                         }`}>
                           {req.emergency_level}
                         </span>
-                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                          isPending ? 'bg-slate-800 text-slate-300' :
-                          isVerification ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' :
-                          isConfirmed ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
-                          isFulfilled ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
-                          'bg-red-500/20 text-red-400'
-                        }`}>
-                          {req.status.replace(/_/g, ' ')}
+                        <span className="text-xs font-mono font-bold text-slate-700">{req.request_id}</span>
+                        <span className="text-xs text-slate-400">&bull;</span>
+                        <span className="text-xs text-slate-500">
+                          {new Date(req.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
 
-                      <div className="flex items-baseline space-x-2">
-                        <span className="text-xl font-bold text-white">
-                          {req.quantity} units {req.blood_group} {req.component.replace(/_/g, ' ')}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-400">
-                        <span className="flex items-center">
-                          <span className="text-slate-500 mr-1">From:</span> 
-                          <span className="text-white font-medium">{req.requesting_hospital_name}</span>
-                        </span>
-                        <span>→</span>
-                        <span className="flex items-center">
-                          <span className="text-slate-500 mr-1">Target:</span> 
-                          <span className="text-cyan-300 font-medium">{req.target_hospital_name}</span>
-                        </span>
-                        <span className="text-slate-600">•</span>
-                        <span>Created: {new Date(req.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-
-                      {req.notes && (
-                        <p className="text-xs text-slate-400 italic bg-slate-800/40 p-2 rounded-lg border border-slate-700/40">
-                          Notes: {req.notes}
-                        </p>
-                      )}
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold uppercase ${
+                        isFulfilled ? 'bg-emerald-100 text-emerald-800' :
+                        isAccepted ? 'bg-blue-100 text-blue-800' :
+                        'bg-amber-100 text-amber-800'
+                      }`}>
+                        {req.status}
+                      </span>
                     </div>
 
-                    {/* Workflow Action Buttons (Step 12) */}
-                    <div className="flex flex-wrap items-center gap-2 self-start lg:self-center">
-                      {isPending && (
-                        <>
-                          <button
-                            onClick={() => handleAccept(req.id, 2)}
-                            className="flex items-center space-x-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-semibold transition"
-                          >
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Accept</span>
-                          </button>
-                          <button
-                            onClick={() => handleReject(req.id, 2)}
-                            className="flex items-center space-x-1.5 px-3.5 py-2 bg-slate-800 hover:bg-red-950/40 text-red-400 border border-slate-700 rounded-xl text-xs font-semibold transition"
-                          >
-                            <XCircle className="w-3.5 h-3.5" />
-                            <span>Reject</span>
-                          </button>
-                        </>
-                      )}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                      <div>
+                        <span className="text-[11px] text-slate-400 block uppercase font-bold">Requesting Facility</span>
+                        <strong className="text-sm text-slate-900 font-extrabold">{req.requesting_hospital_name}</strong>
+                        <span className="text-slate-500 block">{req.requesting_hospital_district}</span>
+                      </div>
 
-                      {isVerification && (
-                        <button
-                          onClick={() => handleConfirmVerification(req.id)}
-                          className="flex items-center space-x-1.5 px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-xs font-semibold transition shadow-md shadow-amber-900/30"
-                        >
-                          <CheckCheck className="w-4 h-4" />
-                          <span>Confirm Cross-Match Verification</span>
-                        </button>
-                      )}
+                      <div>
+                        <span className="text-[11px] text-slate-400 block uppercase font-bold">Requisition Details</span>
+                        <strong className="text-base text-red-600 font-mono font-black">{req.quantity} Units</strong>
+                        <span className="text-slate-700 font-bold block">{req.blood_group} ({req.component.replace(/_/g, ' ')})</span>
+                      </div>
 
-                      {isConfirmed && (
-                        <button
-                          onClick={() => handleFulfill(req.id)}
-                          className="flex items-center space-x-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-semibold transition shadow-md shadow-blue-900/30"
-                        >
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span>Confirm Delivery & Fulfill</span>
-                        </button>
-                      )}
-
-                      {isFulfilled && (
-                        <span className="flex items-center text-xs font-bold text-emerald-400 bg-emerald-950/30 px-3 py-1.5 rounded-lg border border-emerald-800/40">
-                          <CheckCircle2 className="w-4 h-4 mr-1" />
-                          Transfer Completed
-                        </span>
-                      )}
+                      <div>
+                        <span className="text-[11px] text-slate-400 block uppercase font-bold">Targeted Peer</span>
+                        <span className="text-slate-800 font-semibold block">{req.target_hospital_name || 'Open Regional Broadcast'}</span>
+                        <span className="text-slate-400 block italic">{req.notes || 'Emergency ICU reserve requisition'}</span>
+                      </div>
                     </div>
+
+                    {/* Action Buttons */}
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+                      <span className="text-[11px] text-slate-500">
+                        Peer verification required prior to cross-match release.
+                      </span>
+
+                      <div className="flex items-center gap-2">
+                        {isPending && (
+                          <>
+                            <button
+                              onClick={() => handleReject(req.id)}
+                              className="px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-xs font-semibold cursor-pointer"
+                            >
+                              Reject
+                            </button>
+                            <button
+                              onClick={() => handleAccept(req.id)}
+                              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer shadow-xs"
+                            >
+                              Accept Requisition
+                            </button>
+                          </>
+                        )}
+
+                        {isAccepted && (
+                          <button
+                            onClick={() => handleFulfill(req.id)}
+                            className="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold cursor-pointer"
+                          >
+                            Mark Fulfilled
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
                   </div>
                 );
               })}
@@ -336,149 +309,89 @@ export const HospitalNetworkPage: React.FC = () => {
 
       {/* Tab Content: Discovered Healthcare Nodes */}
       {activeTab === 'DISCOVERED' && (
-        <div className="space-y-6">
-          {/* Hospitals */}
-          <div>
-            <h3 className="text-base font-bold text-white mb-3 flex items-center space-x-2">
-              <Building2 className="w-4 h-4 text-cyan-400" />
-              <span>Peer Hospitals & Apex Trauma Centers</span>
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {overview.hospitals.map(h => (
-                <div key={h.id} className="p-5 bg-slate-900/70 border border-slate-800 rounded-2xl space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-xs font-semibold text-cyan-400">{h.district}, {h.state}</span>
-                      <h4 className="text-base font-bold text-white mt-0.5">{h.name}</h4>
-                    </div>
-                    {h.has_trauma_center && (
-                      <span className="px-2 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded text-[10px] font-bold uppercase">
-                        Apex Trauma
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 flex justify-around text-center text-xs">
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">REPORTED</span>
-                      <span className="font-bold text-white">{h.reported_units} units</span>
-                    </div>
-                    <div className="border-l border-slate-700 pl-3">
-                      <span className="text-slate-400 block text-[10px]">CONFIRMED</span>
-                      <span className="font-bold text-emerald-400">{h.confirmed_units} units</span>
-                    </div>
-                    <div className="border-l border-slate-700 pl-3">
-                      <span className="text-slate-400 block text-[10px]">RESERVED</span>
-                      <span className="font-bold text-amber-400">{h.reserved_units} units</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
-                    <span className="flex items-center"><Phone className="w-3.5 h-3.5 mr-1 text-slate-500" /> {h.contact_number}</span>
-                    <span>{h.bed_capacity} beds</span>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {overview.hospitals.map(h => (
+            <div key={h.id} className="health-card p-5 space-y-3 border border-slate-200">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h4 className="font-extrabold text-sm text-slate-900">{h.name}</h4>
+                  <p className="text-xs text-slate-500">{h.district}, {h.state}</p>
                 </div>
-              ))}
-            </div>
-          </div>
+                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                  {h.has_trauma_center ? 'APEX TRAUMA' : 'HOSPITAL'}
+                </span>
+              </div>
 
-          {/* Blood Banks */}
-          <div>
-            <h3 className="text-base font-bold text-white mb-3 flex items-center space-x-2">
-              <Building2 className="w-4 h-4 text-rose-400" />
-              <span>Regional Transfusion Centers & Blood Banks</span>
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {overview.blood_banks.map(b => (
-                <div key={b.id} className="p-5 bg-slate-900/70 border border-slate-800 rounded-2xl space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <span className="text-xs font-semibold text-rose-400">{b.district}, {b.state}</span>
-                      <h4 className="text-base font-bold text-white mt-0.5">{b.name}</h4>
-                    </div>
-                    <span className="px-2 py-0.5 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded text-[10px] font-bold">
-                      {b.cold_chain_verified ? 'Cold-Chain Certified' : 'Standard'}
-                    </span>
-                  </div>
-
-                  <div className="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50 flex justify-around text-center text-xs">
-                    <div>
-                      <span className="text-slate-400 block text-[10px]">AVAILABLE</span>
-                      <span className="font-bold text-white">{b.total_units} units</span>
-                    </div>
-                    <div className="border-l border-slate-700 pl-3">
-                      <span className="text-slate-400 block text-[10px]">CONFIRMED</span>
-                      <span className="font-bold text-emerald-400">{b.confirmed_units}</span>
-                    </div>
-                    <div className="border-l border-slate-700 pl-3">
-                      <span className="text-slate-400 block text-[10px]">RESERVED</span>
-                      <span className="font-bold text-amber-400">{b.reserved_units}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-xs text-slate-400 pt-1">
-                    <span className="flex items-center"><Phone className="w-3.5 h-3.5 mr-1 text-slate-500" /> {b.contact_number}</span>
-                    <span>Cap: {b.storage_capacity} units</span>
-                  </div>
+              <div className="grid grid-cols-3 gap-2 py-2 px-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-bold">Bed Capacity</span>
+                  <strong className="text-slate-800 font-mono">{h.bed_capacity} Beds</strong>
                 </div>
-              ))}
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-bold">Confirmed Stock</span>
+                  <strong className="text-emerald-700 font-mono">{h.confirmed_units} Units</strong>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 block font-bold">Reserved Stock</span>
+                  <strong className="text-blue-700 font-mono">{h.reserved_units} Units</strong>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-1">
+                <a
+                  href={`tel:${h.contact_number}`}
+                  className="text-xs text-slate-600 hover:text-slate-900 font-medium flex items-center gap-1"
+                >
+                  <Phone className="w-3 h-3 text-slate-400" />
+                  <span>{h.contact_number}</span>
+                </a>
+
+                <button
+                  onClick={() => {
+                    setNewRequest({ ...newRequest, target_hospital_id: h.id });
+                    setShowCreateModal(true);
+                  }}
+                  className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold cursor-pointer"
+                >
+                  Request Stock
+                </button>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       )}
 
-      {/* Modal: Create Peer Blood Request (Step 10 & 12) */}
+      {/* Create Peer Request Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center space-x-2">
-                <Send className="w-5 h-5 text-rose-400" />
-                <h3 className="text-lg font-bold text-white">Create Peer Hospital Blood Request</h3>
-              </div>
-              <button
-                onClick={() => setShowCreateModal(false)}
-                className="text-slate-400 hover:text-white text-sm"
-              >
-                ✕ Close
-              </button>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full p-6 space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-black text-slate-900">Initiate Inter-Hospital Peer Requisition</h3>
+              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-700 font-bold">&times;</button>
             </div>
 
             <form onSubmit={handleCreateRequest} className="space-y-4 text-xs">
               <div>
-                <label className="text-slate-300 font-semibold block mb-1">Requesting Hospital</label>
-                <select
-                  value={newRequest.requesting_hospital_id}
-                  onChange={e => setNewRequest({ ...newRequest, requesting_hospital_id: Number(e.target.value) })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500"
-                >
-                  {overview.hospitals.map(h => (
-                    <option key={h.id} value={h.id}>{h.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-slate-300 font-semibold block mb-1">Target Hospital (Optional - Leave for Network Broadcast)</label>
+                <label className="block font-bold text-slate-700 mb-1">Target Peer Hospital</label>
                 <select
                   value={newRequest.target_hospital_id}
                   onChange={e => setNewRequest({ ...newRequest, target_hospital_id: Number(e.target.value) })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-medium"
                 >
-                  <option value={0}>Network Broadcast (All Nearby Facilities)</option>
+                  <option value={0}>All Available Regional Hospitals (Open Broadcast)</option>
                   {overview.hospitals.map(h => (
-                    <option key={h.id} value={h.id}>{h.name}</option>
+                    <option key={h.id} value={h.id}>{h.name} ({h.district})</option>
                   ))}
                 </select>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Blood Group</label>
+                  <label className="block font-bold text-slate-700 mb-1">Blood Group</label>
                   <select
                     value={newRequest.blood_group}
                     onChange={e => setNewRequest({ ...newRequest, blood_group: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500 font-bold"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-bold text-red-600"
                   >
                     {['O-', 'O+', 'A-', 'A+', 'B-', 'B+', 'AB-', 'AB+'].map(g => (
                       <option key={g} value={g}>{g}</option>
@@ -487,70 +400,55 @@ export const HospitalNetworkPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Component</label>
-                  <select
-                    value={newRequest.component}
-                    onChange={e => setNewRequest({ ...newRequest, component: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500"
-                  >
-                    <option value="PACKED_RED_BLOOD_CELLS">Packed Red Blood Cells</option>
-                    <option value="PLATELET_CONCENTRATE">Platelet Concentrate</option>
-                    <option value="FRESH_FROZEN_PLASMA">Fresh Frozen Plasma</option>
-                    <option value="WHOLE_BLOOD">Whole Blood</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Required Units</label>
+                  <label className="block font-bold text-slate-700 mb-1">Units Required</label>
                   <input
                     type="number"
                     min={1}
-                    max={20}
+                    max={15}
                     value={newRequest.quantity}
                     onChange={e => setNewRequest({ ...newRequest, quantity: Number(e.target.value) })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500 font-bold"
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-bold text-slate-900"
                   />
-                </div>
-
-                <div>
-                  <label className="text-slate-300 font-semibold block mb-1">Emergency Level</label>
-                  <select
-                    value={newRequest.emergency_level}
-                    onChange={e => setNewRequest({ ...newRequest, emergency_level: e.target.value })}
-                    className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500 font-bold text-red-400"
-                  >
-                    <option value="CRITICAL">CRITICAL (Immediate Trauma)</option>
-                    <option value="URGENT">URGENT (&lt; 2 Hours)</option>
-                    <option value="ROUTINE">ROUTINE (Elective / Scheduled)</option>
-                  </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-slate-300 font-semibold block mb-1">Clinical Notes</label>
+                <label className="block font-bold text-slate-700 mb-1">Component</label>
+                <select
+                  value={newRequest.component}
+                  onChange={e => setNewRequest({ ...newRequest, component: e.target.value })}
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg font-medium"
+                >
+                  <option value="PACKED_RED_BLOOD_CELLS">Packed Red Blood Cells (PRBC)</option>
+                  <option value="PLATELET_CONCENTRATE">Platelet Concentrate</option>
+                  <option value="FRESH_FROZEN_PLASMA">Fresh Frozen Plasma</option>
+                  <option value="WHOLE_BLOOD">Whole Blood</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Clinical Indication / Urgent Notes</label>
                 <textarea
-                  rows={2}
-                  placeholder="e.g. Major trauma OT surgery; uncrossmatched emergency release requested."
+                  rows={3}
                   value={newRequest.notes}
                   onChange={e => setNewRequest({ ...newRequest, notes: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-rose-500"
+                  placeholder="e.g. Pediatric trauma or massive transfusion protocol"
+                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg font-medium"
                 />
               </div>
 
-              <div className="pt-3 border-t border-slate-800 flex justify-end space-x-3">
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium transition"
+                  className="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-xl font-bold transition shadow-lg shadow-rose-900/40"
+                  className="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-bold cursor-pointer"
                 >
                   {submitting ? 'Broadcasting...' : 'Broadcast Requisition'}
                 </button>
@@ -559,6 +457,7 @@ export const HospitalNetworkPage: React.FC = () => {
           </div>
         </div>
       )}
+
     </div>
   );
 };
