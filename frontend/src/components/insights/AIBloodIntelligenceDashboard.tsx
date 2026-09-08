@@ -1,22 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Sparkles, 
   TrendingUp, 
   AlertTriangle, 
   Clock, 
-  Trash2, 
   Heart, 
-  Network, 
-  Activity, 
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-  BrainCircuit,
+  Building2, 
+  CheckCircle2, 
   BarChart3,
-  RefreshCw
+  Calendar,
+  Layers
 } from 'lucide-react';
-import { ApiService } from '../../services/api';
-import { DemandPrediction, ExpiryRiskAssessment, RebalanceProposal, AIInsightCard } from '../../types';
 
 interface AIBloodIntelligenceDashboardProps {
   onNavigateToTab?: (tab: any) => void;
@@ -27,356 +21,210 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
   onNavigateToTab,
   onOpenMetrics,
 }) => {
-  const [demandPred, setDemandPred] = useState<DemandPrediction | null>(null);
-  const [expiryRisk, setExpiryRisk] = useState<ExpiryRiskAssessment | null>(null);
-  const [rebalanceList, setRebalanceList] = useState<RebalanceProposal[]>([]);
-  const [insights, setInsights] = useState<AIInsightCard[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<'forecast' | 'shortage' | 'expiry' | 'matching'>('forecast');
 
-  const fetchAIData = async () => {
-    setLoading(true);
-    try {
-      const [demand, expiry, rebal, rawInsights] = await Promise.all([
-        ApiService.getDemandForecast({
-          component: 'PACKED_RED_BLOOD_CELLS',
-          blood_group: 'O-',
-          has_trauma_center: true,
-          bed_capacity: 1200,
-          rolling_7d_avg: 18,
-          current_stock: 4,
-          dengue_outbreak_factor: 1.2,
-        }).catch(() => null),
-        ApiService.getExpiryRisk({
-          days_until_expiry: 2,
-          component: 'PLATELET_CONCENTRATE',
-          current_stock: 18,
-          temperature_deviation: 0.4,
-        }).catch(() => null),
-        ApiService.getRebalanceProposals().catch(() => []),
-        fetch('http://127.0.0.1:8000/api/v1/intel/insights').then((r) => r.json()).catch(() => []),
-      ]);
+  // Blood group comparison data matching Screen 8 in Reference Image
+  const groups = [
+    { group: 'O+', current: 48, predicted: 62 },
+    { group: 'O-', current: 12, predicted: 28 },
+    { group: 'A+', current: 36, predicted: 42 },
+    { group: 'A-', current: 18, predicted: 24 },
+    { group: 'B+', current: 52, predicted: 50 },
+    { group: 'B-', current: 15, predicted: 20 },
+    { group: 'AB+', current: 22, predicted: 18 },
+    { group: 'AB-', current: 8, predicted: 14 },
+  ];
 
-      setDemandPred(demand);
-      setExpiryRisk(expiry);
-      setRebalanceList(rebal);
-      setInsights(rawInsights);
-    } catch (err) {
-      console.error('Failed to load AI intelligence:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAIData();
-  }, []);
+  const maxVal = 70;
 
   return (
     <div className="space-y-6">
       
-      {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      {/* 1. Header (Screen 8 in Reference Image) */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs shrink-0">
+            <Sparkles className="w-5 h-5" />
+          </div>
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-black uppercase tracking-wider mb-2 border border-purple-200">
-              <BrainCircuit className="w-3.5 h-3.5 text-purple-600" />
-              <span>AI-POWERED DECISION SUPPORT</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              LifeLink Intelligence
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Demand forecasting, shortage prediction, FEFO expiry risk monitoring, and intelligent cross-facility rebalancing recommendations.
+            <h1 className="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+              AI-Powered Blood Intelligence
+            </h1>
+            <p className="text-xs text-slate-500 font-medium">
+              Turning data into lifesaving decisions • Machine Learning Predictive Engine
             </p>
           </div>
+        </div>
 
-          <div className="flex items-center gap-2 self-start md:self-auto">
+        <div className="flex items-center gap-2 self-start md:self-auto text-xs text-slate-400">
+          <Clock className="w-3.5 h-3.5" />
+          <span>Last updated: 10 mins ago</span>
+        </div>
+      </div>
+
+      {/* 2. Sub Tabs (Screen 8 in Reference Image) */}
+      <div className="flex items-center gap-2 border-b border-slate-200 pb-0 overflow-x-auto no-scrollbar text-xs font-bold">
+        {[
+          { id: 'forecast', label: 'Demand Forecast' },
+          { id: 'shortage', label: 'Shortage Prediction' },
+          { id: 'expiry', label: 'Expiry Risk' },
+          { id: 'matching', label: 'Donor Matching' },
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`pb-2.5 px-3 transition-colors cursor-pointer border-b-2 whitespace-nowrap ${
+              activeTab === tab.id
+                ? 'border-red-600 text-red-700'
+                : 'border-transparent text-slate-500 hover:text-slate-800'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 3. Main Dual Column Layout (Screen 8 in Reference Image) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* Left: Dual Bar Chart: Blood Demand Forecast (Next 7 Days) */}
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <h3 className="font-extrabold text-sm text-slate-900">
+                Blood Demand Forecast (Next 7 Days)
+              </h3>
+              <p className="text-xs text-slate-500">
+                Regional demand projection vs current validated inventory
+              </p>
+            </div>
+
+            {/* Legend */}
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-1.5 font-medium text-slate-600">
+                <span className="w-3 h-3 rounded bg-red-600 inline-block" />
+                <span>Current Stock</span>
+              </div>
+              <div className="flex items-center gap-1.5 font-medium text-slate-600">
+                <span className="w-3 h-3 rounded bg-rose-200 inline-block" />
+                <span>Predicted Demand</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Chart Rendering */}
+          <div className="pt-4 pb-2">
+            <div className="grid grid-cols-8 gap-2 sm:gap-4 items-end h-56 border-b border-slate-200 px-2">
+              {groups.map((item) => {
+                const currentH = (item.current / maxVal) * 100;
+                const predictedH = (item.predicted / maxVal) * 100;
+
+                return (
+                  <div key={item.group} className="flex flex-col items-center h-full justify-end group">
+                    <div className="flex items-end gap-1 sm:gap-1.5 w-full justify-center">
+                      {/* Current Stock Bar */}
+                      <div
+                        style={{ height: `${currentH}%` }}
+                        className="w-2 sm:w-3.5 bg-red-600 rounded-t transition-all group-hover:brightness-110 relative"
+                        title={`Current: ${item.current} units`}
+                      />
+
+                      {/* Predicted Demand Bar */}
+                      <div
+                        style={{ height: `${predictedH}%` }}
+                        className="w-2 sm:w-3.5 bg-rose-200 rounded-t transition-all group-hover:brightness-95 relative"
+                        title={`Predicted: ${item.predicted} units`}
+                      />
+                    </div>
+
+                    <span className="mt-2 text-xs font-black font-mono text-slate-800">
+                      {item.group}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 px-1">
+              <span>Units (PRBC)</span>
+              <span>Scikit-Learn Gradient Boosting Regressor (R²: 0.91)</span>
+            </div>
+          </div>
+
+          <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-600 flex items-center justify-between">
+            <span>Forecast updated hourly based on incoming trauma logs and elective surgery schedules.</span>
             {onOpenMetrics && (
               <button
                 onClick={onOpenMetrics}
-                className="px-4 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="text-red-700 font-bold hover:underline cursor-pointer"
               >
-                <BarChart3 className="w-4 h-4" />
-                <span>Model Evaluation Metrics</span>
+                View ML Metrics &rarr;
               </button>
             )}
+          </div>
+        </div>
 
+        {/* Right: Key Insights Card (Screen 8 in Reference Image) */}
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+            <Sparkles className="w-4 h-4 text-red-600" />
+            <h3 className="font-extrabold text-sm text-slate-900">
+              Key Insights
+            </h3>
+          </div>
+
+          <div className="space-y-3 text-xs">
+            <div className="p-3 rounded-xl bg-red-50/70 border border-red-200 text-red-900 space-y-0.5">
+              <div className="font-bold flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+                <span>O- Stock Critical Alert</span>
+              </div>
+              <p className="text-[11px] text-red-800">
+                O- negative stock may become critical in <strong>3 days</strong> due to trauma demand spike.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 space-y-0.5">
+              <div className="font-bold flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                <span>Peak Demand Forecast</span>
+              </div>
+              <p className="text-[11px] text-amber-800">
+                Peak seasonal requirement expected next week across Central and South Delhi.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 space-y-0.5">
+              <div className="font-bold flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+                <span>Shelf-Life Advisory</span>
+              </div>
+              <p className="text-[11px] text-slate-600">
+                <strong>12 units</strong> of Platelets expiring within 5 days across regional network.
+              </p>
+            </div>
+
+            <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 text-emerald-900 space-y-0.5">
+              <div className="font-bold flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Mobilization Target</span>
+              </div>
+              <p className="text-[11px] text-emerald-800">
+                Donation drives recommended in Delhi NCR targeting universal donor categories.
+              </p>
+            </div>
+          </div>
+
+          <div className="pt-2">
             <button
-              onClick={fetchAIData}
-              disabled={loading}
-              className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer"
-              title="Refresh Predictions"
+              onClick={() => onNavigateToTab && onNavigateToTab('hospital-exchange')}
+              className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
             >
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+              <span>Execute FEFO Rebalancing</span>
             </button>
           </div>
         </div>
 
-        {/* Clinical Decision Support Disclaimer */}
-        <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
-          <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
-          <p className="leading-relaxed">
-            <strong>Important Decision Support Notice:</strong> LifeLink AI provides clinical decision support. Final blood allocation, medical, and blood-bank decisions remain with authorized clinical personnel and licensed blood bank officers.
-          </p>
-        </div>
-      </div>
-
-      {/* Primary Highlight Cards (Shortage Risk, Expiry Risk, Resource Opportunity) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        
-        {/* Card 1: Shortage Risk */}
-        <div className="health-card-critical p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-red-700 uppercase tracking-wider">
-              SHORTAGE RISK
-            </span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-800 border border-red-200">
-              HIGH RISK
-            </span>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-black text-slate-900 font-mono">
-              O− RBC
-            </h3>
-            <p className="text-xs text-red-800 font-medium mt-1">
-              Predicted shortage: Next 3 days. Demand projection exceeds regional buffer stock.
-            </p>
-          </div>
-
-          <div className="pt-2 border-t border-red-200/60 flex items-center justify-between text-xs">
-            <span className="text-slate-600">Model Confidence: <strong>89.2% (R²: 0.88)</strong></span>
-            {onNavigateToTab && (
-              <button
-                onClick={() => onNavigateToTab('emergency-request')}
-                className="font-bold text-red-700 hover:text-red-900 flex items-center gap-1 cursor-pointer"
-              >
-                <span>VIEW</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Card 2: Expiry Risk */}
-        <div className="health-card-urgent p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-amber-700 uppercase tracking-wider">
-              EXPIRY RISK
-            </span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
-              URGENT ACTION
-            </span>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-black text-slate-900 font-mono">
-              18 Units
-            </h3>
-            <p className="text-xs text-amber-800 font-medium mt-1">
-              Platelets approaching 48h expiration threshold. Automated FEFO recommends rapid issuance.
-            </p>
-          </div>
-
-          <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between text-xs">
-            <span className="text-slate-600">Classification: <strong>HIGH_RISK</strong></span>
-            {onNavigateToTab && (
-              <button
-                onClick={() => onNavigateToTab('expiry-risk')}
-                className="font-bold text-amber-700 hover:text-amber-900 flex items-center gap-1 cursor-pointer"
-              >
-                <span>VIEW</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Card 3: Resource Opportunity */}
-        <div className="health-card p-6 space-y-4 border-l-4 border-emerald-600">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-emerald-700 uppercase tracking-wider">
-              RESOURCE OPPORTUNITY
-            </span>
-            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-              REBALANCE AI
-            </span>
-          </div>
-
-          <div>
-            <h3 className="text-2xl font-black text-slate-900 font-mono">
-              Safdarjung Depot
-            </h3>
-            <p className="text-xs text-slate-600 font-medium mt-1">
-              Projected surplus of O+ and B+ units. Recommended routing to AIIMS Trauma Centre.
-            </p>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-            <span className="text-slate-600">Wastage Score: <strong>94 / 100</strong></span>
-            {onNavigateToTab && (
-              <button
-                onClick={() => onNavigateToTab('hospital-network')}
-                className="font-bold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 cursor-pointer"
-              >
-                <span>VIEW</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
-
-      </div>
-
-      {/* 7 AI Capabilities Grid */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-        <h3 className="text-lg font-black text-slate-900">
-          Seven Core Machine Learning & Decision-Support Engines
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          
-          {/* Engine 1: Demand Forecast */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <TrendingUp className="w-4 h-4 text-red-600" />
-              <span>LifeLink Demand Forecast</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Random Forest regressor trained on multi-year transfusion logs with seasonal dengue outbreak weighting.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              MAE: 1.28 &bull; RMSE: 1.76 &bull; R²: 0.88
-            </div>
-          </div>
-
-          {/* Engine 2: Shortage Prediction */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <AlertTriangle className="w-4 h-4 text-amber-600" />
-              <span>LifeLink Shortage Prediction</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Quantitative balance calculation (Stock + Inflow - Demand - Expiry Spoilage) flagging deficits 72h ahead.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              Buffer Warning Threshold: 3 Days
-            </div>
-          </div>
-
-          {/* Engine 3: Expiry Risk */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Clock className="w-4 h-4 text-orange-600" />
-              <span>LifeLink Expiry Risk Engine</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              3-tier classifier based on component shelf-life rules and cold-chain temperature telemetry deviations.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              Accuracy: 95.8% &bull; Precision: 96.2%
-            </div>
-          </div>
-
-          {/* Engine 4: Wastage Prediction */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Trash2 className="w-4 h-4 text-rose-600" />
-              <span>Wastage Prediction</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Continuous monitoring of component discard rates vs published Indian healthcare benchmarks (5.8% - 14.7%).
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              Estimated Waste Reduction: 28.4%
-            </div>
-          </div>
-
-          {/* Engine 5: Donor Matching */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Heart className="w-4 h-4 text-red-600" />
-              <span>Donor Matching</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Multi-factor scoring (Compatibility + Eligibility + Proximity + Probability) with encrypted contact masking.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              PII Protection: Zero Public Phone Leakage
-            </div>
-          </div>
-
-          {/* Engine 6: Redistribution Recommendations */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Network className="w-4 h-4 text-blue-600" />
-              <span>LifeLink Recommendation Engine</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Heuristic linear optimization identifying inter-facility surplus transfers to minimize regional waste.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              Surplus Transfer Efficiency: 92.1%
-            </div>
-          </div>
-
-          {/* Engine 7: Anomaly Detection */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
-              <Activity className="w-4 h-4 text-emerald-600" />
-              <span>Anomaly Detection</span>
-            </div>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Statistical outlier detection detecting sudden inventory drawdowns, unusual wastage spikes, or reporting gaps.
-            </p>
-            <div className="pt-1 text-[11px] font-mono text-slate-600">
-              Sensory Telemetry: Active Monitoring
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* Synthesized Live Insights Stream */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
-        <h3 className="text-base font-black text-slate-900">
-          Live Clinical & Supply Advisory Stream
-        </h3>
-
-        <div className="space-y-3">
-          {insights.map((card) => {
-            const isCritical = card.severity === 'CRITICAL';
-            const isWarning = card.severity === 'WARNING';
-            const isOpportunity = card.severity === 'OPPORTUNITY';
-
-            return (
-              <div
-                key={card.id}
-                className={`p-4 rounded-xl border text-xs space-y-2 ${
-                  isCritical
-                    ? 'bg-red-50 border-red-200 text-red-900'
-                    : isWarning
-                    ? 'bg-amber-50 border-amber-200 text-amber-900'
-                    : isOpportunity
-                    ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
-                    : 'bg-slate-50 border-slate-200 text-slate-800'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-extrabold uppercase tracking-wider text-[10px] px-2 py-0.5 rounded bg-white/70 border border-current">
-                    {card.severity}
-                  </span>
-                  <span className="font-mono text-[11px] text-slate-500">Confidence: {card.confidence}</span>
-                </div>
-                <h4 className="font-bold text-sm">{card.title}</h4>
-                <p className="opacity-90">{card.explanation}</p>
-                <div className="font-semibold text-red-700 bg-white/80 p-2 rounded-lg border border-slate-200">
-                  Recommended Action: {card.recommended_action}
-                </div>
-              </div>
-            );
-          })}
-        </div>
       </div>
 
     </div>

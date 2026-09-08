@@ -14,6 +14,11 @@
   --color-blood-900: #7f1d1d;
   --color-blood-950: #450a0a;
 
+  --color-burgundy-900: #800020;
+  --color-burgundy-950: #5B0612;
+  --color-crimson-600: #9B001B;
+  --color-crimson-700: #800016;
+
   --color-navy-50: #f8fafc;
   --color-navy-100: #f1f5f9;
   --color-navy-200: #e2e8f0;
@@ -24,56 +29,72 @@
 }
 
 body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: #f8f9fa;
+  color: #1e293b;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   margin: 0;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Reference Theme Utility Styles */
+.theme-nav {
+  background-color: #800020;
+}
+
+.theme-footer {
+  background-color: #5B0612;
+}
+
+.ref-card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.ref-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+}
+
+.ref-pill-green {
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.ref-pill-amber {
+  background-color: #fffbeb;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+.ref-pill-red {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.ref-pill-blue {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+}
+
 /* Custom Healthcare Portal Utilities */
 .health-card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
   transition: all 0.15s ease-in-out;
 }
 
 .health-card:hover {
   border-color: #cbd5e1;
-  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.07);
-}
-
-.health-card-primary {
-  background-color: #ffffff;
-  border: 1px solid #fee2e2;
-  border-top: 3px solid #dc2626;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05);
-}
-
-.health-card-urgent {
-  background-color: #fffaf0;
-  border: 1px solid #fed7aa;
-  border-left: 4px solid #ea580c;
-  border-radius: 0.75rem;
-}
-
-.health-card-critical {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-left: 4px solid #dc2626;
-  border-radius: 0.75rem;
-}
-
-/* Header utility strip */
-.gov-strip {
-  background-color: #0f172a;
-  color: #94a3b8;
-  font-size: 0.75rem;
-  border-bottom: 1px solid #1e293b;
+  box-shadow: 0 4px 8px -1px rgba(15, 23, 42, 0.06);
 }
 
 /* Custom modern scrollbars */
@@ -99,7 +120,7 @@ body {
 .leaflet-container {
   width: 100%;
   height: 100%;
-  background: #f1f5f9 !important;
+  background: #f8f9fa !important;
   font-family: inherit;
   z-index: 10;
 }
@@ -108,8 +129,8 @@ body {
   background: #ffffff !important;
   color: #0f172a !important;
   border: 1px solid #cbd5e1 !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 10px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05) !important;
   padding: 0 !important;
   overflow: hidden;
 }
@@ -138,7 +159,7 @@ body {
 
 .leaflet-bar {
   border: 1px solid #cbd5e1 !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.08) !important;
   border-radius: 0.5rem !important;
   overflow: hidden;
 }

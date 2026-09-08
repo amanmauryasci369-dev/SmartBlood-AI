@@ -257,7 +257,7 @@ export const MapView: React.FC<MapViewProps> = ({
 }) => {
   // Navigation & View State
   const [selectedCity, setSelectedCity] = useState<string>('Delhi NCR');
-  const [activeBasemap, setActiveBasemap] = useState<string>('dark');
+  const [activeBasemap, setActiveBasemap] = useState<string>('light');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);

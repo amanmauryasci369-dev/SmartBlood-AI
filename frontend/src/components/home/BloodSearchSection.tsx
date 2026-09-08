@@ -23,6 +23,7 @@ interface BloodSearchSectionProps {
   onNavigateToTab?: (tab: any) => void;
   bloodBanks?: BloodBank[];
   inventory?: InventoryItem[];
+  onSelectFacility?: (facility: BloodBank) => void;
 }
 
 export interface BloodAvailabilityRow {
@@ -52,7 +53,8 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
   onOpenSOSModal,
   onNavigateToTab,
   bloodBanks = [],
-  inventory = []
+  inventory = [],
+  onSelectFacility
 }) => {
   // e-RaktKosh Form State
   const [selectedService, setSelectedService] = useState<string>('Blood Availability');
@@ -1176,10 +1178,45 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
 
                               <button
                                 type="button"
-                                onClick={() => setSelectedModalRow(row)}
-                                className="text-[11px] text-blue-700 hover:underline font-semibold cursor-pointer"
+                                onClick={() => {
+                                  const matched = bloodBanks.find(
+                                    b => b.name.toLowerCase() === row.bloodCenterName.toLowerCase() || 
+                                    (row.licenseNumber && b.license_number.toLowerCase() === row.licenseNumber.toLowerCase())
+                                  );
+                                  const bankObj: BloodBank = matched || {
+                                    id: row.sNo,
+                                    name: row.bloodCenterName,
+                                    short_name: row.bloodCenterName.split(' ')[0] + ' Blood Center',
+                                    parent_hospital: row.bloodCenterName,
+                                    license_number: row.licenseNumber || 'DL-VERIFIED',
+                                    district: row.district,
+                                    state: row.state,
+                                    address: row.address,
+                                    city: row.district,
+                                    pincode: '110001',
+                                    category: row.category,
+                                    contact_number: row.contactNumber,
+                                    email: 'info@bloodcenter.delhi.gov.in',
+                                    website: row.sourceUrl || 'https://eraktkosh.mohfw.gov.in/',
+                                    storage_capacity: (row.availabilityCount || 50) * 10,
+                                    cold_chain_verified: row.coldChainVerified,
+                                    source_name: row.sourceName || 'e-RaktKosh',
+                                    source_url: row.sourceUrl || 'https://eraktkosh.mohfw.gov.in/',
+                                    source_verified: row.sourceVerified ?? true,
+                                    latitude: 28.6139,
+                                    longitude: 77.2090,
+                                    is_active: true
+                                  };
+                                  if (onSelectFacility) onSelectFacility(bankObj);
+                                  if (onNavigateToTab) {
+                                    onNavigateToTab('blood-center-detail');
+                                  } else {
+                                    setSelectedModalRow(row);
+                                  }
+                                }}
+                                className="text-[11px] text-[#800020] hover:underline font-bold cursor-pointer"
                               >
-                                View Details
+                                View Details &rarr;
                               </button>
                             </div>
                           </div>

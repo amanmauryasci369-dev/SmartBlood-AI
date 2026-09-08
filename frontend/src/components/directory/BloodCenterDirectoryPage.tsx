@@ -20,12 +20,16 @@ interface BloodCenterDirectoryPageProps {
   bloodBanks: BloodBank[];
   inventory: InventoryItem[];
   onOpenSOSModal: () => void;
+  onSelectFacility?: (facility: BloodBank) => void;
+  onNavigateToTab?: (tab: any) => void;
 }
 
 export const BloodCenterDirectoryPage: React.FC<BloodCenterDirectoryPageProps> = ({
   bloodBanks,
   inventory,
   onOpenSOSModal,
+  onSelectFacility,
+  onNavigateToTab,
 }) => {
   const [selectedState, setSelectedState] = useState<string>('ALL');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
@@ -241,18 +245,29 @@ export const BloodCenterDirectoryPage: React.FC<BloodCenterDirectoryPageProps> =
                 <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
                   <a
                     href={`tel:${bank.contact_number}`}
-                    className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                    className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 transition-colors"
                   >
                     <PhoneCall className="w-3 h-3 text-slate-600" />
                     <span>{bank.contact_number}</span>
                   </a>
 
-                  <button
-                    onClick={onOpenSOSModal}
-                    className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white text-xs font-bold transition-colors cursor-pointer"
-                  >
-                    Request Stock
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => {
+                        if (onSelectFacility) onSelectFacility(bank);
+                        if (onNavigateToTab) onNavigateToTab('blood-center-detail');
+                      }}
+                      className="px-2.5 py-1.5 rounded-lg border border-[#800020] text-[#800020] hover:bg-rose-50 text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      View Details
+                    </button>
+                    <button
+                      onClick={onOpenSOSModal}
+                      className="px-2.5 py-1.5 rounded-lg bg-[#800020] hover:bg-[#68001a] text-white text-xs font-bold transition-colors cursor-pointer"
+                    >
+                      Request Stock
+                    </button>
+                  </div>
                 </div>
 
               </div>

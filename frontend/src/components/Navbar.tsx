@@ -36,6 +36,7 @@ export type NavTab =
   | 'home'
   | 'find-blood'
   | 'blood-centers'
+  | 'blood-center-detail'
   | 'nearby'
   | 'emergency-request'
   | 'donation-camps'
@@ -50,7 +51,8 @@ export type NavTab =
   | 'admin-configuration'
   | 'about'
   | 'patient-request'
-  | 'hospital-exchange';
+  | 'hospital-exchange'
+  | 'profile';
 
 interface NavbarProps {
   currentRole: UserRole;
@@ -241,10 +243,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Login / Register Pill Button */}
             <button
               type="button"
-              onClick={() => {
-                onRoleChange('ADMIN');
-                handleNavClick('admin-dashboard');
-              }}
+              onClick={() => handleNavClick('profile')}
               className="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#800020] hover:bg-[#660018] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
             >
               <UserIcon className="w-3.5 h-3.5" />

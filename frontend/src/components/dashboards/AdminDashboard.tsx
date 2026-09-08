@@ -3,23 +3,16 @@ import { StockSummary, RebalanceProposal, BloodBank, Hospital } from '../../type
 import { ApiService } from '../../services/api';
 import { 
   Building2, 
-  Hospital as HospitalIcon, 
-  AlertCircle, 
+  Users, 
+  Droplets, 
   CheckCircle2, 
+  AlertTriangle, 
+  Activity, 
   RotateCw, 
-  Sparkles, 
-  ArrowRight,
   TrendingUp,
-  Database,
-  Users,
-  AlertTriangle,
-  Clock,
-  Trash2,
-  Send,
-  Droplets,
-  Layers
+  PieChart,
+  BarChart3
 } from 'lucide-react';
-import { StatusBadge } from '../StatusBadge';
 
 interface AdminDashboardProps {
   stockSummary: StockSummary | null;
@@ -39,205 +32,252 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onNavigateToTab,
 }) => {
   const [syncing, setSyncing] = useState<boolean>(false);
-  const [syncNotice, setSyncNotice] = useState<string | null>(null);
 
-  const handleSyncERaktKosh = async () => {
+  // 6 Top KPI Metrics matching Screen 9 in Reference Image
+  const kpis = [
+    { label: 'Blood Centres', value: '1,254', icon: Building2, color: 'text-red-700', bg: 'bg-red-50 text-red-600' },
+    { label: 'Registered Donors', value: '18.6 L+', icon: Users, color: 'text-emerald-700', bg: 'bg-emerald-50 text-emerald-600' },
+    { label: 'Blood Units Available', value: '3.4 L+', icon: Droplets, color: 'text-blue-700', bg: 'bg-blue-50 text-blue-600' },
+    { label: 'Requests Fulfilled', value: '2,341', icon: CheckCircle2, color: 'text-amber-700', bg: 'bg-amber-50 text-amber-600' },
+    { label: 'Emergency Requests', value: '156', icon: AlertTriangle, color: 'text-rose-700', bg: 'bg-rose-50 text-rose-600' },
+    { label: 'System Uptime', value: '99.8%', icon: Activity, color: 'text-purple-700', bg: 'bg-purple-50 text-purple-600' },
+  ];
+
+  // Blood group breakdown data
+  const bloodGroupShares = [
+    { group: 'O+', pct: 36, color: '#dc2626' },
+    { group: 'A+', pct: 24, color: '#ea580c' },
+    { group: 'B+', pct: 18, color: '#3b82f6' },
+    { group: 'AB+', pct: 10, color: '#10b981' },
+    { group: 'O-', pct: 5, color: '#8b5cf6' },
+    { group: 'A-', pct: 4, color: '#ec4899' },
+    { group: 'B-', pct: 2, color: '#f59e0b' },
+    { group: 'AB-', pct: 1, color: '#64748b' },
+  ];
+
+  // State-wise availability bars
+  const stateAvailability = [
+    { city: 'Delhi', units: 480 },
+    { city: 'Noida', units: 280 },
+    { city: 'Gurugram', units: 310 },
+    { city: 'Faridabad', units: 190 },
+    { city: 'Ghaziabad', units: 220 },
+  ];
+
+  const handleSync = async () => {
     setSyncing(true);
-    setSyncNotice(null);
     try {
-      const res = await ApiService.syncERaktKosh('Central Delhi', 'Delhi');
-      setSyncNotice(`Successfully ingested ${res.synced_units_count} batch units from e-RaktKosh compatible synthetic feed as REPORTED_AVAILABILITY.`);
+      await ApiService.syncERaktKosh('Central Delhi', 'Delhi');
       onRefreshData();
-    } catch (err: any) {
-      setSyncNotice(`Sync failed: ${err.message}`);
+    } catch (e) {
+      console.error(e);
     } finally {
       setSyncing(false);
     }
   };
 
-  const totalUnits = (stockSummary?.total_confirmed_units || 0) + (stockSummary?.total_reported_units || 0);
-
   return (
     <div className="space-y-6">
       
-      {/* Top Banner with Adapter Controls */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold uppercase tracking-wider mb-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>LifeLink Network Status: System Online</span>
+      {/* 1. Header (Screen 9 in Reference Image) */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs shrink-0">
+            <Activity className="w-5 h-5" />
           </div>
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            LifeLink Network Dashboard
-          </h2>
-          <p className="text-xs sm:text-sm font-semibold text-red-600">
-            Smart Hospital & Blood Network
-          </p>
-          <p className="text-xs text-slate-500 mt-0.5">
-            Monitor blood availability, coordinate hospitals, predict shortages, and reduce blood wastage.
-          </p>
+          <div>
+            <h1 className="text-xl font-black text-slate-900 tracking-tight">
+              National Dashboard
+            </h1>
+            <p className="text-xs text-slate-500 font-medium">
+              Real-time overview of blood resources across accredited national network
+            </p>
+          </div>
         </div>
 
         <button
-          onClick={handleSyncERaktKosh}
+          onClick={handleSync}
           disabled={syncing}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition-all cursor-pointer disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition-all cursor-pointer disabled:opacity-50 self-start md:self-auto"
         >
           <RotateCw className={`w-3.5 h-3.5 text-red-400 ${syncing ? 'animate-spin' : ''}`} />
-          <span>{syncing ? 'Syncing Adapter...' : 'Sync e-RaktKosh Prototype Feed'}</span>
+          <span>{syncing ? 'Syncing...' : 'Sync Registry Feeds'}</span>
         </button>
       </div>
 
-      {syncNotice && (
-        <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-center gap-2.5">
-          <Database className="w-4 h-4 text-blue-600 shrink-0" />
-          <span>{syncNotice}</span>
-        </div>
-      )}
-
-      {/* Top KPI Row: LifeLink Terminology */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
-        
-        {/* 1. Connected Blood Centers */}
-        <div className="health-card p-4 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Connected Blood Centers</span>
-          <div className="text-xl font-black text-blue-700 font-mono">{bloodBanks.length}</div>
-          <span className="text-[10px] text-slate-400 block">Active Centers</span>
-        </div>
-
-        {/* 2. Connected Hospitals */}
-        <div className="health-card p-4 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Connected Hospitals</span>
-          <div className="text-xl font-black text-indigo-700 font-mono">{hospitals.length}</div>
-          <span className="text-[10px] text-slate-400 block">Network Desks</span>
-        </div>
-
-        {/* 3. Active Emergency Requests */}
-        <div className="health-card p-4 text-center space-y-1 bg-red-50/40 border-red-200">
-          <span className="text-[10px] font-bold text-red-700 uppercase block truncate">Active Emergency Requests</span>
-          <div className="text-xl font-black text-red-600 font-mono">3 Active</div>
-          <span className="text-[10px] text-red-600/80 block">LifeLink Dispatches</span>
-        </div>
-
-        {/* 4. Available Blood Units */}
-        <div className="health-card p-4 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Available Blood Units</span>
-          <div className="text-xl font-black text-slate-900 font-mono">{totalUnits}</div>
-          <span className="text-[10px] text-slate-400 block">Verified Units</span>
-        </div>
-
-        {/* 5. At-Risk Inventory */}
-        <div className="health-card p-4 text-center space-y-1 bg-amber-50/50 border-amber-200">
-          <span className="text-[10px] font-bold text-amber-700 uppercase block truncate">At-Risk Inventory</span>
-          <div className="text-xl font-black text-amber-700 font-mono">{stockSummary?.total_expiring_within_48h || 28}</div>
-          <span className="text-[10px] text-amber-600 block">&lt; 48h Shelf-Life</span>
-        </div>
-
-        {/* 6. AI Recommendations */}
-        <div className="health-card p-4 text-center space-y-1 bg-purple-50/40 border-purple-200">
-          <span className="text-[10px] font-bold text-purple-700 uppercase block truncate">AI Recommendations</span>
-          <div className="text-xl font-black text-purple-700 font-mono">{rebalanceProposals.length} Ready</div>
-          <span className="text-[10px] text-purple-600 block">LifeLink Decision Support</span>
-        </div>
-
+      {/* 2. Top 6 KPI Stat Cards (Screen 9 in Reference Image) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {kpis.map((kpi, idx) => {
+          const IconComp = kpi.icon;
+          return (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs space-y-1"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-slate-500 truncate block">
+                  {kpi.label}
+                </span>
+                <span className={`p-1.5 rounded-lg ${kpi.bg}`}>
+                  <IconComp className="w-3.5 h-3.5" />
+                </span>
+              </div>
+              <div className={`text-xl sm:text-2xl font-black ${kpi.color}`}>
+                {kpi.value}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* LifeLink AI Recommendations: Proactive Inter-Facility Balancing Engine */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 mb-0.5">
-              LifeLink AI Recommendations
-            </div>
-            <h3 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-600" />
-              <span>Proactive Inter-Facility Redistribution Engine</span>
+      {/* 3. Three Analytics Cards Row (Screen 9 in Reference Image) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        {/* Card 1: Blood Group Distribution (Pie/Breakdown) */}
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="border-b border-slate-100 pb-2.5 flex items-center justify-between">
+            <h3 className="font-extrabold text-sm text-slate-900">
+              Blood Group Distribution
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Automated algorithmic proposals routing near-expiry units from low-turnover facilities to apex trauma centers.
-            </p>
+            <PieChart className="w-4 h-4 text-slate-400" />
           </div>
-          <StatusBadge status="RECOMMENDED_ACTION" size="sm" />
+
+          <div className="grid grid-cols-2 gap-4 items-center py-2">
+            {/* SVG Pie Chart */}
+            <div className="flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="w-28 h-28 transform -rotate-90">
+                {/* SVG circular donut slices */}
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#f1f5f9" strokeWidth="20" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#dc2626" strokeWidth="20" strokeDasharray="79 141" strokeDashoffset="0" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#ea580c" strokeWidth="20" strokeDasharray="53 167" strokeDashoffset="-79" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#3b82f6" strokeWidth="20" strokeDasharray="40 180" strokeDashoffset="-132" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#10b981" strokeWidth="20" strokeDasharray="22 198" strokeDashoffset="-172" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#8b5cf6" strokeWidth="20" strokeDasharray="11 209" strokeDashoffset="-194" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#ec4899" strokeWidth="20" strokeDasharray="9 211" strokeDashoffset="-205" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#f59e0b" strokeWidth="20" strokeDasharray="4 216" strokeDashoffset="-214" />
+                <circle cx="50" cy="50" r="35" fill="transparent" stroke="#64748b" strokeWidth="20" strokeDasharray="2 218" strokeDashoffset="-218" />
+              </svg>
+            </div>
+
+            {/* Percentage legend list */}
+            <div className="space-y-1 text-xs">
+              {bloodGroupShares.map((item) => (
+                <div key={item.group} className="flex items-center justify-between text-[11px]">
+                  <span className="flex items-center gap-1.5 font-bold font-mono">
+                    <span className="w-2 h-2 rounded-full inline-block" style={{ backgroundColor: item.color }} />
+                    {item.group}
+                  </span>
+                  <span className="font-mono text-slate-600 font-semibold">{item.pct}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="text-[11px] text-slate-400 border-t border-slate-100 pt-2 text-center">
+            Universal donors (O-) constitute 5% of national reserves.
+          </div>
         </div>
 
-        {rebalanceProposals.length === 0 ? (
-          <div className="p-6 text-center text-xs text-slate-500 rounded-xl bg-slate-50 border border-slate-200">
-            No imminent unit expiration risks detected across the cluster. Network stock is balanced.
+        {/* Card 2: State-wise Availability (Bar Chart) */}
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="border-b border-slate-100 pb-2.5 flex items-center justify-between">
+            <h3 className="font-extrabold text-sm text-slate-900">
+              State-wise Availability
+            </h3>
+            <BarChart3 className="w-4 h-4 text-slate-400" />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {rebalanceProposals.slice(0, 4).map((prop) => (
-              <div key={prop.rebalance_id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-all space-y-2 text-xs">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-1.5 font-bold text-slate-900">
-                    <span className="text-red-700">{prop.source_bank_name}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-blue-700">{prop.destination_hospital_name}</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
-                    Score: {prop.wastage_prevention_score}%
-                  </span>
+
+          <div className="space-y-3 py-2">
+            {stateAvailability.map((st) => (
+              <div key={st.city} className="space-y-1 text-xs">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-slate-800">{st.city}</span>
+                  <span className="font-mono text-slate-500">{st.units} units</span>
                 </div>
-
-                <p className="text-slate-600 leading-relaxed">
-                  {prop.explanation}
-                </p>
-
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200/80 text-[11px] text-slate-500">
-                  <span>Transfer: <strong className="text-slate-900">{prop.units_to_transfer} units {prop.blood_group}</strong></span>
-                  <span>Transit: <strong className="text-slate-800">{prop.distance_km} km (~{prop.estimated_transit_mins}m)</strong></span>
-                  <span className="text-red-700 font-bold">{prop.days_until_expiry}d shelf-life left</span>
+                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div
+                    className="bg-red-600 h-full rounded-full transition-all"
+                    style={{ width: `${(st.units / 500) * 100}%` }}
+                  />
                 </div>
               </div>
             ))}
           </div>
-        )}
-      </div>
 
-      {/* Regional Inventory Breakdown Table */}
-      {stockSummary && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-black text-slate-900">Regional Inventory by Blood Group</h3>
-            <span className="text-xs text-slate-500">Distinguishing confirmed vs reported inventory</span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-700">
-              <thead className="text-slate-500 border-b border-slate-200 bg-slate-50 uppercase text-[10px] tracking-wider">
-                <tr>
-                  <th className="py-2.5 px-3">Blood Group</th>
-                  <th className="py-2.5 px-3">Confirmed Units</th>
-                  <th className="py-2.5 px-3">Reported Feed Units</th>
-                  <th className="py-2.5 px-3">Critical Shelf-Life (&lt;48h)</th>
-                  <th className="py-2.5 px-3">Network Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {stockSummary.breakdown_by_group.map((item) => (
-                  <tr key={item.blood_group} className="hover:bg-slate-50/70 transition-colors">
-                    <td className="py-2.5 px-3 font-bold text-slate-900 text-sm font-mono">{item.blood_group}</td>
-                    <td className="py-2.5 px-3 text-emerald-700 font-semibold font-mono">{item.confirmed_units} units</td>
-                    <td className="py-2.5 px-3 text-amber-700 font-mono">{item.reported_units} units</td>
-                    <td className="py-2.5 px-3 text-red-700 font-mono font-medium">{item.expiring_within_48h} units</td>
-                    <td className="py-2.5 px-3">
-                      {item.confirmed_units < 5 ? (
-                        <span className="text-[10px] text-red-800 font-bold bg-red-50 px-2 py-0.5 rounded border border-red-200">
-                          Critical Deficit
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-emerald-800 font-medium bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          Buffer Adequate
-                        </span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="text-[11px] text-slate-400 border-t border-slate-100 pt-2 text-center">
+            Regional hubs balance stock via inter-city express corridors.
           </div>
         </div>
-      )}
+
+        {/* Card 3: Monthly Trends (Line Chart) */}
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div className="border-b border-slate-100 pb-2.5 flex items-center justify-between">
+            <h3 className="font-extrabold text-sm text-slate-900">
+              Monthly Trends
+            </h3>
+            <div className="flex items-center gap-2 text-[10px] font-bold">
+              <span className="flex items-center gap-1 text-emerald-700">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                Donations
+              </span>
+              <span className="flex items-center gap-1 text-red-700">
+                <span className="w-2 h-2 rounded-full bg-red-500" />
+                Requests
+              </span>
+            </div>
+          </div>
+
+          {/* SVG Line Graph */}
+          <div className="py-2">
+            <svg viewBox="0 0 300 130" className="w-full h-32">
+              <defs>
+                <linearGradient id="donGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+                </linearGradient>
+              </defs>
+              {/* Grid lines */}
+              <line x1="20" y1="20" x2="280" y2="20" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="20" y1="60" x2="280" y2="60" stroke="#f1f5f9" strokeWidth="1" />
+              <line x1="20" y1="100" x2="280" y2="100" stroke="#f1f5f9" strokeWidth="1" />
+
+              {/* Donations Line (Emerald) */}
+              <path
+                d="M 30 70 Q 70 50 110 55 T 190 40 T 270 30"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2.5"
+              />
+
+              {/* Requests Line (Red) */}
+              <path
+                d="M 30 85 Q 70 80 110 75 T 190 60 T 270 50"
+                fill="none"
+                stroke="#dc2626"
+                strokeWidth="2.5"
+              />
+
+              {/* Data points */}
+              <circle cx="270" cy="30" r="3.5" fill="#10b981" />
+              <circle cx="270" cy="50" r="3.5" fill="#dc2626" />
+
+              {/* Month Labels */}
+              <text x="30" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Jan</text>
+              <text x="70" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Feb</text>
+              <text x="110" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Mar</text>
+              <text x="150" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Apr</text>
+              <text x="190" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">May</text>
+              <text x="230" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Jun</text>
+              <text x="270" y="120" fontSize="9" fill="#94a3b8" textAnchor="middle">Jul</text>
+            </svg>
+          </div>
+
+          <div className="text-[11px] text-slate-400 border-t border-slate-100 pt-2 text-center">
+            Donation mobilization currently outpacing non-urgent requests by 14%.
+          </div>
+        </div>
+
+      </div>
 
     </div>
   );

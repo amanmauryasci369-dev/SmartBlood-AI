@@ -105,18 +105,119 @@ export const DonationCampsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       
-      {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-1">
-            <HeartHandshake className="w-3.5 h-3.5" />
-            <span>Voluntary Blood Drives</span>
+      {/* 1. Be a Hero, Donate Blood Hero Card (Screen 6 in Reference Image) */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs relative overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          {/* Left: Heading & 4 Steps */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shadow-xs">
+                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                  <path d="M12 2.5C12 2.5 6 9.5 6 14C6 17.3137 8.68629 20 12 20C15.3137 20 18 17.3137 18 14C18 9.5 12 2.5 12 2.5Z" fill="#ffffff" />
+                </svg>
+              </div>
+              <div>
+                <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  Be a Hero, Donate Blood
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                  One donation can save up to 3 lives.
+                </p>
+              </div>
+            </div>
+
+            {/* 4-Step Process Strip (Screen 6 in Reference) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  1
+                </span>
+                <span className="text-xs font-bold text-slate-800">Register</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  2
+                </span>
+                <span className="text-xs font-bold text-slate-800">Check Eligibility</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  3
+                </span>
+                <span className="text-xs font-bold text-slate-800">Book Appointment</span>
+              </div>
+
+              <div className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                <span className="w-6 h-6 rounded-full bg-red-600 text-white text-xs font-bold flex items-center justify-center shrink-0">
+                  4
+                </span>
+                <span className="text-xs font-bold text-slate-800">Donate &amp; Save Lives</span>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <button
+                onClick={() => setShowRegModal(mockCamps[0])}
+                className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-extrabold transition-all shadow-xs cursor-pointer"
+              >
+                Register as Donor
+              </button>
+
+              <button
+                onClick={() => {
+                  const el = document.getElementById('donation-camps-list');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 text-xs font-bold transition-all cursor-pointer"
+              >
+                Learn More
+              </button>
+            </div>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            Blood Donation Camps
+
+          {/* Right: Artwork */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center text-center p-4">
+            <div className="w-28 h-36 flex items-center justify-center relative filter drop-shadow-md">
+              <svg viewBox="0 0 100 130" className="w-full h-full">
+                <defs>
+                  <linearGradient id="campDropGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+                    <stop offset="0%" stopColor="#f87171" />
+                    <stop offset="50%" stopColor="#dc2626" />
+                    <stop offset="100%" stopColor="#991b1b" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M50 8 C50 8 16 55 16 85 C16 104.882 31.118 121 50 121 C68.882 121 84 104.882 84 85 C84 55 50 8 50 8 Z"
+                  fill="url(#campDropGrad)"
+                />
+                <path d="M50 16 C50 16 28 55 28 78 C28 60 44 32 50 16 Z" fill="white" opacity="0.4" />
+              </svg>
+            </div>
+            <div className="mt-3">
+              <div className="font-serif italic text-sm text-[#9B001B] font-bold">
+                Donate Today
+              </div>
+              <div className="text-xs text-slate-500 font-medium">
+                Be Someone's Tomorrow ❤️
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      {/* 2. Upcoming Camps Filter & Header */}
+      <div id="donation-camps-list" className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-lg font-black text-slate-900 tracking-tight">
+            Upcoming Scheduled Camps &amp; Mobile Drives
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Discover scheduled community and mobile donation camps across regional centers. Pre-register for expedited donation.
+          <p className="text-xs text-slate-500">
+            Pre-register for expedited donor check-in at verified regional drives
           </p>
         </div>
 

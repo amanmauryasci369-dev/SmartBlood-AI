@@ -55,6 +55,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         onOpenSOSModal={onOpenSOSModal} 
         onNavigateToTab={onNavigateToTab}
         bloodBanks={bloodBanks}
+        onSelectFacility={onSelectFacility}
       />
 
       {/* 4. Ongoing Initiatives (Reference Design Section 8) */}

@@ -327,6 +327,125 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
           ===================================================================== */}
       {activeSubTab === 'find' && (
         <div className="space-y-6">
+
+          {/* Screen 10 Reference Card: Hospital Blood Exchange (FEFO) Table */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
+                  <span>Hospital Blood Exchange (FEFO)</span>
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Optimize inventory across the network • Automated shelf-life triage
+                </p>
+              </div>
+
+              {/* Tabs: Available Stock, Transfer Requests, Recommended */}
+              <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+                <span className="px-3 py-1 rounded-lg bg-red-600 text-white shadow-xs">
+                  Available Stock
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab('incoming')}
+                  className="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
+                >
+                  Transfer Requests
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSubTab('inventory')}
+                  className="px-3 py-1 rounded-lg text-slate-600 hover:text-slate-900 cursor-pointer"
+                >
+                  Recommended
+                </button>
+              </div>
+            </div>
+
+            {/* FEFO Priority Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold">
+                    <th className="py-3 px-5">Blood Bank</th>
+                    <th className="py-3 px-3 text-center">Blood Group</th>
+                    <th className="py-3 px-4">Component</th>
+                    <th className="py-3 px-3 text-center">Units</th>
+                    <th className="py-3 px-4">Expiry Date</th>
+                    <th className="py-3 px-3 text-center">Days Left</th>
+                    <th className="py-3 px-4 text-center">Priority</th>
+                    <th className="py-3 px-5 text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-800">
+                  {[
+                    { bank: 'Hindu Rao Hospital', group: 'O+', component: 'PRBC', units: 10, expiry: '2026-09-10', days: 2, priority: 'Critical', action: 'Transfer' },
+                    { bank: 'Safdarjung Hospital', group: 'A-', component: 'Platelets', units: 6, expiry: '2026-09-12', days: 4, priority: 'High', action: 'Transfer' },
+                    { bank: 'Moolchand Hospital', group: 'B+', component: 'FFP', units: 8, expiry: '2026-09-18', days: 10, priority: 'Medium', action: 'Transfer' },
+                    { bank: 'AIIMS Blood Centre', group: 'O-', component: 'PRBC', units: 12, expiry: '2026-10-01', days: 23, priority: 'Low', action: 'View' },
+                    { bank: 'Lok Nayak Hospital', group: 'AB-', component: 'PRBC', units: 5, expiry: '2026-09-14', days: 6, priority: 'High', action: 'Transfer' },
+                  ].map((row, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="py-3.5 px-5 font-bold text-slate-900">
+                        {row.bank}
+                      </td>
+                      <td className="py-3.5 px-3 text-center font-black font-mono text-sm text-[#9B001B]">
+                        {row.group}
+                      </td>
+                      <td className="py-3.5 px-4 font-medium text-slate-700">
+                        {row.component}
+                      </td>
+                      <td className="py-3.5 px-3 text-center font-mono font-bold">
+                        {row.units}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-slate-500">
+                        {row.expiry}
+                      </td>
+                      <td className="py-3.5 px-3 text-center font-mono font-extrabold text-slate-800">
+                        {row.days}
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                          row.priority === 'Critical'
+                            ? 'bg-red-50 text-red-700 border border-red-200'
+                            : row.priority === 'High'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : row.priority === 'Medium'
+                            ? 'bg-yellow-50 text-yellow-800 border border-yellow-200'
+                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                        }`}>
+                          {row.priority}
+                        </span>
+                      </td>
+                      <td className="py-3.5 px-5 text-right">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setModalCandidate({
+                              hospitalId: idx + 1,
+                              hospitalName: row.bank,
+                              bloodGroup: row.group,
+                              component: row.component,
+                              units: []
+                            });
+                            setIsModalOpen(true);
+                          }}
+                          className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            row.action === 'Transfer'
+                              ? 'bg-red-600 hover:bg-red-700 text-white shadow-2xs'
+                              : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                          }`}
+                        >
+                          {row.action}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
           
           {/* Search Form Card */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm space-y-4">
