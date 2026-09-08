@@ -10,6 +10,22 @@ from app.api.v1.api import api_router
 async def lifespan(app: FastAPI):
     # Initialize database tables
     Base.metadata.create_all(bind=engine)
+    
+    # Auto-seed database if user records are missing
+    try:
+        from app.core.database import SessionLocal
+        from app.models.user import User
+        from app.seed import seed_database
+        from app.db.seed_hospital_exchange import seed_hospital_exchange
+
+        with SessionLocal() as db:
+            if db.query(User).count() == 0:
+                print("Database is empty. Running seed_database() and seed_hospital_exchange()...")
+                seed_database()
+                seed_hospital_exchange()
+    except Exception as e:
+        print(f"Startup database seeding notification: {e}")
+        
     yield
 
 

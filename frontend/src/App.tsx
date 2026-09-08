@@ -102,6 +102,7 @@ export const App: React.FC = () => {
       await ApiService.login(creds.email, creds.pass);
     } catch (err) {
       console.warn('Silent role authentication handled:', err);
+      ApiService.clearToken();
     }
   };
 

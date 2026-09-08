@@ -58,6 +58,12 @@ export class ApiService {
 
     if (!response.ok) {
       const errorBody = await response.json().catch(() => ({ detail: response.statusText }));
+      if (
+        response.status === 401 ||
+        (typeof errorBody?.detail === 'string' && errorBody.detail.toLowerCase().includes('token'))
+      ) {
+        this.clearToken();
+      }
       throw new Error(errorBody.detail || `Request failed with status ${response.status}`);
     }
 
