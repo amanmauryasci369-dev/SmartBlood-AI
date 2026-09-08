@@ -81,7 +81,7 @@ export const HospitalNetworkPage: React.FC = () => {
 
   const handleAccept = async (id: number) => {
     try {
-      await ApiService.acceptHospitalRequest(id, 2, 'Accepted via SmartBlood H2H peer allocation network.');
+      await ApiService.acceptHospitalRequest(id, 2, 'Accepted via LifeLink H2H peer allocation network.');
       fetchOverview();
     } catch (err: any) {
       alert(`Accept failed: ${err.message}`);
@@ -112,7 +112,7 @@ export const HospitalNetworkPage: React.FC = () => {
     return (
       <div className="flex flex-col items-center justify-center min-h-[450px] space-y-3 bg-white p-8 rounded-2xl border border-slate-200">
         <RefreshCw className="w-8 h-8 text-red-600 animate-spin" />
-        <p className="text-slate-600 font-medium text-xs">Scanning Hospital-to-Hospital Peer Sharing Network...</p>
+        <p className="text-slate-600 font-medium text-xs">Scanning LifeLink Hospital-to-Hospital Peer Network...</p>
       </div>
     );
   }
@@ -132,6 +132,10 @@ export const HospitalNetworkPage: React.FC = () => {
     );
   }
 
+  const activeRequestsCount = overview.requests.filter(r => r.status === 'PENDING' || r.status === 'SEARCHING' || r.status === 'VERIFICATION_REQUIRED' || r.status === 'MATCH_FOUND').length;
+  const pendingTransfersCount = overview.requests.filter(r => r.status === 'PENDING' || r.status === 'SEARCHING').length;
+  const completedTransfersCount = overview.requests.filter(r => r.status === 'FULFILLED' || r.status === 'ACCEPTED' || r.status === 'CONFIRMED').length;
+
   return (
     <div className="space-y-6">
       
@@ -139,35 +143,60 @@ export const HospitalNetworkPage: React.FC = () => {
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wider">
-              Hospital-to-Hospital Network
+            <span className="px-2.5 py-0.5 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-bold uppercase tracking-wider">
+              LifeLink H2H Network
             </span>
             <span className="px-2.5 py-0.5 bg-blue-50 text-blue-800 border border-blue-200 rounded-full text-xs font-bold">
-              {overview.hospitals.length} Hospitals &bull; {overview.blood_banks.length} Blood Banks
+              {overview.hospitals.length} Hospitals &bull; {overview.blood_banks.length} Blood Centers
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2 tracking-tight">
-            Inter-Hospital Resource-Sharing Network
+            LifeLink Hospital Network
           </h2>
-          <p className="text-slate-500 text-xs mt-0.5 max-w-2xl">
-            Direct peer-to-peer blood requisitioning and cross-match coordination between healthcare facilities and apex trauma centers.
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5 max-w-2xl font-medium">
+            Connect hospitals and blood centers to coordinate critical blood resources.
           </p>
         </div>
 
         <div className="flex items-center space-x-2.5">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center space-x-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+            className="flex items-center space-x-1.5 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer tracking-wide uppercase"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Create Peer Request</span>
+            <span>Coordinate Transfer</span>
           </button>
           <button
             onClick={fetchOverview}
-            className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer"
+            className="p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition cursor-pointer"
+            title="Refresh Network"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
+        </div>
+      </div>
+
+      {/* KPI Stats Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
+        <div className="health-card p-3.5 text-center">
+          <span className="text-[10px] text-slate-400 uppercase font-bold block">Connected Hospitals</span>
+          <strong className="text-base text-slate-900 font-mono font-black">{overview.hospitals.length}</strong>
+        </div>
+        <div className="health-card p-3.5 text-center">
+          <span className="text-[10px] text-slate-400 uppercase font-bold block">Connected Blood Centers</span>
+          <strong className="text-base text-blue-700 font-mono font-black">{overview.blood_banks.length}</strong>
+        </div>
+        <div className="health-card p-3.5 text-center bg-red-50/40 border-red-200">
+          <span className="text-[10px] text-red-600 uppercase font-bold block">Active Requests</span>
+          <strong className="text-base text-red-700 font-mono font-black">{activeRequestsCount}</strong>
+        </div>
+        <div className="health-card p-3.5 text-center bg-amber-50/40 border-amber-200">
+          <span className="text-[10px] text-amber-700 uppercase font-bold block">Pending Transfers</span>
+          <strong className="text-base text-amber-800 font-mono font-black">{pendingTransfersCount}</strong>
+        </div>
+        <div className="health-card p-3.5 text-center bg-emerald-50/40 border-emerald-200 col-span-2 sm:col-span-1">
+          <span className="text-[10px] text-emerald-700 uppercase font-bold block">Completed Transfers</span>
+          <strong className="text-base text-emerald-800 font-mono font-black">{completedTransfersCount}</strong>
         </div>
       </div>
 

@@ -20,6 +20,8 @@ import { AIBloodIntelligenceDashboard } from './components/insights/AIBloodIntel
 import { BloodInventoryPage } from './components/inventory/BloodInventoryPage';
 import { AboutPage } from './components/about/AboutPage';
 import { MapView } from './components/MapView';
+import { BRAND } from './constants/branding';
+import { LifeLinkLogo } from './components/common/LifeLinkLogo';
 
 import { AdminDashboard } from './components/dashboards/AdminDashboard';
 import { BloodBankDashboard } from './components/dashboards/BloodBankDashboard';
@@ -130,6 +132,11 @@ export const App: React.FC = () => {
       loadAllData();
     });
   }, [role]);
+
+  // Dynamic Browser & Page Title
+  useEffect(() => {
+    document.title = BRAND.TITLES[activeTab] || BRAND.FULL_NAME;
+  }, [activeTab]);
 
   const handleRoleChange = (newRole: UserRole) => {
     setRole(newRole);
@@ -345,52 +352,49 @@ export const App: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold">
-                  SB
-                </div>
-                <span className="text-base font-black text-slate-900">
-                  SmartBlood <span className="text-red-600">AI</span>
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                Autonomous blood resource intelligence, FEFO shelf-life prioritization, and emergency inter-hospital allocation system.
+              <LifeLinkLogo size="md" showTagline={true} />
+              <p className="text-xs font-semibold text-red-600">
+                "Connect. Coordinate. Save Time."
               </p>
-              <div className="text-[11px] text-slate-400 font-mono">
-                Version 1.0.0 &bull; Evaluation Build
+              <p className="text-xs text-slate-500 leading-relaxed">
+                An intelligent network for blood availability, emergency coordination, shortage prediction, and resource optimization.
+              </p>
+              <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-500 font-medium">
+                AI-powered decision support for intelligent blood resource coordination.
               </div>
             </div>
 
             <div>
-              <h4 className="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Citizen Services</h4>
+              <h4 className="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Public Services</h4>
               <ul className="space-y-2 text-slate-500">
-                <li><button onClick={() => setActiveTab('find-blood')} className="hover:text-red-600">Find Blood Availability</button></li>
-                <li><button onClick={() => setActiveTab('blood-centers')} className="hover:text-red-600">Blood Center Directory</button></li>
-                <li><button onClick={() => setActiveTab('donation-camps')} className="hover:text-red-600">Blood Donation Camps</button></li>
-                <li><button onClick={() => setActiveTab('donors')} className="hover:text-red-600">Donor Registration Portal</button></li>
-                <li><button onClick={() => setIsSOSModalOpen(true)} className="hover:text-red-600 text-red-600 font-bold">Need Blood Now (SOS)</button></li>
+                <li><button onClick={() => setActiveTab('find-blood')} className="hover:text-red-600 cursor-pointer">Find Blood</button></li>
+                <li><button onClick={() => setActiveTab('blood-centers')} className="hover:text-red-600 cursor-pointer">Blood Centers</button></li>
+                <li><button onClick={() => setActiveTab('emergency-request')} className="hover:text-red-600 text-red-600 font-bold cursor-pointer">Emergency Coordination</button></li>
+                <li><button onClick={() => setActiveTab('donation-camps')} className="hover:text-red-600 cursor-pointer">Donation Camps</button></li>
+                <li><button onClick={() => setActiveTab('donors')} className="hover:text-red-600 cursor-pointer">Donors</button></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">Clinical Network</h4>
               <ul className="space-y-2 text-slate-500">
-                <li><button onClick={() => setActiveTab('hospital-network')} className="hover:text-red-600">Hospital Resource Network</button></li>
-                <li><button onClick={() => setActiveTab('hospital-communications')} className="hover:text-red-600">Transfusion Coordination Comms</button></li>
-                <li><button onClick={() => setActiveTab('inventory')} className="hover:text-red-600">Laboratory FEFO Stock</button></li>
-                <li><button onClick={() => setActiveTab('expiry-risk')} className="hover:text-red-600">Expiry Decay Analysis</button></li>
-                <li><button onClick={() => setActiveTab('wastage-analytics')} className="hover:text-red-600">Hemovigilance Wastage Audit</button></li>
+                <li><button onClick={() => setActiveTab('hospital-network')} className="hover:text-red-600 cursor-pointer">Hospitals Network (H2H)</button></li>
+                <li><button onClick={() => setActiveTab('hospital-communications')} className="hover:text-red-600 cursor-pointer">Transfusion Communications</button></li>
+                <li><button onClick={() => setActiveTab('inventory')} className="hover:text-red-600 cursor-pointer">LifeLink Inventory (FEFO)</button></li>
+                <li><button onClick={() => setActiveTab('expiry-risk')} className="hover:text-red-600 cursor-pointer">Expiry Risk Engine</button></li>
+                <li><button onClick={() => setActiveTab('wastage-analytics')} className="hover:text-red-600 cursor-pointer">Wastage Reports</button></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">System & Governance</h4>
+              <h4 className="font-bold text-slate-900 uppercase tracking-wider mb-3 text-xs">System & Links</h4>
               <ul className="space-y-2 text-slate-500">
-                <li><button onClick={() => setActiveTab('about')} className="hover:text-red-600">About SmartBlood AI</button></li>
-                <li><button onClick={() => setActiveTab('ai-insights')} className="hover:text-red-600">AI Intelligence Architecture</button></li>
-                <li><button onClick={() => setIsMetricsModalOpen(true)} className="hover:text-red-600">Scikit-Learn Model Metrics</button></li>
-                <li><span className="text-slate-400">Privacy & Masked Donor Policy</span></li>
+                <li><button onClick={() => setActiveTab('about')} className="hover:text-red-600 cursor-pointer">About LifeLink</button></li>
+                <li><button onClick={() => setActiveTab('ai-insights')} className="hover:text-red-600 cursor-pointer">LifeLink Intelligence</button></li>
+                <li><button onClick={() => setIsMetricsModalOpen(true)} className="hover:text-red-600 cursor-pointer">Model Performance Metrics</button></li>
+                <li><span className="text-slate-400">Privacy Policy (Masked Donors)</span></li>
                 <li><span className="text-slate-400">Terms of Clinical Decision Support</span></li>
+                <li><span className="text-slate-400">Contact: support@lifelink.health</span></li>
               </ul>
             </div>
 
@@ -398,10 +402,10 @@ export const App: React.FC = () => {
 
           <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left text-[11px] text-slate-500">
             <p>
-              Prototype developed for Smart India Hackathon 2026 — Problem Statement 26202.
+              LifeLink &bull; Smart Hospital & Blood Network &bull; Prototype for Healthcare Hackathon 2026.
             </p>
             <p className="text-slate-400">
-              Clinical decision support layer. Not affiliated with or replacing official Ministry of Health portals.
+              AI-powered decision support for intelligent blood resource coordination. Prototype with e-RaktKosh-compatible feed.
             </p>
           </div>
 

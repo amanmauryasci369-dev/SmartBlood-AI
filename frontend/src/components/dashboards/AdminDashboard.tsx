@@ -63,14 +63,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       {/* Top Banner with Adapter Controls */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-800 text-xs font-bold uppercase tracking-wider mb-1">
-            Regional Transfusion Command Hub
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold uppercase tracking-wider mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>LifeLink Network Status: System Online</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            Administrative Management & Oversight
+            LifeLink Network Dashboard
           </h2>
+          <p className="text-xs sm:text-sm font-semibold text-red-600">
+            Smart Hospital & Blood Network
+          </p>
           <p className="text-xs text-slate-500 mt-0.5">
-            Autonomous multi-facility inventory monitoring, adapter synchronization, and proactive shelf-life balancing.
+            Monitor blood availability, coordinate hospitals, predict shortages, and reduce blood wastage.
           </p>
         </div>
 
@@ -80,7 +84,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition-all cursor-pointer disabled:opacity-50"
         >
           <RotateCw className={`w-3.5 h-3.5 text-red-400 ${syncing ? 'animate-spin' : ''}`} />
-          <span>{syncing ? 'Syncing Adapter...' : 'Sync e-RaktKosh Adapter Feed'}</span>
+          <span>{syncing ? 'Syncing Adapter...' : 'Sync e-RaktKosh Prototype Feed'}</span>
         </button>
       </div>
 
@@ -91,71 +95,60 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       )}
 
-      {/* Top Required KPI Row: 8 Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 text-xs">
+      {/* Top KPI Row: LifeLink Terminology */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs">
         
-        {/* 1. Total Blood Units */}
-        <div className="health-card p-3.5 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Total Units</span>
-          <div className="text-lg font-black text-slate-900 font-mono">{totalUnits}</div>
-          <span className="text-[10px] text-slate-400 block">Regional Stock</span>
+        {/* 1. Connected Blood Centers */}
+        <div className="health-card p-4 text-center space-y-1">
+          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Connected Blood Centers</span>
+          <div className="text-xl font-black text-blue-700 font-mono">{bloodBanks.length}</div>
+          <span className="text-[10px] text-slate-400 block">Active Centers</span>
         </div>
 
-        {/* 2. Blood Banks */}
-        <div className="health-card p-3.5 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Blood Banks</span>
-          <div className="text-lg font-black text-blue-700 font-mono">{bloodBanks.length}</div>
-          <span className="text-[10px] text-slate-400 block">Licensed Centers</span>
+        {/* 2. Connected Hospitals */}
+        <div className="health-card p-4 text-center space-y-1">
+          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Connected Hospitals</span>
+          <div className="text-xl font-black text-indigo-700 font-mono">{hospitals.length}</div>
+          <span className="text-[10px] text-slate-400 block">Network Desks</span>
         </div>
 
-        {/* 3. Hospitals */}
-        <div className="health-card p-3.5 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Hospitals</span>
-          <div className="text-lg font-black text-indigo-700 font-mono">{hospitals.length}</div>
-          <span className="text-[10px] text-slate-400 block">Clinical Desks</span>
+        {/* 3. Active Emergency Requests */}
+        <div className="health-card p-4 text-center space-y-1 bg-red-50/40 border-red-200">
+          <span className="text-[10px] font-bold text-red-700 uppercase block truncate">Active Emergency Requests</span>
+          <div className="text-xl font-black text-red-600 font-mono">3 Active</div>
+          <span className="text-[10px] text-red-600/80 block">LifeLink Dispatches</span>
         </div>
 
-        {/* 4. Active Donors */}
-        <div className="health-card p-3.5 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Active Donors</span>
-          <div className="text-lg font-black text-emerald-700 font-mono">1,480+</div>
-          <span className="text-[10px] text-slate-400 block">Masked Tokens</span>
+        {/* 4. Available Blood Units */}
+        <div className="health-card p-4 text-center space-y-1">
+          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Available Blood Units</span>
+          <div className="text-xl font-black text-slate-900 font-mono">{totalUnits}</div>
+          <span className="text-[10px] text-slate-400 block">Verified Units</span>
         </div>
 
-        {/* 5. Emergency Requests */}
-        <div className="health-card p-3.5 text-center space-y-1">
-          <span className="text-[10px] font-bold text-slate-500 uppercase block truncate">Emergency SOS</span>
-          <div className="text-lg font-black text-red-600 font-mono">3 Active</div>
-          <span className="text-[10px] text-slate-400 block">In Dispatch</span>
-        </div>
-
-        {/* 6. Critical Shortages */}
-        <div className="health-card p-3.5 text-center space-y-1 bg-red-50/50 border-red-200">
-          <span className="text-[10px] font-bold text-red-700 uppercase block truncate">Shortages</span>
-          <div className="text-lg font-black text-red-700 font-mono">1 (O−)</div>
-          <span className="text-[10px] text-red-600 block">&lt; 3-Day Buffer</span>
-        </div>
-
-        {/* 7. Expiry Risk */}
-        <div className="health-card p-3.5 text-center space-y-1 bg-amber-50/50 border-amber-200">
-          <span className="text-[10px] font-bold text-amber-700 uppercase block truncate">Expiry Risk</span>
-          <div className="text-lg font-black text-amber-700 font-mono">{stockSummary?.total_expiring_within_48h || 28}</div>
+        {/* 5. At-Risk Inventory */}
+        <div className="health-card p-4 text-center space-y-1 bg-amber-50/50 border-amber-200">
+          <span className="text-[10px] font-bold text-amber-700 uppercase block truncate">At-Risk Inventory</span>
+          <div className="text-xl font-black text-amber-700 font-mono">{stockSummary?.total_expiring_within_48h || 28}</div>
           <span className="text-[10px] text-amber-600 block">&lt; 48h Shelf-Life</span>
         </div>
 
-        {/* 8. Wastage Risk */}
-        <div className="health-card p-3.5 text-center space-y-1 bg-rose-50/50 border-rose-200">
-          <span className="text-[10px] font-bold text-rose-700 uppercase block truncate">Wastage Rate</span>
-          <div className="text-lg font-black text-rose-700 font-mono">4.2%</div>
-          <span className="text-[10px] text-emerald-700 block">&darr; 28% Saved</span>
+        {/* 6. AI Recommendations */}
+        <div className="health-card p-4 text-center space-y-1 bg-purple-50/40 border-purple-200">
+          <span className="text-[10px] font-bold text-purple-700 uppercase block truncate">AI Recommendations</span>
+          <div className="text-xl font-black text-purple-700 font-mono">{rebalanceProposals.length} Ready</div>
+          <span className="text-[10px] text-purple-600 block">LifeLink Decision Support</span>
         </div>
 
       </div>
 
-      {/* Proactive Inter-Facility Balancing Engine */}
+      {/* LifeLink AI Recommendations: Proactive Inter-Facility Balancing Engine */}
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div>
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-purple-700 mb-0.5">
+              LifeLink AI Recommendations
+            </div>
             <h3 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-purple-600" />
               <span>Proactive Inter-Facility Redistribution Engine</span>

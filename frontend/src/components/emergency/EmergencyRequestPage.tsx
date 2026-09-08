@@ -115,13 +115,13 @@ export const EmergencyRequestPage: React.FC<EmergencyRequestPageProps> = ({
           </div>
           <div>
             <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider mb-1">
-              Priority Clinical Protocol
+              Priority Clinical Protocol &bull; LifeLink Emergency
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              EMERGENCY BLOOD REQUEST
+              LifeLink Emergency Coordination
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Automated multi-criteria dispatch routing across certified blood centers, trauma hospitals, and donor networks.
+              Coordinate urgent blood requirements across the connected hospital network.
             </p>
           </div>
         </div>

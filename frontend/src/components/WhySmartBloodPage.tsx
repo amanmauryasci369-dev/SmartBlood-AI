@@ -76,10 +76,10 @@ export const WhySmartBloodPage: React.FC = () => {
           <span>Strategic Architectural Advantage</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-          Why SmartBlood AI?
+          Why LifeLink?
         </h2>
         <p className="text-xs sm:text-sm text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          SmartBlood AI does not replace e-RaktKosh — it forms an <strong>intelligent decision-support and resource-optimization layer</strong> that transforms static data into predictive, automated clinical action.
+          LifeLink forms an <strong>intelligent decision-support and resource-coordination network</strong> connecting hospitals, blood centers, donors, and emergency requirements.
         </p>
       </div>
 
@@ -90,9 +90,9 @@ export const WhySmartBloodPage: React.FC = () => {
             <thead className="bg-slate-900 border-b border-slate-800 uppercase text-[11px] tracking-wider text-slate-400">
               <tr>
                 <th className="py-4 px-5 w-1/4">Capability Dimension</th>
-                <th className="py-4 px-5 w-1/3 text-slate-400">Traditional Portal (e.g. e-RaktKosh)</th>
+                <th className="py-4 px-5 w-1/3 text-slate-400">Traditional Registry (e.g. e-RaktKosh)</th>
                 <th className="py-4 px-5 w-5/12 text-blood-400 font-bold bg-blood-950/30">
-                  SmartBlood AI Optimization Layer
+                  LifeLink Coordination Network
                 </th>
               </tr>
             </thead>

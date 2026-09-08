@@ -306,7 +306,7 @@ export const ExpiryRiskDashboard: React.FC = () => {
             In compliance with National Blood Transfusion Council (NBTC) guidelines, whole blood and red cell concentrates are restricted to a maximum 42-day lifespan when stored in CPDA-1/SAGM at 2–6°C. Platelets stored at 20–24°C with continuous agitation expire within 5 days.
           </p>
           <div className="p-3 bg-red-50 rounded-xl border border-red-200 text-xs text-red-800 font-medium">
-            SmartBlood AI automatically flags any batch under 72 hours remaining as HIGH RISK, notifying nearby trauma centers for urgent utilization.
+            LifeLink AI automatically flags any batch under 72 hours remaining as HIGH RISK, notifying nearby trauma centers for urgent utilization.
           </div>
         </div>
       </div>

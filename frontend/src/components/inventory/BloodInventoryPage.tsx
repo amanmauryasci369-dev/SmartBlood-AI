@@ -68,28 +68,78 @@ export const BloodInventoryPage: React.FC<BloodInventoryPageProps> = ({ bloodBan
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider mb-1">
-            <Droplets className="w-3.5 h-3.5" />
-            <span>FEFO Laboratory Inventory Registry</span>
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider mb-1">
+              <Droplets className="w-3.5 h-3.5" />
+              <span>FEFO Laboratory Inventory Registry</span>
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+              LifeLink Inventory
+            </h2>
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 mt-0.5">
+              FEFO — First Expire, First Out
+            </p>
           </div>
-          <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-            Blood Stock & Shelf-Life Management
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Strict First-Expiry-First-Out prioritization ensuring critical batches are issued before spoilage.
-          </p>
+
+          <button
+            onClick={loadData}
+            disabled={loading}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 transition-colors cursor-pointer self-start md:self-auto"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            <span>Refresh Inventory</span>
+          </button>
         </div>
 
-        <button
-          onClick={loadData}
-          disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 transition-colors cursor-pointer self-start md:self-auto"
-        >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          <span>Refresh Inventory</span>
-        </button>
+        {/* LifeLink Recommendation Callout */}
+        <div className="p-3.5 rounded-xl bg-blue-50/80 border border-blue-200 text-blue-900 text-xs flex items-center gap-2.5">
+          <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />
+          <span className="font-medium">
+            <strong>LifeLink Recommendation:</strong> LifeLink recommends issuing these units first to reduce expiry-related wastage.
+          </span>
+        </div>
+      </div>
+
+      {/* Inventory Category Summary Metrics */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2.5 text-xs">
+        <div className="health-card p-3 text-center">
+          <span className="text-[10px] text-slate-500 uppercase font-bold block truncate">Blood Inventory</span>
+          <strong className="text-base text-slate-900 font-mono font-black">
+            {items.reduce((acc, i) => acc + i.available_units, 0)} Units
+          </strong>
+        </div>
+        <div className="health-card p-3 text-center">
+          <span className="text-[10px] text-slate-500 uppercase font-bold block truncate">Component Types</span>
+          <strong className="text-base text-blue-700 font-mono font-black">5 Types</strong>
+        </div>
+        <div className="health-card p-3 text-center">
+          <span className="text-[10px] text-slate-500 uppercase font-bold block truncate">Reserved Units</span>
+          <strong className="text-base text-slate-700 font-mono font-black">
+            {items.reduce((acc, i) => acc + (i.reserved_units || 0), 0)} Units
+          </strong>
+        </div>
+        <div className="health-card p-3 text-center">
+          <span className="text-[10px] text-slate-500 uppercase font-bold block truncate">Incoming Units</span>
+          <strong className="text-base text-emerald-700 font-mono font-black">12 Units</strong>
+        </div>
+        <div className="health-card p-3 text-center bg-amber-50/50 border-amber-200">
+          <span className="text-[10px] text-amber-700 uppercase font-bold block truncate">Expiry Risk</span>
+          <strong className="text-base text-amber-800 font-mono font-black">
+            {items.filter(i => i.days_to_expiry <= 2).length} Batches
+          </strong>
+        </div>
+        <div className="health-card p-3 text-center bg-red-50/50 border-red-200">
+          <span className="text-[10px] text-red-700 uppercase font-bold block truncate">FEFO Queue</span>
+          <strong className="text-base text-red-800 font-mono font-black">
+            {items.filter(i => i.priority === 1).length} High Priority
+          </strong>
+        </div>
+        <div className="health-card p-3 text-center bg-rose-50/50 border-rose-200 col-span-2 lg:col-span-1">
+          <span className="text-[10px] text-rose-700 uppercase font-bold block truncate">Wastage Risk</span>
+          <strong className="text-base text-rose-800 font-mono font-black">&lt; 3.5%</strong>
+        </div>
       </div>
 
       {/* Filter Row */}

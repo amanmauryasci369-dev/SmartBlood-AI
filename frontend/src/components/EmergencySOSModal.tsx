@@ -116,12 +116,12 @@ export const EmergencySOSModal: React.FC<EmergencySOSModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-black flex items-center gap-2">
-                Emergency Blood SOS Coordination
+                LifeLink Emergency Coordination
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/20 text-white uppercase tracking-wider">
                   Critical Priority
                 </span>
               </h3>
-              <p className="text-xs text-white/80">Multi-criteria spatial matching & cold-chain verification engine</p>
+              <p className="text-xs text-white/80">Coordinate urgent blood requirements across the connected hospital network</p>
             </div>
           </div>
           <button 

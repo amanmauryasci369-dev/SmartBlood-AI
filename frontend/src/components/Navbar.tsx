@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { UserRole } from '../types';
+import { BRAND } from '../constants/branding';
+import { LifeLinkLogo } from './common/LifeLinkLogo';
+import { ApiService } from '../services/api';
 import { 
   Shield, 
   Building2, 
@@ -22,7 +25,9 @@ import {
   Layers,
   Bell,
   LogOut,
-  PhoneCall
+  PhoneCall,
+  Droplets,
+  LayoutDashboard
 } from 'lucide-react';
 
 export type NavTab = 
@@ -66,6 +71,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const roleConfig: Record<UserRole, { label: string; icon: React.ReactNode; badge: string }> = {
     ADMIN: { label: 'Regional Admin', icon: <Shield className="w-3.5 h-3.5" />, badge: 'bg-amber-100 text-amber-800' },
@@ -75,55 +81,55 @@ export const Navbar: React.FC<NavbarProps> = ({
     PATIENT: { label: 'Citizen / Seeker', icon: <UserIcon className="w-3.5 h-3.5" />, badge: 'bg-cyan-100 text-cyan-800' },
   };
 
-  const navItems: Array<{ id: NavTab; label: string; icon?: React.ReactNode }> = [
-    { id: 'home', label: 'Home' },
+  const navItems: Array<{ id: NavTab; label: string }> = [
+    { id: 'admin-dashboard', label: 'Dashboard' },
     { id: 'find-blood', label: 'Find Blood' },
     { id: 'blood-centers', label: 'Blood Centers' },
     { id: 'hospital-network', label: 'Hospitals' },
     { id: 'emergency-request', label: 'Emergency' },
-    { id: 'donation-camps', label: 'Camps' },
-    { id: 'donors', label: 'Donors' },
     { id: 'ai-insights', label: 'AI Insights' },
+    { id: 'donors', label: 'Donors' },
+    { id: 'inventory', label: 'Inventory' },
     { id: 'about', label: 'About' },
   ];
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200 shadow-xs">
       
-      {/* 1. Top Government / Healthcare Information Strip */}
+      {/* 1. Top Healthcare & Network Operational Information Strip */}
       <div className="bg-slate-900 text-slate-300 text-xs border-b border-slate-800 px-4 sm:px-6 lg:px-8 py-1.5">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
           
           <div className="flex items-center gap-3">
             <span className="font-semibold text-slate-200 tracking-wide flex items-center gap-1.5 text-[11px]">
               <span className="w-2 h-2 rounded-full bg-red-500 inline-block animate-pulse"></span>
-              SMARTBLOOD AI &bull; Intelligent Blood Resource Management System
+              {BRAND.FULL_NAME}
             </span>
-            <span className="hidden md:inline text-slate-500">|</span>
+            <span className="hidden md:inline text-slate-600">|</span>
             <span className="hidden md:inline text-slate-400 text-[11px]">
-              Synthetic e-RaktKosh Compatible Coordination Engine
+              e-RaktKosh-compatible prototype/demo data integration
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex items-center gap-3 sm:gap-4 text-[11px]">
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${backendHealthy ? 'bg-emerald-400' : 'bg-amber-400'}`}></span>
-              <span className="text-slate-300 font-mono">
-                {backendHealthy ? 'Network: 100% Operational' : 'Connecting to Node...'}
+              <span className="text-slate-300 font-mono font-semibold">
+                LifeLink Network Status: {backendHealthy ? 'SYSTEM ONLINE' : 'CONNECTING...'}
               </span>
             </div>
 
             <button
               onClick={onOpenMetrics}
-              className="text-slate-300 hover:text-white flex items-center gap-1 transition-colors"
+              className="text-slate-300 hover:text-white flex items-center gap-1 transition-colors cursor-pointer"
               title="Inspect genuine Scikit-Learn Model Evaluation Metrics"
             >
               <BarChart3 className="w-3 h-3 text-purple-400" />
               <span>AI Validation Metrics</span>
             </button>
 
-            <span className="text-slate-500">|</span>
-            <span className="text-slate-400">Toll-Free Emergency: 1075 / 108</span>
+            <span className="hidden sm:inline text-slate-600">|</span>
+            <span className="hidden sm:inline text-slate-400">Emergency Coordination: 1075 / 108</span>
           </div>
 
         </div>
@@ -136,46 +142,21 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Logo & Branding */}
           <div 
             onClick={() => onTabChange('home')}
-            className="flex items-center gap-3 cursor-pointer select-none shrink-0"
+            className="cursor-pointer select-none shrink-0"
+            title={`${BRAND.NAME} — ${BRAND.TAGLINE}`}
           >
-            {/* Custom Blood-Drop + AI Neural Network Vector Logo */}
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-b from-red-600 to-red-800 flex items-center justify-center shadow-md shadow-red-900/20 border border-red-500/40 relative">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-white fill-current" aria-hidden="true">
-                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="currentColor" opacity="0.95" />
-                <circle cx="12" cy="14" r="2.2" fill="#0f172a" />
-                <circle cx="9" cy="11.5" r="1.2" fill="#38bdf8" />
-                <circle cx="15" cy="11.5" r="1.2" fill="#38bdf8" />
-                <circle cx="12" cy="18" r="1.2" fill="#38bdf8" />
-                <line x1="9" y1="11.5" x2="12" y2="14" stroke="#ffffff" strokeWidth="1" />
-                <line x1="15" y1="11.5" x2="12" y2="14" stroke="#ffffff" strokeWidth="1" />
-                <line x1="12" y1="14" x2="12" y2="18" stroke="#ffffff" strokeWidth="1" />
-              </svg>
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-tight text-slate-900 leading-none">
-                  SmartBlood <span className="text-red-600">AI</span>
-                </span>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-red-100 text-red-700 uppercase tracking-wider">
-                  HEALTHCARE
-                </span>
-              </div>
-              <p className="text-[11px] text-slate-500 font-medium tracking-tight mt-0.5 hidden sm:block">
-                AI-Powered Intelligent Blood Resource Management System
-              </p>
-            </div>
+            <LifeLinkLogo size="md" showTagline={true} />
           </div>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5" aria-label="Main Navigation">
+          <nav className="hidden xl:flex items-center gap-1" aria-label="Main Navigation">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => onTabChange(item.id)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold tracking-normal transition-all ${
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold tracking-normal transition-all cursor-pointer ${
                     isActive
                       ? 'bg-red-50 text-red-700 border-b-2 border-red-600'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -190,32 +171,64 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Right Action Controls */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             
+            {/* Notification Bell with Badge */}
+            <div className="relative">
+              <button
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+                className="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors relative cursor-pointer"
+                title="Notifications"
+                aria-label="Notifications"
+              >
+                <Bell className="w-4 h-4" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-600"></span>
+              </button>
+
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-2 w-72 bg-white border border-slate-200 rounded-xl shadow-xl py-2 z-50 text-xs">
+                  <div className="px-3 py-1 font-bold text-slate-700 border-b border-slate-100 flex items-center justify-between">
+                    <span>LifeLink Notifications</span>
+                    <span className="text-[10px] font-mono text-red-600 font-bold">2 Unread</span>
+                  </div>
+                  <div className="divide-y divide-slate-100">
+                    <div className="p-3 hover:bg-slate-50 cursor-pointer">
+                      <p className="font-bold text-slate-900">LifeLink AI Alert</p>
+                      <p className="text-slate-500 text-[11px] mt-0.5">O− PRBC demand surge projected for AIIMS Trauma Centre.</p>
+                    </div>
+                    <div className="p-3 hover:bg-slate-50 cursor-pointer">
+                      <p className="font-bold text-slate-900">FEFO Expiry Notice</p>
+                      <p className="text-slate-500 text-[11px] mt-0.5">18 units approaching 48h expiration threshold.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
             {/* Persistent Red Emergency CTA */}
             <button
               onClick={onOpenSOSModal}
               id="emergency-sos-btn"
-              className="px-3.5 sm:px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 tracking-wide uppercase cursor-pointer"
+              className="px-3 sm:px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white text-xs font-extrabold shadow-sm transition-all flex items-center gap-1.5 tracking-wide uppercase cursor-pointer"
             >
-              <AlertTriangle className="w-4 h-4 text-white animate-pulse shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-white shrink-0" />
               <span className="whitespace-nowrap">Need Blood Now</span>
             </button>
 
-            {/* Role Demonstration Switcher */}
+            {/* Role Demonstration Switcher / Profile */}
             <div className="relative">
               <button
                 onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors"
-                title="Switch Demonstration Role"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-slate-300 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
+                title="Switch Demonstration Profile"
               >
                 {roleConfig[currentRole].icon}
-                <span className="hidden xl:inline">{roleConfig[currentRole].label}</span>
+                <span className="hidden lg:inline">{roleConfig[currentRole].label}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
               </button>
 
               {roleDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-50">
                   <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                    Demonstration Role
+                    Active Profile (LifeLink)
                   </div>
                   {(Object.keys(roleConfig) as UserRole[]).map((r) => (
                     <button
@@ -224,7 +237,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onRoleChange(r);
                         setRoleDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors ${
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between transition-colors cursor-pointer ${
                         currentRole === r ? 'bg-red-50 text-red-700 font-bold' : 'text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -237,6 +250,19 @@ export const Navbar: React.FC<NavbarProps> = ({
                       )}
                     </button>
                   ))}
+                  <div className="border-t border-slate-100 mt-1 pt-1 px-3 py-1">
+                    <button
+                      onClick={() => {
+                        setRoleDropdownOpen(false);
+                        ApiService.clearToken();
+                        onRoleChange('PATIENT');
+                      }}
+                      className="text-xs text-slate-500 hover:text-red-600 flex items-center gap-1.5 py-1 w-full text-left cursor-pointer"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      <span>Logout / Switch User</span>
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -244,7 +270,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Menu Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none"
+              className="xl:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none cursor-pointer"
               aria-label="Toggle Mobile Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -257,7 +283,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* 3. Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-lg">
+        <div className="xl:hidden bg-white border-t border-slate-200 px-4 pt-3 pb-6 space-y-3 shadow-lg">
           <div className="grid grid-cols-2 gap-1.5">
             {navItems.map((item) => (
               <button
@@ -266,7 +292,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onTabChange(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
+                className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer ${
                   activeTab === item.id
                     ? 'bg-red-50 text-red-700 border-l-3 border-red-600'
                     : 'text-slate-700 hover:bg-slate-100'
@@ -283,7 +309,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onOpenSOSModal();
                 setMobileMenuOpen(false);
               }}
-              className="w-full py-2.5 rounded-lg bg-red-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs"
+              className="w-full py-2.5 rounded-lg bg-red-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs cursor-pointer"
             >
               <AlertTriangle className="w-4 h-4" />
               <span>EMERGENCY SOS: NEED BLOOD NOW</span>
@@ -293,10 +319,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onOpenMetrics();
                 setMobileMenuOpen(false);
               }}
-              className="w-full py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold text-xs border border-purple-200 flex items-center justify-center gap-2"
+              className="w-full py-2 rounded-lg bg-purple-50 text-purple-700 font-semibold text-xs border border-purple-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <BarChart3 className="w-4 h-4 text-purple-600" />
-              <span>Inspect AI Model Metrics</span>
+              <span>Inspect LifeLink AI Metrics</span>
             </button>
           </div>
         </div>

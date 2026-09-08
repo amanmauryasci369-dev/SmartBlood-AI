@@ -107,24 +107,43 @@ export const BloodSearchSection: React.FC<BloodSearchSectionProps> = ({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-red-700 text-xs font-bold uppercase tracking-wider mb-2">
               <Search className="w-3.5 h-3.5 text-red-600" />
-              <span>Blood Availability Search</span>
+              <span>LifeLink Resource Search</span>
             </div>
             <h2 className="text-2xl font-black text-slate-900 tracking-tight">
-              Locate Real-Time Blood Stock Across Licensed Centers
+              Find Blood
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
-              Strictly distinguishes certified laboratory physical stock from external reported feeds. Compliant with e-RaktKosh data exchange formats.
+              Search connected blood centers and hospitals for available blood resources.
             </p>
           </div>
 
-          <button
-            onClick={handleUseLocation}
-            type="button"
-            className="self-start md:self-auto px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 flex items-center gap-2 transition-all cursor-pointer shadow-2xs"
-          >
-            <Navigation className={`w-3.5 h-3.5 text-red-600 ${usingLocation ? 'animate-spin' : ''}`} />
-            <span>Use My Location</span>
-          </button>
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            <button
+              onClick={handleUseLocation}
+              type="button"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300 flex items-center gap-2 transition-all cursor-pointer shadow-2xs"
+            >
+              <Navigation className={`w-3.5 h-3.5 text-red-600 ${usingLocation ? 'animate-spin' : ''}`} />
+              <span>Use My Location</span>
+            </button>
+            <button
+              onClick={() => {
+                setState('Delhi');
+                setDistrict('Central Delhi');
+                setCity('');
+                setBloodGroup('O-');
+                setComponent('PACKED_RED_BLOOD_CELLS');
+                setQuantity(2);
+                setMaxDistance(30);
+                setSearched(false);
+                setResults([]);
+              }}
+              type="button"
+              className="px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-300 transition-all cursor-pointer"
+            >
+              Reset
+            </button>
+          </div>
         </div>
 
         {/* Search Parameters Form */}

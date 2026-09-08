@@ -36,7 +36,7 @@ export const PatientDashboard: React.FC<PatientDashboardProps> = ({
           <span>Patient Protection & Ethical Sourcing Notice</span>
         </div>
         <p className="text-slate-500 leading-relaxed">
-          SmartBlood AI connects patients directly with licensed, certified regional blood centers. To protect donor safety and prevent unauthorized commercial exploitation, direct donor phone numbers are never shared publicly. All availability listings clearly distinguish verified laboratory stock from reported feeds.
+          LifeLink connects patients directly with licensed, certified regional blood centers and hospitals. To protect donor safety and prevent unauthorized commercial exploitation, direct donor phone numbers are never shared publicly. All availability listings clearly distinguish verified laboratory stock from reported feeds.
         </p>
       </div>
 

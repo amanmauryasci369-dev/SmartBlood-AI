@@ -75,39 +75,49 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
     <div className="space-y-6">
       
       {/* Header Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-xs font-bold uppercase tracking-wider mb-2">
-            <BrainCircuit className="w-3.5 h-3.5" />
-            <span>Autonomous Machine Learning Engine</span>
+      <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-50 text-purple-700 text-xs font-black uppercase tracking-wider mb-2 border border-purple-200">
+              <BrainCircuit className="w-3.5 h-3.5 text-purple-600" />
+              <span>AI-POWERED DECISION SUPPORT</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              LifeLink Intelligence
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Demand forecasting, shortage prediction, FEFO expiry risk monitoring, and intelligent cross-facility rebalancing recommendations.
+            </p>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            AI BLOOD INTELLIGENCE
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time shortage anticipation, automated FEFO expiry risk classification, and intelligent cross-facility rebalancing.
-          </p>
+
+          <div className="flex items-center gap-2 self-start md:self-auto">
+            {onOpenMetrics && (
+              <button
+                onClick={onOpenMetrics}
+                className="px-4 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 flex items-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <BarChart3 className="w-4 h-4" />
+                <span>Model Evaluation Metrics</span>
+              </button>
+            )}
+
+            <button
+              onClick={fetchAIData}
+              disabled={loading}
+              className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer"
+              title="Refresh Predictions"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 self-start md:self-auto">
-          {onOpenMetrics && (
-            <button
-              onClick={onOpenMetrics}
-              className="px-4 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 text-xs font-bold border border-purple-200 flex items-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <BarChart3 className="w-4 h-4" />
-              <span>Model Evaluation Metrics</span>
-            </button>
-          )}
-
-          <button
-            onClick={fetchAIData}
-            disabled={loading}
-            className="p-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-colors cursor-pointer"
-            title="Refresh Predictions"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-          </button>
+        {/* Clinical Decision Support Disclaimer */}
+        <div className="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+          <ShieldCheck className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+          <p className="leading-relaxed">
+            <strong>Important Decision Support Notice:</strong> LifeLink AI provides clinical decision support. Final blood allocation, medical, and blood-bank decisions remain with authorized clinical personnel and licensed blood bank officers.
+          </p>
         </div>
       </div>
 
@@ -224,13 +234,13 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
           Seven Core Machine Learning & Decision-Support Engines
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           
           {/* Engine 1: Demand Forecast */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <TrendingUp className="w-4 h-4 text-red-600" />
-              <span>1. Demand Forecasting</span>
+              <span>LifeLink Demand Forecast</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               Random Forest regressor trained on multi-year transfusion logs with seasonal dengue outbreak weighting.
@@ -244,7 +254,7 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <AlertTriangle className="w-4 h-4 text-amber-600" />
-              <span>2. Shortage Prediction</span>
+              <span>LifeLink Shortage Prediction</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               Quantitative balance calculation (Stock + Inflow - Demand - Expiry Spoilage) flagging deficits 72h ahead.
@@ -258,7 +268,7 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <Clock className="w-4 h-4 text-orange-600" />
-              <span>3. Expiry Risk (FEFO)</span>
+              <span>LifeLink Expiry Risk Engine</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               3-tier classifier based on component shelf-life rules and cold-chain temperature telemetry deviations.
@@ -268,11 +278,11 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
             </div>
           </div>
 
-          {/* Engine 4: Wastage Reduction */}
+          {/* Engine 4: Wastage Prediction */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <Trash2 className="w-4 h-4 text-rose-600" />
-              <span>4. Wastage Reduction</span>
+              <span>Wastage Prediction</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               Continuous monitoring of component discard rates vs published Indian healthcare benchmarks (5.8% - 14.7%).
@@ -286,7 +296,7 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <Heart className="w-4 h-4 text-red-600" />
-              <span>5. AI Donor Matching</span>
+              <span>Donor Matching</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               Multi-factor scoring (Compatibility + Eligibility + Proximity + Probability) with encrypted contact masking.
@@ -296,17 +306,31 @@ export const AIBloodIntelligenceDashboard: React.FC<AIBloodIntelligenceDashboard
             </div>
           </div>
 
-          {/* Engine 6: Resource Redistribution */}
+          {/* Engine 6: Redistribution Recommendations */}
           <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
               <Network className="w-4 h-4 text-blue-600" />
-              <span>6. Resource Redistribution</span>
+              <span>LifeLink Recommendation Engine</span>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
               Heuristic linear optimization identifying inter-facility surplus transfers to minimize regional waste.
             </p>
             <div className="pt-1 text-[11px] font-mono text-slate-600">
               Surplus Transfer Efficiency: 92.1%
+            </div>
+          </div>
+
+          {/* Engine 7: Anomaly Detection */}
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-slate-900">
+              <Activity className="w-4 h-4 text-emerald-600" />
+              <span>Anomaly Detection</span>
+            </div>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Statistical outlier detection detecting sudden inventory drawdowns, unusual wastage spikes, or reporting gaps.
+            </p>
+            <div className="pt-1 text-[11px] font-mono text-slate-600">
+              Sensory Telemetry: Active Monitoring
             </div>
           </div>
 
