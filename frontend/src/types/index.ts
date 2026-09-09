@@ -435,19 +435,25 @@ export interface SystemConfigItem {
 export interface ExchangeUnitCard {
   id: number;
   unit_code: string;
+  batch_number?: string;
   blood_group: string;
   component: string;
   quantity_ml: number;
+  units_available?: number;
   providing_hospital_id?: number;
   providing_hospital_name: string;
   city: string;
   collection_date: string;
   expiration_date: string;
   days_until_expiry: number;
-  urgency_label: string; // "Critical Expiry", "Expiring Soon", "Use Soon", "Normal"
+  days_remaining_text?: string;
+  urgency_label: string; // "CRITICAL — EXPIRING SOON", "HIGH PRIORITY", "USE SOON", "NORMAL"
   urgency_color: string;
   status: string;
+  fefo_rank?: number;
   is_recommended_allocation: boolean;
+  allocated_units_count?: number;
+  fefo_priority_reason?: string;
 }
 
 export interface ExchangeSearchResult {
@@ -458,6 +464,8 @@ export interface ExchangeSearchResult {
   shortage_units_count: number;
   is_fully_fulfillable: boolean;
   wastage_prevention_message: string;
+  recommended_allocation_summary?: string;
+  fefo_explanation?: string;
   recommended_units: ExchangeUnitCard[];
   all_eligible_units: ExchangeUnitCard[];
 }

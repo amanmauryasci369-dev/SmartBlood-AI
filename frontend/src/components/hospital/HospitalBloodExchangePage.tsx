@@ -380,11 +380,11 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-800">
                   {[
-                    { bank: 'Hindu Rao Hospital', group: 'O+', component: 'PRBC', units: 10, expiry: '2026-09-10', days: 2, priority: 'Critical', action: 'Transfer' },
-                    { bank: 'Safdarjung Hospital', group: 'A-', component: 'Platelets', units: 6, expiry: '2026-09-12', days: 4, priority: 'High', action: 'Transfer' },
-                    { bank: 'Moolchand Hospital', group: 'B+', component: 'FFP', units: 8, expiry: '2026-09-18', days: 10, priority: 'Medium', action: 'Transfer' },
-                    { bank: 'AIIMS Blood Centre', group: 'O-', component: 'PRBC', units: 12, expiry: '2026-10-01', days: 23, priority: 'Low', action: 'View' },
-                    { bank: 'Lok Nayak Hospital', group: 'AB-', component: 'PRBC', units: 5, expiry: '2026-09-14', days: 6, priority: 'High', action: 'Transfer' },
+                    { bank: 'Hindu Rao Hospital', group: 'O+', component: 'PRBC', units: 10, expiry: '2026-09-10', days: 1, priority: 'CRITICAL — EXPIRING SOON', action: 'Transfer' },
+                    { bank: 'Safdarjung Hospital', group: 'A-', component: 'Platelets', units: 6, expiry: '2026-09-12', days: 3, priority: 'HIGH PRIORITY', action: 'Transfer' },
+                    { bank: 'Lok Nayak Hospital', group: 'AB-', component: 'PRBC', units: 5, expiry: '2026-09-14', days: 5, priority: 'HIGH PRIORITY', action: 'Transfer' },
+                    { bank: 'Moolchand Hospital', group: 'B+', component: 'FFP', units: 8, expiry: '2026-09-18', days: 9, priority: 'USE SOON', action: 'Transfer' },
+                    { bank: 'AIIMS Blood Centre', group: 'O-', component: 'PRBC', units: 12, expiry: '2026-10-01', days: 22, priority: 'NORMAL', action: 'View' },
                   ].map((row, idx) => (
                     <tr key={idx} className="hover:bg-slate-50/80 transition-colors">
                       <td className="py-3.5 px-5 font-bold text-slate-900">
@@ -406,14 +406,14 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                         {row.days}
                       </td>
                       <td className="py-3.5 px-4 text-center">
-                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
-                          row.priority === 'Critical'
+                        <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
+                          row.priority.includes('CRITICAL')
                             ? 'bg-red-50 text-red-700 border border-red-200'
-                            : row.priority === 'High'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : row.priority === 'Medium'
-                            ? 'bg-yellow-50 text-yellow-800 border border-yellow-200'
-                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : row.priority.includes('HIGH')
+                            ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                            : row.priority.includes('USE SOON')
+                            ? 'bg-blue-50 text-blue-800 border border-blue-200'
+                            : 'bg-slate-50 text-slate-700 border border-slate-200'
                         }`}>
                           {row.priority}
                         </span>
@@ -564,25 +564,60 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
             </div>
           )}
 
-          {/* Allocation Breakdown / Wastage Reduction Summary (Rule 7 & 13) */}
-          {searchResults && (
-            <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-5 text-white shadow-md flex flex-wrap items-center justify-between gap-4">
-              <div className="space-y-1">
+          {/* FEFO Active Explanation Compact Card */}
+          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#800020] text-white flex flex-col items-center justify-center font-black leading-none shrink-0 shadow-xs">
+                <span className="text-[10px] tracking-wider">FEFO</span>
+                <span className="text-[7px] text-red-200">ACTIVE</span>
+              </div>
+              <div>
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-red-600 text-[10px] font-black uppercase tracking-wider">
-                    FEFO ALLOCATION ENGINE
-                  </span>
-                  <span className="text-xs text-slate-300 font-medium">
-                    Requested: <strong className="text-white">{searchResults.requested_quantity} units</strong> of {searchResults.requested_blood_group} ({searchResults.requested_component})
+                  <span className="text-xs font-black text-slate-900 tracking-tight">First Expire, First Out (FEFO)</span>
+                  <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                    Deterministic Rule-Based
                   </span>
                 </div>
-                <p className="text-xs text-slate-300">
-                  {searchResults.wastage_prevention_message}
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Eligible blood units are prioritized by earliest expiration date to help reduce avoidable wastage.
+                </p>
+              </div>
+            </div>
+            <div className="text-[11px] font-extrabold text-[#800020] bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl shrink-0 flex items-center gap-1.5">
+              <span>FIRST TO USE</span>
+              <ArrowRight className="w-3 h-3 text-[#800020]" />
+              <span>EARLIEST EXPIRY</span>
+            </div>
+          </div>
+
+          {/* Allocation Breakdown / Wastage Reduction Summary */}
+          {searchResults && (
+            <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-3xl p-5 text-white shadow-md flex flex-wrap items-center justify-between gap-4">
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-md bg-red-600 text-[10px] font-black uppercase tracking-wider">
+                    FEFO ALLOCATION SEQUENCE
+                  </span>
+                  <span className="text-xs text-slate-300 font-medium">
+                    Requested: <strong className="text-white font-bold">{searchResults.requested_quantity} units</strong> of {searchResults.requested_blood_group} ({searchResults.requested_component})
+                  </span>
+                </div>
+
+                {/* Recommended Allocation Breakdown */}
+                {searchResults.recommended_allocation_summary && (
+                  <div className="text-xs font-semibold text-emerald-300 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span>{searchResults.recommended_allocation_summary}</span>
+                  </div>
+                )}
+
+                <p className="text-[11px] text-slate-400">
+                  Reason: FEFO — earliest-expiring eligible units are prioritized first to reduce component spoilage.
                 </p>
               </div>
 
               {/* Multi-Unit Numbers */}
-              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2 rounded-2xl border border-white/10 text-xs">
+              <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/10 text-xs">
                 <div>
                   <div className="text-[10px] text-slate-400 uppercase font-bold">Requested</div>
                   <div className="text-sm font-black text-white">{searchResults.requested_quantity} units</div>
@@ -596,7 +631,7 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                   <>
                     <div className="h-6 w-px bg-white/20" />
                     <div>
-                      <div className="text-[10px] text-rose-400 uppercase font-bold">Shortage</div>
+                      <div className="text-[10px] text-rose-300 uppercase font-bold">Shortage</div>
                       <div className="text-sm font-black text-rose-400">{searchResults.shortage_units_count} units</div>
                     </div>
                   </>
@@ -605,20 +640,20 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
             </div>
           )}
 
-          {/* Recommended FEFO Bundle CTA (Rule 7) */}
+          {/* Recommended FEFO Allocation Plan Bundle CTA */}
           {searchResults && searchResults.recommended_units.length > 0 && (
             <div className="bg-amber-50 border border-amber-200 rounded-3xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <Flame className="w-4 h-4 text-amber-600" />
                   <span className="text-xs font-black text-amber-950 uppercase tracking-wide">
-                    Optimal FEFO Allocation Bundle ({searchResults.recommended_units.length} units selected)
+                    Optimal FEFO Allocation Plan ({searchResults.recommended_units.length} batch{searchResults.recommended_units.length !== 1 ? 'es' : ''} selected)
                   </span>
                 </div>
                 <p className="text-xs text-amber-900">
-                  The system selected the earliest-expiring eligible blood units across the network: {' '}
+                  Prioritizing earliest-expiring inventory: {' '}
                   <span className="font-mono font-bold">
-                    {searchResults.recommended_units.map(u => `${u.unit_code} (${u.days_until_expiry}d)`).join(', ')}
+                    {searchResults.recommended_units.map(u => `${u.batch_number || u.unit_code} (${u.allocated_units_count || 1} unit(s) • ${u.days_remaining_text || `${u.days_until_expiry}d left`})`).join(', ')}
                   </span>
                 </p>
               </div>
@@ -626,15 +661,15 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
               <button
                 type="button"
                 onClick={() => openRequestModal(searchResults.recommended_units)}
-                className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs shadow-sm transition-all cursor-pointer shrink-0 flex items-center justify-center gap-2"
+                className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-black text-xs shadow-xs transition-all cursor-pointer shrink-0 flex items-center justify-center gap-2"
               >
-                <span>Request Recommended Bundle</span>
+                <span>Request Recommended Allocation</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           )}
 
-          {/* Empty State when no units are available */}
+          {/* Empty State / Shortage Notification when no units are available */}
           {searchResults && searchResults.all_eligible_units.length === 0 && (
             <div className="bg-white rounded-3xl border border-dashed border-slate-300 p-8 text-center space-y-4 shadow-xs">
               <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mx-auto text-red-600">
@@ -642,10 +677,10 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
               </div>
               <div>
                 <h3 className="text-base font-black text-slate-900">
-                  No eligible blood currently available.
+                  No eligible unexpired blood currently available.
                 </h3>
                 <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-                  No cleared, non-expired inventory units matched {searchResults.requested_blood_group} ({searchResults.requested_component}).
+                  No cleared, unexpired inventory units matched {searchResults.requested_blood_group} ({searchResults.requested_component}).
                 </p>
               </div>
               <div className="flex items-center justify-center gap-6 text-xs bg-slate-50 py-2.5 px-6 rounded-2xl max-w-sm mx-auto border border-slate-200">
@@ -656,23 +691,23 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                 <div className="h-6 w-px bg-slate-300" />
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block">Available</span>
-                  <span className="text-sm font-black text-red-600">{searchResults.available_units_count} units</span>
+                  <span className="text-sm font-black text-red-600">0 eligible units available</span>
                 </div>
                 <div className="h-6 w-px bg-slate-300" />
                 <div>
                   <span className="text-[10px] uppercase font-bold text-slate-400 block">Shortage</span>
-                  <span className="text-sm font-black text-red-600">{searchResults.shortage_units_count} units</span>
+                  <span className="text-sm font-black text-red-600">Shortage: {searchResults.requested_quantity} units</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* 3. Results Grid of Cards (Rule 6) */}
+          {/* Results Grid of FEFO Prioritized Cards */}
           {searchResults && searchResults.all_eligible_units.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between text-xs text-slate-500 font-bold px-1">
-                <span>Eligible Units Ranked by Expiry (First Expired, First Out)</span>
-                <span>Found {searchResults.all_eligible_units.length} Cleared Units</span>
+                <span>Eligible Batches Ranked by Expiry (First Expire, First Out)</span>
+                <span>Found {searchResults.all_eligible_units.length} Cleared Batches ({searchResults.available_units_count} Total Units)</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -681,72 +716,108 @@ export const HospitalBloodExchangePage: React.FC<HospitalBloodExchangePageProps>
                     key={unit.id}
                     className={`bg-white rounded-2xl border p-4 shadow-xs transition-all hover:shadow-md flex flex-col justify-between relative ${
                       unit.is_recommended_allocation 
-                        ? 'border-amber-300 ring-2 ring-amber-400/20 bg-amber-50/20' 
+                        ? 'border-amber-300 ring-2 ring-amber-400/25 bg-amber-50/15' 
                         : 'border-slate-200'
                     }`}
                   >
-                    {/* FEFO Ranking Badge */}
-                    <div className="flex items-start justify-between gap-2 mb-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-black text-slate-900 font-mono">{unit.unit_code}</span>
-                          <span className="text-[10px] font-bold text-slate-400">Rank #{index + 1}</span>
+                    <div>
+                      {/* Card Top: Blood Group, Component, FEFO Rank, Urgency */}
+                      <div className="flex items-start justify-between gap-2 mb-2.5">
+                        <div>
+                          <div className="text-sm font-black text-slate-900 flex items-center gap-1.5">
+                            <span className="text-[#800020] font-mono">{unit.blood_group}</span>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-xs font-bold text-slate-800 truncate max-w-[140px]">{unit.component}</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 mt-1">
+                            <span className="px-2 py-0.5 rounded-md bg-slate-900 text-white text-[10px] font-black font-mono">
+                              FEFO Rank: #{unit.fefo_rank || index + 1}
+                            </span>
+                            {unit.is_recommended_allocation && (
+                              <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-extrabold flex items-center gap-1">
+                                <CheckCircle2 className="w-2.5 h-2.5 text-amber-700" />
+                                {unit.allocated_units_count || 1} unit(s) allocated
+                              </span>
+                            )}
+                          </div>
                         </div>
-                        <div className="text-xs font-bold text-red-700 mt-0.5">
-                          {unit.blood_group} • {unit.component}
-                        </div>
-                      </div>
 
-                      {/* Urgency Badge (Rule 6) */}
-                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black border uppercase tracking-wider ${unit.urgency_color}`}>
-                        {unit.urgency_label}
-                      </span>
-                    </div>
-
-                    {/* Facility & Location Info */}
-                    <div className="space-y-1.5 text-xs text-slate-600 border-t border-b border-slate-100 py-2.5 my-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Available Volume:</span>
-                        <span className="font-bold text-slate-800">{unit.quantity_ml} ml</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Providing Hospital:</span>
-                        <span className="font-semibold text-slate-800 truncate max-w-[160px]">{unit.providing_hospital_name}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Location:</span>
-                        <span className="font-semibold text-slate-800">{unit.city}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Collected On:</span>
-                        <span className="font-mono text-slate-700">{unit.collection_date}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Expiration Date:</span>
-                        <span className="font-mono font-bold text-slate-900">{unit.expiration_date}</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-slate-400">Availability Status:</span>
-                        <span className="inline-flex items-center gap-1 font-bold text-emerald-700 capitalize">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                          {unit.status}
+                        {/* Priority Label Badge */}
+                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-extrabold border uppercase tracking-wider shrink-0 text-center ${unit.urgency_color}`}>
+                          {unit.urgency_label}
                         </span>
+                      </div>
+
+                      {/* Prominent Callout for FEFO #1 */}
+                      {index === 0 && (
+                        <div className="mb-2.5 p-2.5 rounded-xl bg-amber-500/10 border border-amber-300 text-amber-950 text-xs font-bold flex items-start gap-2">
+                          <Flame className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                          <div>
+                            <div className="font-black text-amber-950 flex items-center gap-1.5">
+                              <span>FEFO #1 • {unit.days_remaining_text || `${unit.days_until_expiry} days remaining`}</span>
+                            </div>
+                            <div className="text-[11px] text-amber-800 font-medium mt-0.5">
+                              ↓ Recommended for earlier utilization (earliest valid expiry in network)
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Detailed Inventory Information */}
+                      <div className="space-y-1.5 text-xs text-slate-600 border-t border-b border-slate-100 py-2.5 my-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Batch ID:</span>
+                          <span className="font-mono font-bold text-slate-900 bg-slate-100 px-1.5 py-0.5 rounded text-[11px]">
+                            {unit.batch_number || unit.unit_code}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Hospital / Blood Centre:</span>
+                          <span className="font-bold text-slate-800 truncate max-w-[170px]" title={unit.providing_hospital_name}>
+                            {unit.providing_hospital_name}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Available Quantity:</span>
+                          <span className="font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            {unit.units_available || 1} Units Available
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Location:</span>
+                          <span className="font-semibold text-slate-800">{unit.city}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Collection Date:</span>
+                          <span className="font-mono text-slate-700">{unit.collection_date}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Expiration Date:</span>
+                          <span className="font-mono font-bold text-slate-900">{unit.expiration_date}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400 font-medium">Status:</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 capitalize">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            {unit.status}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
                     {/* Expiry Countdown & Request CTA */}
-                    <div className="pt-2 flex items-center justify-between gap-2">
+                    <div className="pt-2.5 flex items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5 text-xs">
                         <Clock className={`w-3.5 h-3.5 ${unit.days_until_expiry <= 2 ? 'text-red-600 animate-pulse' : 'text-slate-500'}`} />
-                        <span className={`font-black ${unit.days_until_expiry <= 2 ? 'text-red-700' : 'text-slate-700'}`}>
-                          Expires in {unit.days_until_expiry} day{unit.days_until_expiry !== 1 ? 's' : ''}
+                        <span className={`font-black ${unit.days_until_expiry <= 2 ? 'text-red-700' : 'text-slate-800'}`}>
+                          {unit.days_remaining_text || `${unit.days_until_expiry} days remaining`}
                         </span>
                       </div>
 
                       <button
                         type="button"
                         onClick={() => openRequestModal([unit])}
-                        className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-[#800020] text-white text-xs font-bold transition-all cursor-pointer"
+                        className="px-4 py-1.5 rounded-xl bg-[#800020] hover:bg-[#600018] text-white text-xs font-bold transition-all cursor-pointer shadow-2xs"
                       >
                         Request Blood
                       </button>

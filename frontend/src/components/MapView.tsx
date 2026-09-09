@@ -62,25 +62,25 @@ const CITY_CLUSTERS = [
   { name: 'Pune', lat: 18.5204, lng: 73.8567, zoom: 11 },
 ];
 
-// Available basemap tile styles
+// Available basemap tile styles (Keyless, Free & Open-Source)
 const BASEMAP_PROVIDERS = [
   {
-    id: 'dark',
-    name: 'Tactical Dark',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; CARTO &copy; OpenStreetMap contributors',
+    id: 'light',
+    name: 'Clean Light',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
   },
   {
     id: 'streets',
     name: 'Street Navigation',
-    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; OpenStreetMap contributors',
+    url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors, Humanitarian style',
   },
   {
-    id: 'light',
-    name: 'Clean Light',
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; CARTO &copy; OpenStreetMap contributors',
+    id: 'dark',
+    name: 'Tactical Dark',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
   },
 ];
 
@@ -507,12 +507,14 @@ export const MapView: React.FC<MapViewProps> = ({
           center={cameraCenter}
           zoom={cameraZoom}
           scrollWheelZoom={true}
-          style={{ height: '100%', width: '100%', background: '#090d16' }}
+          style={{ height: '100%', width: '100%', background: activeBasemap === 'dark' ? '#090d16' : '#f8f9fa' }}
         >
           {/* Tile Layer Provider */}
           <TileLayer
+            key={activeBasemap}
             attribution={basemap.attribution}
             url={basemap.url}
+            className={activeBasemap === 'dark' ? 'map-tiles-dark' : ''}
           />
 
           {/* Programmatic Map Controller for smooth panning and tile invalidation */}

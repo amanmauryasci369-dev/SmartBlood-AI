@@ -40,19 +40,25 @@ class ExchangeSearchQuery(BaseModel):
 class ExchangeUnitCard(BaseModel):
     id: int
     unit_code: str
+    batch_number: Optional[str] = None
     blood_group: str
     component: str
     quantity_ml: int
+    units_available: int = 1
     providing_hospital_id: Optional[int] = None
     providing_hospital_name: str
     city: str
     collection_date: str
     expiration_date: str
     days_until_expiry: int
-    urgency_label: str  # "Critical Expiry" (0-2d), "Expiring Soon" (3-7d), "Use Soon" (8-14d), "Normal" (15+d)
+    days_remaining_text: str = ""
+    urgency_label: str  # "CRITICAL — EXPIRING SOON", "HIGH PRIORITY", "USE SOON", "NORMAL"
     urgency_color: str
     status: str
-    is_recommended_allocation: bool = False  # True if selected in FEFO bundle for requested quantity
+    fefo_rank: int = 1
+    is_recommended_allocation: bool = False
+    allocated_units_count: int = 0
+    fefo_priority_reason: Optional[str] = None
 
 
 class ExchangeSearchResult(BaseModel):
@@ -63,6 +69,8 @@ class ExchangeSearchResult(BaseModel):
     shortage_units_count: int
     is_fully_fulfillable: bool
     wastage_prevention_message: str
+    recommended_allocation_summary: Optional[str] = None
+    fefo_explanation: Optional[str] = None
     recommended_units: List[ExchangeUnitCard]
     all_eligible_units: List[ExchangeUnitCard]
 
@@ -123,15 +131,31 @@ class WastagePreventionDashboard(BaseModel):
 # ---------------------------------------------------------------------------
 
 def calculate_urgency(days: int) -> tuple[str, str]:
-    """Calculate urgency label and theme color according to business rule 6."""
+    """
+    FEFO Priority Labels:
+    - days <= 2: "CRITICAL — EXPIRING SOON"
+    - days <= 5: "HIGH PRIORITY"
+    - days <= 10: "USE SOON"
+    - else: "NORMAL"
+    """
     if days <= 2:
-        return "Critical Expiry", "bg-red-100 text-red-800 border-red-300"
-    elif days <= 7:
-        return "Expiring Soon", "bg-amber-100 text-amber-800 border-amber-300"
-    elif days <= 14:
-        return "Use Soon", "bg-blue-100 text-blue-800 border-blue-300"
+        return "CRITICAL — EXPIRING SOON", "bg-red-50 text-red-700 border-red-200"
+    elif days <= 5:
+        return "HIGH PRIORITY", "bg-amber-50 text-amber-800 border-amber-200"
+    elif days <= 10:
+        return "USE SOON", "bg-blue-50 text-blue-800 border-blue-200"
     else:
-        return "Normal", "bg-emerald-100 text-emerald-800 border-emerald-300"
+        return "NORMAL", "bg-slate-50 text-slate-700 border-slate-200"
+
+
+def format_days_remaining(days: int) -> str:
+    """Format human-readable days remaining."""
+    if days <= 0:
+        return "Expires today"
+    elif days == 1:
+        return "Only 1 day remaining"
+    else:
+        return f"{days} days remaining"
 
 
 def normalize_blood_group(bg: str) -> str:
@@ -218,14 +242,16 @@ def search_available_exchange_blood(
     current_user: User = Depends(get_prototype_user)
 ):
     """
-    Deterministic FEFO search logic (Rule 4, 5, 16):
+    Deterministic FEFO search logic:
     WHERE blood_group = requested
       AND component = requested
-      AND status = 'available'
+      AND status IN ('available', 'CONFIRMED_AVAILABILITY')
+      AND is_quarantined = False
       AND screening_status = 'cleared'
       AND storage_status = 'proper'
-      AND expiration_date > CURRENT_DATE
-    ORDER BY expiration_date ASC
+      AND units_available > 0
+      AND expiration_date >= CURRENT_DATE
+    ORDER BY expiration_date ASC, units_available DESC
     """
     today = date.today()
     norm_bg = normalize_blood_group(blood_group)
@@ -233,20 +259,33 @@ def search_available_exchange_blood(
 
     # Base query
     query = db.query(BloodInventory).filter(
-        BloodInventory.status == "available",
+        or_(
+            BloodInventory.status == "available",
+            BloodInventory.status == "CONFIRMED_AVAILABILITY"
+        ),
+        BloodInventory.is_quarantined == False,
         BloodInventory.screening_status == "cleared",
         BloodInventory.storage_status == "proper",
-        or_(
-            BloodInventory.expiration_date > today,
-            BloodInventory.expiry_date > today
-        )
+        BloodInventory.units_available > 0,
+        func.coalesce(BloodInventory.expiration_date, BloodInventory.expiry_date) >= today
     )
 
-    # Match blood group
+    # Match blood group (supports O+, O_POS, etc.)
+    bg_candidates = [norm_bg]
+    inv_map = {
+        "O+": "O_POS", "O-": "O_NEG", "A+": "A_POS", "A-": "A_NEG",
+        "B+": "B_POS", "B-": "B_NEG", "AB+": "AB_POS", "AB-": "AB_NEG"
+    }
+    if norm_bg in inv_map:
+        bg_candidates.append(inv_map[norm_bg])
+    rev_map = {v: k for k, v in inv_map.items()}
+    if norm_bg in rev_map:
+        bg_candidates.append(rev_map[norm_bg])
+
     query = query.filter(
         or_(
-            BloodInventory.blood_group == norm_bg,
-            func.lower(BloodInventory.blood_group) == norm_bg.lower()
+            BloodInventory.blood_group.in_(bg_candidates),
+            func.lower(BloodInventory.blood_group).in_([b.lower() for b in bg_candidates])
         )
     )
 
@@ -255,6 +294,7 @@ def search_available_exchange_blood(
         query = query.filter(
             or_(
                 BloodInventory.component == ComponentType.PRBC,
+                BloodInventory.component == "PRBC",
                 BloodInventory.component == "Packed Red Blood Cells",
                 BloodInventory.component == "PACKED_RED_BLOOD_CELLS"
             )
@@ -263,6 +303,7 @@ def search_available_exchange_blood(
         query = query.filter(
             or_(
                 BloodInventory.component == ComponentType.PLATELETS,
+                BloodInventory.component == "PLATELETS",
                 BloodInventory.component == "Platelets",
                 BloodInventory.component == "PLATELET_CONCENTRATE"
             )
@@ -271,6 +312,7 @@ def search_available_exchange_blood(
         query = query.filter(
             or_(
                 BloodInventory.component == ComponentType.FFP,
+                BloodInventory.component == "FFP",
                 BloodInventory.component == "Fresh Frozen Plasma",
                 BloodInventory.component == "FRESH_FROZEN_PLASMA"
             )
@@ -279,74 +321,109 @@ def search_available_exchange_blood(
         query = query.filter(
             or_(
                 BloodInventory.component == ComponentType.WHOLE_BLOOD,
-                BloodInventory.component == "Whole Blood",
-                BloodInventory.component == "WHOLE_BLOOD"
+                BloodInventory.component == "WHOLE_BLOOD",
+                BloodInventory.component == "Whole Blood"
             )
         )
 
     # City filter if specified
     if search_location and search_location.strip():
         loc = search_location.strip().lower()
-        if loc not in ("all", "all locations"):
+        if loc not in ("all", "all locations", ""):
             query = query.filter(func.lower(BloodInventory.city).like(f"%{loc}%"))
 
     # Deterministic FEFO Ordering: Earliest expiring first!
     query = query.order_by(
-        func.coalesce(BloodInventory.expiration_date, BloodInventory.expiry_date).asc()
+        func.coalesce(BloodInventory.expiration_date, BloodInventory.expiry_date).asc(),
+        BloodInventory.units_available.desc()
     )
 
     units = query.all()
 
     cards: List[ExchangeUnitCard] = []
     recommended_cards: List[ExchangeUnitCard] = []
+    total_eligible_units_available = 0
+    remaining_to_allocate = required_quantity
+    allocation_parts: List[str] = []
 
     for idx, u in enumerate(units):
         exp_d = u.expiration_date or u.expiry_date
-        col_d = u.collected_date or (exp_d - date.resolution * 35)
+        col_d = u.collected_date or (exp_d - timedelta(days=35))
         days_left = max(0, (exp_d - today).days)
+        batch_avail = u.units_available if (u.units_available and u.units_available > 0) else 1
+        total_eligible_units_available += batch_avail
 
-        label, color = calculate_urgency(days_left)
-        is_rec = idx < required_quantity
+        urgency_lbl, urgency_col = calculate_urgency(days_left)
+        days_txt = format_days_remaining(days_left)
+
+        alloc_for_batch = min(remaining_to_allocate, batch_avail) if remaining_to_allocate > 0 else 0
+        is_rec = alloc_for_batch > 0
+        batch_id_str = u.batch_number or u.unit_code or f"BL-{u.id}"
+
+        if alloc_for_batch > 0:
+            remaining_to_allocate -= alloc_for_batch
+            allocation_parts.append(f"{alloc_for_batch} unit(s) from {batch_id_str}")
+
+        fefo_reason = None
+        if idx == 0:
+            fefo_reason = f"FEFO #1 • Expires in {days_left} day{'s' if days_left != 1 else ''} ↓ Recommended for earlier utilization"
+        elif is_rec:
+            fefo_reason = f"FEFO #{idx + 1} • Next earliest expiry in network ({days_txt})"
+
+        hospital_disp_name = u.hospital_name or u.blood_bank_name or "Regional Blood Centre"
 
         card = ExchangeUnitCard(
             id=u.id,
-            unit_code=u.unit_code or f"BL-{u.id}",
+            unit_code=batch_id_str,
+            batch_number=batch_id_str,
             blood_group=norm_bg,
             component=norm_comp,
             quantity_ml=u.quantity_ml or 450,
-            providing_hospital_id=u.hospital_id,
-            providing_hospital_name=u.hospital_name or u.blood_bank_name or "Regional Center",
+            units_available=batch_avail,
+            providing_hospital_id=u.hospital_id or u.facility_id,
+            providing_hospital_name=hospital_disp_name,
             city=u.city or "Delhi",
             collection_date=col_d.isoformat(),
             expiration_date=exp_d.isoformat(),
             days_until_expiry=days_left,
-            urgency_label=label,
-            urgency_color=color,
-            status=u.status,
-            is_recommended_allocation=is_rec
+            days_remaining_text=days_txt,
+            urgency_label=urgency_lbl,
+            urgency_color=urgency_col,
+            status="Available",
+            fefo_rank=idx + 1,
+            is_recommended_allocation=is_rec,
+            allocated_units_count=alloc_for_batch,
+            fefo_priority_reason=fefo_reason
         )
         cards.append(card)
         if is_rec:
             recommended_cards.append(card)
 
-    avail_count = len(cards)
-    shortage_count = max(0, required_quantity - avail_count)
-    fully_fulfillable = avail_count >= required_quantity
+    shortage_count = max(0, required_quantity - total_eligible_units_available)
+    fully_fulfillable = total_eligible_units_available >= required_quantity
 
-    msg = (
-        f"Prioritizing {len(recommended_cards)} earliest-expiring unit(s) using FEFO to eliminate wastage."
-        if fully_fulfillable else
-        f"Notice: Shortage of {shortage_count} unit(s). Recommending {avail_count} earliest-expiring unit(s) available."
-    )
+    fefo_expl = "Eligible blood units are prioritized by earliest expiration date to help reduce avoidable wastage."
+
+    if fully_fulfillable:
+        alloc_summary = "Recommended allocation: " + ", ".join(allocation_parts)
+        msg = f"FEFO Active: All {required_quantity} requested units allocated from earliest-expiring eligible batches."
+    elif total_eligible_units_available > 0:
+        alloc_summary = "Partial allocation: " + ", ".join(allocation_parts) + f" (Shortage: {shortage_count} units)"
+        msg = f"Notice: Shortage of {shortage_count} unit(s). Recommending all {total_eligible_units_available} eligible units available."
+    else:
+        alloc_summary = f"Shortage: {required_quantity} units. No eligible unexpired units currently available for this search."
+        msg = f"Notice: Shortage of {required_quantity} unit(s). No unexpired inventory matches criteria."
 
     return ExchangeSearchResult(
         requested_blood_group=norm_bg,
         requested_component=norm_comp,
         requested_quantity=required_quantity,
-        available_units_count=avail_count,
+        available_units_count=total_eligible_units_available,
         shortage_units_count=shortage_count,
         is_fully_fulfillable=fully_fulfillable,
         wastage_prevention_message=msg,
+        recommended_allocation_summary=alloc_summary,
+        fefo_explanation=fefo_expl,
         recommended_units=recommended_cards,
         all_eligible_units=cards
     )
@@ -393,7 +470,7 @@ def create_exchange_request(
 
         for u in candidate_units:
             exp_d = u.expiration_date or u.expiry_date
-            if u.status != "available" or (exp_d and exp_d <= today):
+            if u.status not in ("available", "CONFIRMED_AVAILABILITY") or (exp_d and exp_d < today):
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail="This blood unit is no longer available. It may have been reserved by another hospital."
